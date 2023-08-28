@@ -49,11 +49,57 @@ ntee2_level_3_4 <- mapply(get_ntee_level_3_4, digits23, digits45)
 #' Extract level 5 code from disaggregated csv
 ntee2_level5 <- ntee_disagg_df$type.org
 
-#' Create function to parse user-inputs and return NTEE Codes
-parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
+#' Create universe of applicable codes
+ntee_new_codes <- paste(
+  ntee2_level1,
+  "-",
+  ntee2_level2,
+  ntee2_level_3_4,
+  "-",
+  ntee2_level5,
+  sep = ""
+)
+
+#' Create function to return regex query for NTEE Codes
+parse_ntee_regex <- function(ntee.group = "", ntee.code = "", ntee.orgtype = ""){
   # Formulate regex query based on user input
   
-  universal_query <- ""
+  level1_query <- ifelse(
+    ntee.group == "",
+    "[A-Z][A-Z][A-Z]",
+    ntee.group
+  )
   
+  level_2to4_query <- ifelse(
+    ntee.code == "",
+    "[A-Z][0-9][A-Z0-9]",
+    
+    ifelse(
+      grepl("[A-Z]$", ntee.code) | grepl("[A-Z][xX][xX]$", ntee.code),
+      paste(substring(ntee.code, 1, 1), "[0-9][A-Z0-9]", sep = ""),
+      
+      ifelse(
+        grepl("[A-Z][0-9]$", ntee.code) | grepl("[A-Z][0-9][xX]$", ntee.code),
+        paste(substring(ntee.code, 1, 2), "[A-Z0-9]", sep = ""),
+        ntee.code
+      )
+    )
+  )
+  
+  level_5_query <- ifelse(
+    ntee.orgtype == "",
+    "[A-Z][A-Z]",
+    ntee.orgtype
+  )
+  
+  full_query <- paste(
+    level1_query,
+    "-",
+    level_2to4_query,
+    "-",
+    level_5_query,
+    sep = "")
+  
+  return(full_query)
 }
 
