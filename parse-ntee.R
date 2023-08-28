@@ -10,5 +10,11 @@
 
 #' It will also raise an error if the user tries argument values that are 
 #' undefined and print an informative message.
+#' 
+#' Load packages
+library("rjson")
 
 
+#' Read json file and extract old codes
+ntee_old <- fromJSON(file = "ntee.json")
+ntee_old <- names(ntee_old)
