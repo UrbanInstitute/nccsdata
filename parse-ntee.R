@@ -19,11 +19,8 @@ library("stringr")
 ntee_disagg_df <- read.csv("ntee-disaggregated.csv")
 ntee_new__codes <- ntee_disagg_df$new.code
 
-#' Create function that Updates old codes to new codes
-
-convert_ntee_code <- function(old_code){
-  new_code <- ""
+#' Create function to parse user-inputs and return NTEE Codes
+parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
   
 }
 
-#' Lapply function to entire vector
