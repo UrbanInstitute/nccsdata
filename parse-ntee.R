@@ -13,8 +13,11 @@
 #' 
 #' Load packages
 library("rjson")
-
+library("stringr")
 
 #' Read json file and extract old codes
 ntee_old <- fromJSON(file = "ntee.json")
 ntee_old <- names(ntee_old)
+ntee_old <- ntee_old[str_length(ntee_old) == 3]
+
+#' 
