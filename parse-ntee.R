@@ -15,9 +15,16 @@
 library("rjson")
 library("stringr")
 
-#' Read json file and extract old codes
-ntee_old <- fromJSON(file = "ntee.json")
-ntee_old <- names(ntee_old)
-ntee_old <- ntee_old[str_length(ntee_old) == 3]
+#' Read csv file to extract new NTEE Codes
 
-#' 
+ntee_disagg_df <- read.csv("ntee-disaggregated.csv")
+
+
+#' Create function that Updates old codes to new codes
+
+convert_ntee_code <- function(old_code){
+  new_code <- ""
+  
+}
+
+#' Lapply function to entire vector
