@@ -13,6 +13,7 @@
 #' 
 #' Load packages
 library("stringr")
+library("data.table")
 
 #' Read csv file to extract different versions of NTEE Codes
 
@@ -65,13 +66,13 @@ parse_ntee_regex <- function(ntee.group = "", ntee.code = "", ntee.orgtype = "")
   # Formulate regex query based on user input
   
   level1_query <- ifelse(
-    ntee.group == "",
+    ntee.group == "all",
     "[A-Z][A-Z][A-Z]",
     ntee.group
   )
   
   level_2to4_query <- ifelse(
-    ntee.code == "",
+    ntee.code == "all",
     "[A-Z][0-9][A-Z0-9]",
     
     ifelse(
@@ -87,7 +88,7 @@ parse_ntee_regex <- function(ntee.group = "", ntee.code = "", ntee.orgtype = "")
   )
   
   level_5_query <- ifelse(
-    ntee.orgtype == "",
+    ntee.orgtype == "all",
     "[A-Z][A-Z]",
     ntee.orgtype
   )
@@ -100,6 +101,20 @@ parse_ntee_regex <- function(ntee.group = "", ntee.code = "", ntee.orgtype = "")
     level_5_query,
     sep = "")
   
+
+  full_query <- data.table::CJ(
+    level1_query,
+    level_2to4_query,
+    level_5_query
+  )[, paste(level1_query,
+            level_2to4_query, 
+            level_5_query,
+            sep = "-")]
+  
   return(full_query)
 }
+
+#' Function to execute regex query on list of codes
+ntee_new_codes[grep("ART-A[0-9][A-Z0-9]-[A-Z][A-Z]", ntee_new_codes)]
+
 
