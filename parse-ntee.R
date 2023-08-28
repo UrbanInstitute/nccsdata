@@ -27,18 +27,24 @@ digits45 <- replace(digits45, digits45 == "", "00")
 
 
 #' Use digits23 and digits45 to get level 3 of new NTEE code
-get_ntee_level3 <- function(digits23, digits45){
+get_ntee_level_3_4 <- function(digits23, digits45){
   
-  ntee2_level3 <- ifelse(
+  ntee2_level_3_4 <- ifelse(
     as.numeric(digits23) > 19,
-    substring(digits23, 1, 1),
-    substring(digits45, 1, 1)
-    )
+    substring(digits23, 1, 2),
+    substring(digits45, 1, 2)
+  )
+
+  ntee2_level_3_4 <- ifelse(
+    is.na(ntee2_level_3_4),
+    substring(digits23, 1, 2),
+    ntee2_level_3_4
+  )
   
-  return(ntee2_level3) 
+  return(ntee2_level_3_4) 
 }
 
-mapply(get_ntee_level3, digits23, digits45)
+ntee2_level_3_4 <- mapply(get_ntee_level_3_4, digits23, digits45)
 
 
 
