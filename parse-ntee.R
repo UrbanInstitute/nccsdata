@@ -62,7 +62,7 @@ ntee_new_codes <- paste(
 )
 
 #' Create function to return regex query for NTEE Codes
-parse_ntee_regex <- function(ntee.group = "", ntee.code = "", ntee.orgtype = ""){
+generate_ntee_regex <- function(ntee.group = "", ntee.code = "", ntee.orgtype = ""){
   # Formulate regex query based on user input
   
   level1_query <- ifelse(
@@ -114,7 +114,19 @@ parse_ntee_regex <- function(ntee.group = "", ntee.code = "", ntee.orgtype = "")
   return(full_query)
 }
 
-#' Function to execute regex query on list of codes
-ntee_new_codes[grep("ART-A[0-9][A-Z0-9]-[A-Z][A-Z]", ntee_new_codes)]
+#' Function to loop through and execute a vector of regex queries
+#' on a vector of ntee codes
+
+parse_ntee_regex <- function(regexp_vec, ntee_codes){
+  matched_codes <- c()
+  
+  for (regexp in regexp_vec){
+    results <- ntee_codes[grep(regexp, ntee_codes)]
+    matched_codes <- c(results, matched_codes)
+  }
+    
+  return(matched_codes)
+  
+}
 
 
