@@ -23,6 +23,8 @@ ntee2_level2 <- ntee_disagg_df$major.group
 #' Extract digits23 and digits 45
 digits23 <- substring(ntee_disagg_df$old.code, 2, 3)
 digits45 <- substring(ntee_disagg_df$old.code, 4, 5)
+digits45 <- replace(digits45, digits45 == "", "00")
+
 
 #' Use digits23 and digits45 to get level 3 of new NTEE code
 get_ntee_level3 <- function(digits23, digits45){
@@ -35,6 +37,10 @@ get_ntee_level3 <- function(digits23, digits45){
   
   return(ntee2_level3) 
 }
+
+mapply(get_ntee_level3, digits23, digits45)
+
+
 
 #' Create function to parse user-inputs and return NTEE Codes
 parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
