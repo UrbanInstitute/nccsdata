@@ -23,7 +23,7 @@ ntee_new_codes <- ntee_disagg_df$new.code
 parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
   # Formulate regex query based on user input
   
-  universal_query <- 
+  universal_query <- ""
   
 }
 
