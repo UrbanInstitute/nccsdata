@@ -14,10 +14,14 @@
 #' Load packages
 library("stringr")
 
-#' Read csv file to extract new NTEE Codes
+#' Read csv file to extract different versions of NTEE Codes
 
 ntee_disagg_df <- read.csv("ntee-disaggregated.csv")
-ntee_new_codes <- ntee_disagg_df$new.code
+ntee2_level1 <- ntee_disagg_df$broad.category
+ntee2_level2 <- ntee_disagg_df$major.group
+
+# Extract digits23 and digits 45
+digits23 <- substring(ntee_disagg_df$old.code, 2, 3)
 
 #' Create function to parse user-inputs and return NTEE Codes
 parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
