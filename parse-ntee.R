@@ -17,10 +17,13 @@ library("stringr")
 #' Read csv file to extract new NTEE Codes
 
 ntee_disagg_df <- read.csv("ntee-disaggregated.csv")
-ntee_new__codes <- ntee_disagg_df$new.code
+ntee_new_codes <- ntee_disagg_df$new.code
 
 #' Create function to parse user-inputs and return NTEE Codes
 parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
+  # Formulate regex query based on user input
+  
+  universal_query <- 
   
 }
 
