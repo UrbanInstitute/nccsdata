@@ -12,13 +12,12 @@
 #' undefined and print an informative message.
 #' 
 #' Load packages
-library("rjson")
 library("stringr")
 
 #' Read csv file to extract new NTEE Codes
 
 ntee_disagg_df <- read.csv("ntee-disaggregated.csv")
-
+ntee_new__codes <- ntee_disagg_df$new.code
 
 #' Create function that Updates old codes to new codes
 
