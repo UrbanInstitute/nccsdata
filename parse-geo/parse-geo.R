@@ -81,14 +81,16 @@ parse_geo <- function(geo.level, ...){
       dat = tract_dt,
       args = args,
       ex_args = ex_args,
-      id_col = "geo.tract"
+      id_col = "geo.tract",
+      geo.level = geo.level
     )
     } else if (geo.level == "BLOCK"){
     fips <- validate_arg(
       dat = block_dt,
       args = args,
       ex_args = ex_args,
-      id_col = "geo.block"
+      id_col = "geo.block",
+      geo.level = geo.level
     )    
   } else {
     stop("Invalid geo.level, select either 'BLOCK' or 'TRACT'")
@@ -100,7 +102,8 @@ parse_geo <- function(geo.level, ...){
 
 
 #' Function to validate user inputs
-validate_arg <- function(dat, args = args, ex_args = ex_args, id_col){
+validate_arg <- function(dat, args = args, ex_args = ex_args, id_col,
+                         geo.level){
   if (all(names(args) %in% colnames(dat))){
     parsed_ids <- dat %>% 
       filter(!!! ex_args) %>% 
@@ -108,7 +111,9 @@ validate_arg <- function(dat, args = args, ex_args = ex_args, id_col){
     return(parsed_ids)
   } else {
     absent_colnames <- setdiff(names(args), colnames(dat))
-    stop(paste("The following columns are not present in the dataset:",
+    stop(paste("The following columns are not present in the",
+               geo.level,
+               "dataset:",
                setdiff(names(args), colnames(dat))))
   }  
 }
