@@ -19,8 +19,15 @@ geo_preproc <- function(
   #' @description This function downloads the crosswalk datasets from an S3
   #' bucket, reads them as data.tables, reformats the column names, and creates
   #' a new column with state abbreviations for the Tract dataset.
+  #' 
+  #' @usage geo_preproc()
+  #' 
+  #' @return A string message indicating that the processed data.tables
+  #' are available in memory
+  #' 
+  #' @note Can also be used to recreate the data.tables if files get corrupted.
   
-  print("Loading Datasets")
+  message("Loading Datasets")
   
   # Load Data from S3
   block_dt <- 
