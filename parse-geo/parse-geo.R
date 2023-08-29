@@ -106,7 +106,7 @@ validate_arg <- function(dat, args = args, ex_args = ex_args, id_col,
                          geo.level){
   if (all(names(args) %in% colnames(dat))){
     parsed_ids <- dat %>% 
-      filter(!!! ex_args) %>% 
+      suppressWarnings(filter(!!! ex_args)) %>% 
       select(id_col)
     return(parsed_ids)
   } else {
