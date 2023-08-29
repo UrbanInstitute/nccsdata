@@ -38,7 +38,8 @@ ntee_preproc <- function(path_to_csv = "ntee-disaggregated.csv"){
   #' Use digits23 and digits45 to get level 3 and 4 of new NTEE code
   ntee2_level_3_4 <- mapply(get_ntee_level_3_4, digits23, digits45)
   
-  #' Combine levels 2-4 to create 
+  #' Combine levels 2-4
+  ntee2_level_2_4 <- paste(ntee2_level2, ntee2_level_3_4, sep = "")
   
   #' Extract level 5 code from disaggregated csv
   ntee2_level5 <- ntee_disagg_df$type.org
@@ -54,7 +55,7 @@ ntee_preproc <- function(path_to_csv = "ntee-disaggregated.csv"){
     sep = ""
   )
   
-  return(ntee_new_codes)
+  return(list(ntee_new_codes, ntee2_level1, ntee2_level_2_4, ntee2_level5))
 }
 
 #' Function to get level 3 and 4 codes from 2 vectors containing
