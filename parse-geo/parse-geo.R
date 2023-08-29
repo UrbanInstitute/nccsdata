@@ -6,11 +6,15 @@
 library("data.table")
 library("dplyr")
 library("purrr")
+library("usdata")
 
 #' Preprocessing
 #' Load in Data as Data.Table
 block_dt <- fread("block_crosswalk.csv")
 tract_dt <- fread("tract_crosswalk.csv")
+#' Rename states in tract
+tract_dt <- tract_dt %>% 
+  mutate(geo.state = usdata::state2abbr(state_name))
 
 #' Function to filter block or tract
 parse_dt <- function(dat, ...){
