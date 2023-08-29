@@ -21,6 +21,14 @@ tract_dt <- tract_dt %>%
     )
   ) %>% 
   dplyr::mutate(geo.state = usdata::state2abbr(geo.state_name))
+# Rename columns in block
+block_dt <- block_dt %>% 
+  dplyr::rename_all(
+    ~ stringr::str_replace_all(., "_geoid", "")
+  ) %>% 
+  dplyr::rename_all(
+    ~ paste0("geo.", .)
+  )
 
 #' Function to filter block or tract
 parse_dt <- function(dat, ...){
