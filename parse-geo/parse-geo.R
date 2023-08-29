@@ -59,8 +59,21 @@ geo_preproc <- function(
   
 }
 
-#' Function to check if objects exist in memory
 exists.m <- function(...) {
+  #' Check if ALL elements of one vector exist in another vector
+  #' 
+  #' @description This function is used in the validate_arg() function to 
+  #' ensure that the arguments supplied to parse_geo() are valid column names
+  #' in either the block or tract data.table objects.
+  #' 
+  #' @usage exists.m(vector_1, vector_2)
+  #' 
+  #' @return A single boolean value indicating whether all elements of vector_1
+  #' are present in vector_2
+  #' 
+  #' @examples 
+  #' exists.m(c("col_1", "col_2"), c("col_1", "col_2", "col_3"))
+
   ls <- list(...)
   all(sapply(ls, exists))
 }
