@@ -81,14 +81,22 @@ exists.m <- function(...) {
 
 parse_geo <- function(geo.level, ...){
   
-  #' Function that returns FIPS codes that match User arguments
+  #' Function that returns FIPS codes that match dynamic User arguments
   #' 
   #' @description Filters either the Block or Tract data.tables to return
   #' a list of FIPS codes that match conditions specified by the User
   #' 
+  #' Parameters for the Block Tract
+  #' 
   #' @param geo.level character. data.table to parse; "BLOCK" | "TRACT"
-  #' @param geo.block numeric or vector. Vector of Block IDs (FIPS)
-  #' @param geo.tract numeric or vector. Vector of Tract IDs (FIPS)
+  #' @param geo.block string or vector. Vector of Block IDs (FIPS)
+  #' @param geo.tract string or vector. Vector of Tract IDs (FIPS)
+  #' @param geo.county string or vector. Vector of county IDs
+  #' @param geo.place string or vector. Vector of census place IDs
+  #' @param geo.ua string or vector. Vector of Urban Area IDs
+  #' @param geo.vtd string or vector. Vector of Voting District IDs
+  #' @param geo.zcta string or vector. Vector of ZCTA IDs
+  #' @param geo.locale string or vector. Vector of NCES Locale IDs
   
   # Check if data is already preloaded
   if (exists.m("block_dt", "tract_dt")){
