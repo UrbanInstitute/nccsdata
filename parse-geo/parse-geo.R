@@ -15,6 +15,9 @@ geo_preproc <- function(
     block_s3_url = "s3://nccsdata/geo/xwalk_geoid/block_crosswalk.csv",
     tract_s3_url = "s3://nccsdata/geo/xwalk_geoid/tract_crosswalk.csv"
 ){
+  
+  print("Loading Datasets")
+  
   # Load Data from S3
   block_dt <- 
     save_object(block_s3_url) %>%
@@ -31,6 +34,7 @@ geo_preproc <- function(
       )
     ) %>% 
     dplyr::mutate(geo.state = usdata::state2abbr(geo.state_name))
+  
   # Rename columns in block
   block_dt <- block_dt %>% 
     dplyr::rename_all(
@@ -44,10 +48,23 @@ geo_preproc <- function(
   
 }
 
+#' Function to check if objects exist in memory
+exists.m <- function(...) {
+  ls <- list(...)
+  all(sapply(ls, exists))
+}
+
 #' Parse-Geo function
 #' Takes as input a series of geographic arguments and returns a list
 #' of Tract or Block IDs
 parse_geo <- function(geo.level, ...){
+  
+  # Check if data is already preloaded
+  if (exists.m("block_dt", "tract_dt")){
+    print("Block and Tract datasets present")
+  } else {
+    geo_preproc()
+  }
   
   # Extract arguments
   args <- enquos(...)
@@ -63,17 +80,18 @@ parse_geo <- function(geo.level, ...){
   # Filter data
   ifelse(
     geo.level == "TRACT",
-    tract_dt %>% 
+    parsed_ids <- tract_dt %>% 
       filter(!!! ex_args) %>% 
-      select("tract"),
+      select("geo.tract"),
     ifelse(
       geo.level == "BLOCK",
-      block_dt %>% 
+      parsed_ids <- block_dt %>% 
         filter(!!! ex_args) %>% 
-        select("block_geoid"),
+        select("geo.block"),
       stop("Invalid geo.level, select either 'BLOCK' or 'TRACT'")
     )
   )
+  return(list(parsed_ids))
 }
 
 
