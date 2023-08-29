@@ -8,42 +8,41 @@ library("dplyr")
 library("purrr")
 library("usdata")
 library("stringr")
+library("aws.s3")
 
 #' Preprocessing
-#' Load in Data as Data.Table
-block_dt <- fread("block_crosswalk.csv")
-tract_dt <- fread("tract_crosswalk.csv")
-#' Rename columns and create state abbreviations in tract
-tract_dt <- tract_dt %>% 
-  dplyr::rename_all(
-    list(
+geo_preproc <- function(
+    block_s3_url = "s3://nccsdata/geo/xwalk_geoid/block_crosswalk.csv",
+    tract_s3_url = "s3://nccsdata/geo/xwalk_geoid/tract_crosswalk.csv"
+){
+  # Load Data from S3
+  block_dt <- 
+    save_object(block_s3_url) %>%
+    data.table::fread()
+  tract_dt <- 
+    save_object(tract_s3_url) %>%
+    data.table::fread()
+  
+  #' Rename columns and create state abbreviations in tract
+  tract_dt <- tract_dt %>% 
+    dplyr::rename_all(
+      list(
+        ~ paste0("geo.", .)
+      )
+    ) %>% 
+    dplyr::mutate(geo.state = usdata::state2abbr(geo.state_name))
+  # Rename columns in block
+  block_dt <- block_dt %>% 
+    dplyr::rename_all(
+      ~ stringr::str_replace_all(., "_geoid", "")
+    ) %>% 
+    dplyr::rename_all(
       ~ paste0("geo.", .)
     )
-  ) %>% 
-  dplyr::mutate(geo.state = usdata::state2abbr(geo.state_name))
-# Rename columns in block
-block_dt <- block_dt %>% 
-  dplyr::rename_all(
-    ~ stringr::str_replace_all(., "_geoid", "")
-  ) %>% 
-  dplyr::rename_all(
-    ~ paste0("geo.", .)
-  )
-
-#' Function to filter block or tract
-parse_dt <- function(dat, ...){
-  args <- enquos(...)
-  ex_args <- unname(
-    purrr::imap(
-      args,
-      function(expr, name) quo(!!sym(name)==!!expr)
-    )
-  )
-  dat %>% 
-    filter(!!! ex_args) %>% 
-    select("block_geoid")
+  
+  return("Data Loaded")
+  
 }
-
 
 #' Parse-Geo function
 #' Takes as input a series of geographic arguments and returns a list
@@ -79,6 +78,4 @@ parse_geo <- function(geo.level, ...){
 
 
 
-block_dt %>% 
-  filter(county_geoid == c("1001", "1002")) %>% 
-  select("block_geoid")
+
