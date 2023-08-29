@@ -76,24 +76,44 @@ parse_geo <- function(geo.level, ...){
   )
   
   # Evaluate arguments
-  
-  # Filter data
-  ifelse(
-    geo.level == "TRACT",
-    parsed_ids <- tract_dt %>% 
-      filter(!!! ex_args) %>% 
-      select("geo.tract"),
-    ifelse(
-      geo.level == "BLOCK",
+  if (geo.level == "TRACT"){
+    if (all(names(args) %in% colnames(tract_dt))){
+      parsed_ids <- tract_dt %>% 
+        filter(!!! ex_args) %>% 
+        select("geo.tract")
+    } else {
+      absent_colnames <- setdiff(names(args), colnames(tract_dt))
+      stop(paste("The following columns are not present in the dataset:",
+                 setdiff(names(args), colnames(tract_dt))))
+    }
+    } else if (geo.level == "BLOCK"){
+    if (all(names(args) %in% colnames(block_dt))){
       parsed_ids <- block_dt %>% 
         filter(!!! ex_args) %>% 
-        select("geo.block"),
-      stop("Invalid geo.level, select either 'BLOCK' or 'TRACT'")
-    )
-  )
+        select("geo.block")
+    } else {
+      absent_colnames <- setdiff(names(args), colnames(block_dt))
+      stop(paste("The following columns are not present in the dataset:",
+                 setdiff(names(args), colnames(block_dt))))
+    }     
+  } else {
+    stop("Invalid geo.level, select either 'BLOCK' or 'TRACT'")
+  }
+
   return(list(parsed_ids))
 }
 
 
 
-
+# dummy code to test function evaluations
+test_eval <- function(...){
+  # Extract arguments
+  args <- enquos(...)
+  ex_args <- unname(
+    purrr::imap(
+      args,
+      function(expr, name) quo(!!sym(name)==!!expr)
+    )
+  )
+  return(args)
+}
