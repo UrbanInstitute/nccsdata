@@ -162,9 +162,13 @@ validate_inp <- function(ntee.group,
   
   ifelse(
     ! ntee.code %in% c(level_2_4_codes, "all"),
-    stop("Invalid Industry Division Subdivision Combination \n 
+    ifelse(
+      grepl("[A-Z][0-9xX]*[A-Z0-9xX]", ntee.code),
+      print("Collecting Matching Industry Division and Subdivisions"),
+      stop("Invalid Industry Division Subdivision Combination \n 
           List of available Combinations can be found at: \n
-          https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md"),
+          https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md")
+    ),
     print("Collecting Matching Industry Division and Subdivisions")
       
   ) 
