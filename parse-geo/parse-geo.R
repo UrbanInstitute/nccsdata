@@ -7,14 +7,20 @@ library("data.table")
 library("dplyr")
 library("purrr")
 library("usdata")
+library("stringr")
 
 #' Preprocessing
 #' Load in Data as Data.Table
 block_dt <- fread("block_crosswalk.csv")
 tract_dt <- fread("tract_crosswalk.csv")
-#' Rename states in tract
+#' Rename columns and create state abbreviations in tract
 tract_dt <- tract_dt %>% 
-  mutate(geo.state = usdata::state2abbr(state_name))
+  dplyr::rename_all(
+    list(
+      ~ paste0("geo.", .)
+    )
+  ) %>% 
+  dplyr::mutate(geo.state = usdata::state2abbr(geo.state_name))
 
 #' Function to filter block or tract
 parse_dt <- function(dat, ...){
@@ -47,6 +53,7 @@ parse_geo <- function(geo.level, ...){
   
   # Evaluate arguments
   
+  # Filter data
   ifelse(
     geo.level == "TRACT",
     tract_dt %>% 
