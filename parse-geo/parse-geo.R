@@ -1,20 +1,24 @@
-#' Script to return Block or Tract IDs from Census tables that match
-#' user inputs
-#' 
-#' 
-#' Load packages
+## Script to return Block or Tract IDs from Census tables that match
+
+## Load required packages
 library("data.table")
 library("dplyr")
 library("purrr")
 library("usdata")
 library("stringr")
 library("aws.s3")
+library("docstring")
+library("roxygen2")
 
-#' Preprocessing
 geo_preproc <- function(
     block_s3_url = "s3://nccsdata/geo/xwalk_geoid/block_crosswalk.csv",
     tract_s3_url = "s3://nccsdata/geo/xwalk_geoid/tract_crosswalk.csv"
 ){
+  #' Preprocess Census Block and Tract Crosswalks
+  #' 
+  #' @description This function downloads the crosswalk datasets from an S3
+  #' bucket, reads them as data.tables, reformats the column names, and creates
+  #' a new column with state abbreviations for the Tract dataset.
   
   print("Loading Datasets")
   
