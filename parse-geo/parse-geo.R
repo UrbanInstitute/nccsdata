@@ -60,6 +60,7 @@ geo_preproc <- function(
 }
 
 exists.m <- function(...) {
+  
   #' Check if ALL elements of one vector exist in another vector
   #' 
   #' @description This function is used in the validate_arg() function to 
@@ -78,10 +79,16 @@ exists.m <- function(...) {
   all(sapply(ls, exists))
 }
 
-#' Parse-Geo function
-#' Takes as input a series of geographic arguments and returns a list
-#' of Tract or Block IDs
 parse_geo <- function(geo.level, ...){
+  
+  #' Function that returns FIPS codes that match User arguments
+  #' 
+  #' @description Filters either the Block or Tract data.tables to return
+  #' a list of FIPS codes that match conditions specified by the User
+  #' 
+  #' @param geo.level character. data.table to parse; "BLOCK" | "TRACT"
+  #' @param geo.block numeric or vector. Vector of Block IDs (FIPS)
+  #' @param geo.tract numeric or vector. Vector of Tract IDs (FIPS)
   
   # Check if data is already preloaded
   if (exists.m("block_dt", "tract_dt")){
