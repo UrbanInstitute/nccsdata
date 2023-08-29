@@ -1,5 +1,6 @@
 ## Test data frame
 
+```r
 set.seed( 1234 )
 
 get_test_core <- function()
@@ -19,8 +20,9 @@ get_test_bmf <- function()
   return(df)
 }
 
-testbmf <- dplyr::sample( get_test_bmf(), 25000 )
 
+testbmf <- dplyr::sample( get_test_bmf(), 25000 )
+```
 
 
 
