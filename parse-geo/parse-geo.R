@@ -37,7 +37,7 @@ geo_preproc <- function(
     save_object(tract_s3_url) %>%
     data.table::fread()
   
-  #' Rename columns and create state abbreviations in tract
+  # Rename columns and create state abbreviations in tract data.table
   tract_dt <- tract_dt %>% 
     dplyr::rename_all(
       list(
@@ -46,7 +46,7 @@ geo_preproc <- function(
     ) %>% 
     dplyr::mutate(geo.state = usdata::state2abbr(geo.state_name))
   
-  # Rename columns in block
+  # Rename columns in block data.table
   block_dt <- block_dt %>% 
     dplyr::rename_all(
       ~ stringr::str_replace_all(., "_geoid", "")
