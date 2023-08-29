@@ -30,9 +30,11 @@ geo_preproc <- function(
   message("Loading Datasets")
   
   # Load Data from S3
+  
   block_dt <- 
     save_object(block_s3_url) %>%
     data.table::fread()
+  
   tract_dt <- 
     save_object(tract_s3_url) %>%
     data.table::fread()
@@ -97,6 +99,8 @@ parse_geo <- function(geo.level, ...){
   #' @param geo.vtd string or vector. Vector of Voting District IDs
   #' @param geo.zcta string or vector. Vector of ZCTA IDs
   #' @param geo.locale string or vector. Vector of NCES Locale IDs
+  #' 
+  #' Parameters for the Census Tract
   
   # Check if data is already preloaded
   if (exists.m("block_dt", "tract_dt")){
