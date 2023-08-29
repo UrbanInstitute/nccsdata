@@ -179,3 +179,32 @@ validate_inp <- function(ntee.group,
   )
     
 }
+
+#' Final function to return NTEE Codes from user inputs
+parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
+  # Build dataset using disaggregated csv file
+  ntee_code_ls = ntee_preproc()
+  # Validate user inputs
+  validate_inp(
+    ntee.group = ntee.group,
+    ntee.code = ntee.code,
+    ntee.orgtype = ntee.orgtype,
+    ind_group_codes = ntee_code_ls[[2]],
+    level_2_4_codes = ntee_code_ls[[3]],
+    org_type_codes = ntee_code_ls[[4]]
+  )
+  # Generate regex queries if inputs are valids
+  regex_queries <- generate_ntee_regex(
+    ntee.group = ntee.group,
+    ntee.code = ntee.code,
+    ntee.orgtype = ntee.orgtype
+  )
+  # Execute regex queries
+  ntee2_codes <- parse_ntee_regex(
+    regexp_vec = regex_queries,
+    ntee_codes = ntee_code_ls[[1]]
+  )
+  # Return NTEE2 Codes
+  return(list(ntee2_codes))
+  
+}
