@@ -24,8 +24,9 @@ library("data.table")
 ntee_preproc <- function(path_to_csv = "ntee-disaggregated.csv"){
   
   #' Read csv file to extract different versions of NTEE Codes
-  
   ntee_disagg_df <- read.csv("ntee-disaggregated.csv")
+  
+  #' Extract level 1 and level 2 parts of NTEE2 Code
   ntee2_level1 <- ntee_disagg_df$broad.category
   ntee2_level2 <- ntee_disagg_df$major.group
   
@@ -36,6 +37,8 @@ ntee_preproc <- function(path_to_csv = "ntee-disaggregated.csv"){
   
   #' Use digits23 and digits45 to get level 3 and 4 of new NTEE code
   ntee2_level_3_4 <- mapply(get_ntee_level_3_4, digits23, digits45)
+  
+  #' Combine levels 2-4 to create 
   
   #' Extract level 5 code from disaggregated csv
   ntee2_level5 <- ntee_disagg_df$type.org
@@ -141,4 +144,37 @@ parse_ntee_regex <- function(regexp_vec, ntee_codes){
   
 }
 
-
+#' Function to inspect user inputs and flag errors
+validate_inp <- function(ntee.group,
+                         ntee.code,
+                         ntee.orgtype,
+                         ind_group_codes,
+                         level_2_4_codes,
+                         org_type_codes){
+  ifelse(
+    ! ntee.group %in% c(ind_group_codes, "all"),
+    stop("Invalid Industry Group \n 
+          List of available groups can be found at: \n
+          https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md"),
+    print("Collecting Matching Industry Groups")
+  )
+  
+  ifelse(
+    ! ntee.code %in% c(level_2_4_codes, "all"),
+    stop("Invalid Industry Division Subdivision Combination \n 
+          List of available Combinations can be found at: \n
+          https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md"),
+    print("Collecting Matching Industry Division and Subdivisions")
+      
+  ) 
+  
+  
+  ifelse(
+    ! ntee.orgtype %in% c(org_type_codes, "all"),
+    stop("Invalid Organization Type \n 
+          List of available Organization Types can be found at: \n
+          https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md"),
+    print("Collecting Matching Organization Types")
+  )
+    
+}
