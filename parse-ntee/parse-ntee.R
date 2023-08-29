@@ -15,6 +15,16 @@
 library("stringr")
 library("data.table")
 
+#' Function for data processing
+#' This function takes the path to a .csv database of disaggregated 
+#' and older ntee codes as an input
+#' and creates a vector containing the population of new NTEE codes
+#' The analyst can simply edit the csv to add or modify the population
+#' of available codes
+ntee_preproc <- function(path_to_csv = "ntee-disaggregated.csv"){
+  
+}
+
 #' Read csv file to extract different versions of NTEE Codes
 
 ntee_disagg_df <- read.csv("ntee-disaggregated.csv")
