@@ -14,7 +14,7 @@
 #' Load packages
 library("stringr")
 library("data.table")
-source("01-data-preproc.R")
+source("ntee_preproc.R")
 source("get_ntee_level_3_4.R")
 
 #' Function for data processing
@@ -23,74 +23,6 @@ source("get_ntee_level_3_4.R")
 #' and creates a vector containing the population of new NTEE codes
 #' The analyst can simply edit the csv to add or modify the population
 #' of available codes
-
-#' Create function to return regex query for NTEE Codes
-generate_ntee_regex <- function(ntee.group, ntee.code, ntee.orgtype){
-  # Formulate regex query based on user input
-  
-  level1_query <- ifelse(
-    ntee.group == "all",
-    "[A-Z][A-Z][A-Z]",
-    ntee.group
-  )
-  
-  level_2to4_query <- ifelse(
-    ntee.code == "all",
-    "[A-Z][0-9][A-Z0-9]",
-    
-    ifelse(
-      grepl("[A-Z]$", ntee.code) | grepl("[A-Z][xX][xX]$", ntee.code),
-      paste(substring(ntee.code, 1, 1), "[0-9][A-Z0-9]", sep = ""),
-      
-      ifelse(
-        grepl("[A-Z][0-9]$", ntee.code) | grepl("[A-Z][0-9][xX]$", ntee.code),
-        paste(substring(ntee.code, 1, 2), "[A-Z0-9]", sep = ""),
-        ntee.code
-      )
-    )
-  )
-  
-  level_5_query <- ifelse(
-    ntee.orgtype == "all",
-    "[A-Z][A-Z]",
-    ntee.orgtype
-  )
-  
-  full_query <- paste(
-    level1_query,
-    "-",
-    level_2to4_query,
-    "-",
-    level_5_query,
-    sep = "")
-  
-
-  full_query <- data.table::CJ(
-    level1_query,
-    level_2to4_query,
-    level_5_query
-  )[, paste(level1_query,
-            level_2to4_query, 
-            level_5_query,
-            sep = "-")]
-  
-  return(full_query)
-}
-
-#' Function to loop through and execute a vector of regex queries
-#' on a vector of ntee codes
-
-parse_ntee_regex <- function(regexp_vec, ntee_codes){
-  matched_codes <- c()
-  
-  for (regexp in regexp_vec){
-    results <- ntee_codes[grep(regexp, ntee_codes)]
-    matched_codes <- c(results, matched_codes)
-  }
-    
-  return(unique(matched_codes))
-  
-}
 
 #' Function to inspect user inputs and flag errors
 validate_inp <- function(ntee.group,
