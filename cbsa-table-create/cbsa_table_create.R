@@ -1,7 +1,4 @@
 ## Script to preprocess NBER cbsa crosswalk
-
-cbsa_df <- read.csv("cbsa2fipsxw.csv")
-
 library("tidyr")
 library("dplyr")
 library("jsonlite")
@@ -18,14 +15,14 @@ cbsa_table_create <- function(path_to_raw_cbsa){
   
   # Preprocess Columns
   cbsa_df <- cbsa_df %>% 
-    rename(cbsa_code = cbsacode,
+    rename(id = cbsacode,
            metropolitan_and_division_code = metropolitandivisioncode,
            csa_code = csacode,
            cbsa_title = cbsatitle,
            metropolitan_micropolitan_statis = metropolitanmicropolitanstatis,
            metropolitan_division_title = metropolitandivisiontitle,
            csa_title = csatitle,
-           county_county_equivalen = countycountyequivalent,
+           county_county_equivalent = countycountyequivalent,
            state_name = statename,
            fips_state_code = fipsstatecode,
            fips_county_code = fipscountycode,
@@ -35,7 +32,7 @@ cbsa_table_create <- function(path_to_raw_cbsa){
   # Nest dataframe by cbsacode and write to json
   
   cbsa_nest_df <- cbsa_df %>% 
-    dplyr::group_nest(cbsa_code)
+    dplyr::group_nest(id)
   
   cbsa_nest_json <- cbsa_nest_df %>% 
     jsonlite::toJSON() %>% 
