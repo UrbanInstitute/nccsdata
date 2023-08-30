@@ -11,62 +11,38 @@
 #' It will also raise an error if the user tries argument values that are 
 #' undefined and print an informative message.
 #' 
-#' Load packages
-library("stringr")
-library("data.table")
+#' Load required packages in folder
 source("ntee_preproc.R")
 source("get_ntee_level_3_4.R")
+source("generate_ntee_regex.R")
+source("parse_ntee_regex.R")
+source("validate_inp.R")
 
-#' Function for data processing
-#' This function takes the path to a .csv database of disaggregated 
-#' and older ntee codes as an input
-#' and creates a vector containing the population of new NTEE codes
-#' The analyst can simply edit the csv to add or modify the population
-#' of available codes
+#' Function that generates population of NTEE2 codes and filters codes that
+#' match user inputs
+#' 
+#' @description This function takes user defined Industry Group, Industry, 
+#' Division, Subdivision and Organization Types and filters population of NTEE2
+#' codes to find codes that match user inputs.
+#' 
+#' @param ntee.group character vector. Vector of desired Industry Group codes
+#'  to filter. Use "all" to include all possible codes.
+#' @param ntee.code character vector. Sequence of desired Industry, Division and
+#' Subdivision codes (old code structure) to use in filtering. Use "all" to 
+#' include all possible codes. Can also provide only partial codes. For example
+#' "A" or "Axx" will query NTEE2 codes based on Industry group "A" and all
+#' division and subdivisions.
+#' @param ntee.orgtype character vector. Vector of Organization Types.
+#' Use "all" to include all possible codes.
+#' 
+#' @usage parse_ntee(ntee.group, ntee.code, ntee.orgtype)
+#' 
+#' @returns list of matched NTEE2 codes
 
-#' Function to inspect user inputs and flag errors
-validate_inp <- function(ntee.group,
-                         ntee.code,
-                         ntee.orgtype,
-                         ind_group_codes,
-                         level_2_4_codes,
-                         org_type_codes){
-  ifelse(
-    ! ntee.group %in% c(ind_group_codes, "all"),
-    stop("Invalid Industry Group \n 
-          List of available groups can be found at: \n
-          https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md"),
-    print("Collecting Matching Industry Groups")
-  )
-  
-  ifelse(
-    ! ntee.code %in% c(level_2_4_codes, "all"),
-    ifelse(
-      grepl("[A-Z][0-9xX]*[A-Z0-9xX]", ntee.code),
-      print("Collecting Matching Industry Division and Subdivisions"),
-      stop("Invalid Industry Division Subdivision Combination \n 
-          List of available Combinations can be found at: \n
-          https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md")
-    ),
-    print("Collecting Matching Industry Division and Subdivisions")
-      
-  ) 
-  
-  
-  ifelse(
-    ! ntee.orgtype %in% c(org_type_codes, "all"),
-    stop("Invalid Organization Type \n 
-          List of available Organization Types can be found at: \n
-          https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md"),
-    print("Collecting Matching Organization Types")
-  )
-    
-}
-
-#' Final function to return NTEE Codes from user inputs
 parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
-  # Build dataset using disaggregated csv file
+
   ntee_code_ls = ntee_preproc()
+  
   # Validate user inputs
   validate_inp(
     ntee.group = ntee.group,
@@ -76,17 +52,20 @@ parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
     level_2_4_codes = ntee_code_ls[[3]],
     org_type_codes = ntee_code_ls[[4]]
   )
-  # Generate regex queries if inputs are valids
+  
+  # Generate regex queries if inputs are valid
   regex_queries <- generate_ntee_regex(
     ntee.group = ntee.group,
     ntee.code = ntee.code,
     ntee.orgtype = ntee.orgtype
   )
+  
   # Execute regex queries
   ntee2_codes <- parse_ntee_regex(
     regexp_vec = regex_queries,
     ntee_codes = ntee_code_ls[[1]]
   )
+  
   # Return NTEE2 Codes
   return(list(ntee2_codes))
   
