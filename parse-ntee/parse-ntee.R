@@ -15,6 +15,7 @@
 library("stringr")
 library("data.table")
 source("01-data-preproc.R")
+source("get_ntee_level_3_4.R")
 
 #' Function for data processing
 #' This function takes the path to a .csv database of disaggregated 
