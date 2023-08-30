@@ -41,7 +41,7 @@ source("validate_inp.R")
 
 parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
 
-  ntee_code_ls = ntee_preproc()
+  ntee_code_ls <- ntee_preproc()
   
   # Validate user inputs
   validate_inp(
@@ -52,7 +52,7 @@ parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
     level_2_4_codes = ntee_code_ls[[3]],
     org_type_codes = ntee_code_ls[[4]]
   )
-  
+
   # Generate regex queries if inputs are valid
   regex_queries <- generate_ntee_regex(
     ntee.group = ntee.group,
