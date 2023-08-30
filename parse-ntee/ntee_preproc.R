@@ -1,5 +1,3 @@
-library("stringr")
-
 #' This function preprocesses the disaggregated NTEE dataset and returns
 #' a vector of NTEE codes formatted according to NTEE2 standards.
 #' 
@@ -28,8 +26,8 @@ ntee_preproc <- function(path_to_csv = "ntee-disaggregated.csv"){
   ntee2_level2 <- ntee_disagg_df$major.group
   
   # Extract digits23 and digits 45
-  digits23 <- stringr::substring(ntee_disagg_df$old.code, 2, 3)
-  digits45 <- stringr::substring(ntee_disagg_df$old.code, 4, 5)
+  digits23 <- substring(ntee_disagg_df$old.code, 2, 3)
+  digits45 <- substring(ntee_disagg_df$old.code, 4, 5)
   digits45 <- replace(digits45, digits45 == "", "00")
   
   # Use digits23 and digits45 to get level 3 and 4 of new NTEE code
