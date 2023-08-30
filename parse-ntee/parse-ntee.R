@@ -24,26 +24,6 @@ source("get_ntee_level_3_4.R")
 #' The analyst can simply edit the csv to add or modify the population
 #' of available codes
 
-
-#' Function to get level 3 and 4 codes from 2 vectors containing
-#' digits23 and digits45 respectively
-get_ntee_level_3_4 <- function(digits23, digits45){
-  
-  ntee2_level_3_4 <- ifelse(
-    as.numeric(digits23) > 19,
-    substring(digits23, 1, 2),
-    substring(digits45, 1, 2)
-  )
-  
-  ntee2_level_3_4 <- ifelse(
-    is.na(ntee2_level_3_4),
-    substring(digits23, 1, 2),
-    ntee2_level_3_4
-  )
-  
-  return(ntee2_level_3_4) 
-}
-
 #' Create function to return regex query for NTEE Codes
 generate_ntee_regex <- function(ntee.group, ntee.code, ntee.orgtype){
   # Formulate regex query based on user input
