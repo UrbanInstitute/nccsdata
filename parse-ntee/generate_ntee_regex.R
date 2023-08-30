@@ -36,11 +36,11 @@ generate_ntee_regex <- function(ntee.group, ntee.code, ntee.orgtype){
     "[A-Z][0-9][A-Z0-9]",
     
     ifelse(
-      grepl("^[A-Z]$", ntee.code) | grepl("[A-Z][xX][xX]$", ntee.code),
+      grepl("^[A-Z]$", ntee.code) | grepl("^[A-Z][xX][xX]$", ntee.code),
       paste(substring(ntee.code, 1, 1), "[0-9][A-Z0-9]", sep = ""),
       
       ifelse(
-        grepl("[A-Z][0-9]$", ntee.code) | grepl("[A-Z][0-9][xX]$", ntee.code),
+        grepl("^[A-Z][0-9]$", ntee.code) | grepl("^[A-Z][0-9][xX]$", ntee.code),
         paste(substring(ntee.code, 1, 2), "[A-Z0-9]", sep = ""),
         ntee.code
       )
