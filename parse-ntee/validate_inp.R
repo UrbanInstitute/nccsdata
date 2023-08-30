@@ -29,16 +29,16 @@ validate_inp <- function(ntee.group,
                          level_2_4_codes,
                          org_type_codes){
   
-  if (! ntee.group %in% c(ind_group_codes, "all")){
+  if (any(ntee.group %in% c(ind_group_codes, "all"))){
+    message("Collecting Matching Industry Groups")
+  } else {
     stop("Invalid Industry Group \n 
           List of available groups can be found at: \n
           https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md")
-  } else {
-    message("Collecting Matching Industry Groups")
   }
   
-  if (ntee.code %in% c(level_2_4_codes, "all") | 
-      grepl("[A-Z][0-9xX]*[A-Z0-9xX]", ntee.code)){
+  if (any(ntee.code %in% c(level_2_4_codes, "all")) | 
+      any(grepl("[A-Z][0-9xX]*[A-Z0-9xX]*", ntee.code))){
     message("Collecting Matching Industry Division and Subdivisions")
   } else {
     stop("Invalid Industry Division Subdivision Combination \n 
@@ -46,7 +46,7 @@ validate_inp <- function(ntee.group,
           https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md")
   }
   
-  if (ntee.orgtype %in% c(org_type_codes, "all")) {
+  if (any(ntee.orgtype %in% c(org_type_codes, "all"))) {
     message("Collecting Matching Organization Types")
   } else {
     stop("Invalid Organization Type \n 
