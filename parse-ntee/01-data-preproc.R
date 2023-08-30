@@ -1,6 +1,21 @@
 #' This function preprocesses the disaggregated NTEE dataset and returns
 #' a vector of NTEE codes formatted according to NTEE2 standards.
 #' 
+#' @description This function reads in a csv containing disaggregated NTEE
+#' codes built from the old formatting. It uses the rules specified in
+#' https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md
+#' to derive the codes from level 1-5 used in NTEE2 from old NTEE codes
+#' 
+#' @param path_to_csv character. Path to the .csv file with disaggregated NTEE
+#' data
+#' 
+#' @usage ntee_preproc(path_to_csv)
+#' 
+#' @return A list containing the population of valid NTEE2 codes
+#' 
+#' @note The disaggregated csv file can be edited and the function rerun
+#' to generate a new list of valid NTEE2 codes if needed.
+
 ntee_preproc <- function(path_to_csv = "ntee-disaggregated.csv"){
   
   # Read csv file to extract different versions of NTEE Codes
