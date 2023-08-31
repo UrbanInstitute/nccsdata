@@ -20,7 +20,9 @@
 #' @usage validate_inp(ntee.group, ntee.code, ntee.orgtype, ind_group_codes,
 #'                     level_2_4_codes, org_type_codes)
 #' @return String indicating whether input is valid or invalid. If invalid,
-#' points user to a list of acceptable codes. 
+#' points user to a list of acceptable codes.
+#' 
+#' @export 
 
 validate_inp <- function(ntee.group,
                          ntee.code,
