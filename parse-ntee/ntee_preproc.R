@@ -50,6 +50,10 @@ ntee_preproc <- function(path_to_csv = "ntee-disaggregated.csv"){
     sep = ""
   )
   
+  # Append NTEE2 codes to disaggregated csv and save
+  ntee_disagg_df$ntee2.code <- ntee_new_codes
+  saveRDS(ntee_disagg_df, "../data-raw/ntee_df.RDS")
+  
   return(list(ntee_new_codes, 
               ntee2_level1, 
               ntee2_level_2_4, 
