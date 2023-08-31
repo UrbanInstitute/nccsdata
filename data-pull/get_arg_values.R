@@ -23,6 +23,7 @@ library("reactable")
 #' get_arg_values("tract", TRUE, 
 #'                 metro.census.cbsa.geoid = c("10100", "10200"), 
 #'                 state.census.abbr = c("NY", "CA"))
+#' @export
 
 get_arg_values <-  function(dataset, visual = FALSE, ...){
   
