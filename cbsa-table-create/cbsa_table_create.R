@@ -7,6 +7,15 @@ source("../utils/jsonify.R")
 
 #' Function to create cbsa arguments table and save to json
 #' 
+#' @description This function reads the path to the raw cbsa .csv
+#' renames the columns, saves the processed data as an .RDS, nests
+#' the dataframe by cbsa ID and saves the nested data as a .json file.
+#' 
+#' @param path_to_raw_cbsa string. Path to raw cbsa data.
+#' 
+#' @usage cbsa_table_create(path_to_raw_cbsa)
+#' 
+#' @return Message indicating that data has been processed and saved
 
 cbsa_table_create <- function(path_to_raw_cbsa = "cbsa2fipsxw.csv"){
   
@@ -37,7 +46,7 @@ cbsa_table_create <- function(path_to_raw_cbsa = "cbsa2fipsxw.csv"){
   # Nest dataframe by cbsacode and write to json
   
   cbsa_nest_df <- cbsa_df %>% 
-    dplyr::group_nest(id)
+    dplyr::group_nest(metro.census.cbsa.geoid)
   
   cbsa_nest_json <- cbsa_nest_df %>% 
     jsonlite::toJSON() %>% 
