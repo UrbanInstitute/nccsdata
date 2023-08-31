@@ -23,16 +23,16 @@ geo_data_get <- function(
   
   # Load Data from S3 and save as RDS
   
-  block_dt <- save_object(block_s3_url) %>% 
+  block_dat <- save_object(block_s3_url) %>% 
     data.table::fread() %>% 
     saveRDS("block_dat.RDS")
   
-  tract_dt <- save_object(tract_s3_url) %>%
+  tract_dat <- save_object(tract_s3_url) %>%
     data.table::fread() %>% 
     saveRDS("tract_dat.RDS")
   
   # Create state abbreviations in tract data.table
-  tract_dt <- tract_dt %>%
+  tract_dat <- tract_dat %>%
     dplyr::rename(metro.census.cbsa.geoid = metro.census.cbsa10.geoid,
                   metro.census.cbsa.name = metro.census.cbsa10.name,
                   metro.census.csa.geoid = metro.census.csa10.geoid,
