@@ -79,6 +79,7 @@ parse_geo <- function(census.level, ...){
     block_dat <- readRDS("block_dat.RDS")
     tract_dat <- readRDS("tract_dat.RDS")
     
+    message("Block and Tract datasets Loaded")
   }
   
   # Extract arguments
