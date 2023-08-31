@@ -29,24 +29,9 @@ geo_data_get <- function(
   tract_dt <- save_object(tract_s3_url) %>%
     data.table::fread()
   
-  # Rename columns and create state abbreviations in tract data.table
+  # Create state abbreviations in tract data.table
   tract_dt <- tract_dt %>%
-    dplyr::rename() %>% 
-    dplyr::rename_all(
-      list(
-        ~ paste0("geo.", .)
-        )
-      ) %>% 
-    dplyr::mutate(geo.state = usdata::state2abbr(geo.state_name))
-  
-  # Rename columns in block data.table
-  block_dt <- block_dt %>% 
-    dplyr::rename_all(
-      ~ stringr::str_replace_all(., "_geoid", "")
-    ) %>% 
-    dplyr::rename_all(
-      ~ paste0("geo.", .)
-    )
+    dplyr::mutate(state.census.abbr = usdata::state2abbr(state.census.name))
   
   return("Data Loaded")
   
