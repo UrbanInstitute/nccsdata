@@ -22,6 +22,9 @@
 #' generate_ntee_regex("ART", "A23", "RG")
 #' generate_ntee_regex("all", "Axx", "RG")
 #' generate_ntee_regex("EDU", "B", "all")
+#' 
+#' @export
+
 generate_ntee_regex <- function(ntee.group, ntee.code, ntee.orgtype){
   # Formulate regex query based on user input
   
