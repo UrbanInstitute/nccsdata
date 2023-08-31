@@ -21,15 +21,13 @@ geo_data_get <- function(
   
   message("Loading Datasets")
   
-  # Load Data from S3 and save as RDS
+  # Load Data from S3
   
   block_dat <- save_object(block_s3_url) %>% 
-    data.table::fread() %>% 
-    saveRDS("block_dat.RDS")
+    data.table::fread()
   
   tract_dat <- save_object(tract_s3_url) %>%
-    data.table::fread() %>% 
-    saveRDS("tract_dat.RDS")
+    data.table::fread()
   
   # Create state abbreviations in tract data.table
   tract_dat <- tract_dat %>%
@@ -38,6 +36,10 @@ geo_data_get <- function(
                   metro.census.csa.geoid = metro.census.csa10.geoid,
                   metro.census.csa.name = metro.census.csa10.name) %>% 
     dplyr::mutate(state.census.abbr = usdata::state2abbr(state.census.name))
+  
+  # Save data as RDS
+  saveRDS(tract_dat, "tract_dat.RDS")
+  saveRDS(block_dat, "block_dat.RDS")
   
   return("Data Loaded")
   
