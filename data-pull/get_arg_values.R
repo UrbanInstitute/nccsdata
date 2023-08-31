@@ -12,7 +12,7 @@ library("reactable")
 get_arg_values <-  function(dataset, visual = TRUE, ...){
   
   # Read RDS
-  RDS_ls <- readRDS("../data-raw/data_directory.RDS")
+  RDS_ls <- readRDS("data-raw/data_directory.RDS")
   cbsa_df <- readRDS(RDS_ls[[dataset]])
   
   # Create filter expressions
