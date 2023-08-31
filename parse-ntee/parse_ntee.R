@@ -38,6 +38,8 @@ source("validate_inp.R")
 #' @usage parse_ntee(ntee.group, ntee.code, ntee.orgtype)
 #' 
 #' @returns list of matched NTEE2 codes
+#' 
+#' @export
 
 parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
 
