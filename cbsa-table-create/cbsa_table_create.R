@@ -16,6 +16,8 @@ source("../utils/jsonify.R")
 #' @usage cbsa_table_create(path_to_raw_cbsa)
 #' 
 #' @return Message indicating that data has been processed and saved
+#' 
+#' @export
 
 cbsa_table_create <- function(path_to_raw_cbsa = "cbsa2fipsxw.csv"){
   
