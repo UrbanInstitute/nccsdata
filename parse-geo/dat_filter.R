@@ -17,6 +17,8 @@
 #' @geo.level name of data.table (Block/Census) for error messages.
 #' 
 #' @returns A list of fips codes based on filter criteria.
+#' 
+#' @export
 
 dat_filter <- function(dat, 
                        args = args, 
