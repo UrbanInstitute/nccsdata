@@ -60,9 +60,11 @@ parse_geo <- function(census.level, ...){
   
   if (objs_exist("block_dat", "tract_dat")){
     
-    message("Block and Tract datasets Loaded")
+    message("Objects in Memory")
     
-  } else if (all(file.exists("tract_dt.RDS", "block_dt.RDS"))){
+  } else if (all(file.exists("tract_dat.RDS", "block_dat.RDS"))){
+    
+    message("Objects not in memory, Checking for RDS")
     
     block_dat <- readRDS("block_dat.RDS")
     tract_dat <- readRDS("tract_dat.RDS")
@@ -90,7 +92,7 @@ parse_geo <- function(census.level, ...){
   # Evaluate arguments
   if (census.level == "TRACT"){
     fips <- dat_filter(
-      dat = tract_dt,
+      dat = tract_dat,
       args = args,
       ex_args = ex_args,
       id_col = "tract.census.geoid",
@@ -98,7 +100,7 @@ parse_geo <- function(census.level, ...){
     )
     } else if (geo.level == "BLOCK"){
     fips <- dat_filter(
-      dat = block_dt,
+      dat = block_dat,
       args = args,
       ex_args = ex_args,
       id_col = "block.census.geoid",
