@@ -53,6 +53,8 @@ source("dat_filter.R")
 #'                  state.census.abbr = c("NY", "MD"))
 #' 
 #' @return a list of FIPS codes for either Tract IDs or Block IDs.
+#' 
+#' @export
 
 parse_geo <- function(census.level, ...){
   
