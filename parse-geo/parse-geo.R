@@ -10,6 +10,7 @@ library("docstring")
 library("roxygen2")
 source("geo_data_get.R")
 source("../utils/objs_exist.R")
+source("dat_filter.R")
 
 #' Function that returns FIPS codes that match dynamic User arguments
 #' 
