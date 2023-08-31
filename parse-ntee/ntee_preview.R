@@ -34,6 +34,8 @@ library("reactable")
 #' ntee_preview("all", "A1x", "all", "all",TRUE)
 #' ntee_preview("ART", "Axx", "all", "all",TRUE)
 #' ntee_preview("all", "Axx", "all", c("type.org", "univ"), FALSE)
+#' 
+#' @export
 
 ntee_preview <- function(ntee.group = "all",
                          ntee.code = "all",
@@ -45,7 +47,7 @@ ntee_preview <- function(ntee.group = "all",
                             ntee.code = ntee.code,
                             ntee.orgtype = ntee.orgtype)
   
-  ntee_df <- readRDS("../data-raw/ntee_df.RDS")
+  ntee_df <- readRDS("data-raw/ntee_df.RDS")
   
   # Specify columns to select
   
