@@ -31,6 +31,10 @@ geo_data_get <- function(
   
   # Create state abbreviations in tract data.table
   tract_dt <- tract_dt %>%
+    dplyr::rename(metro.census.cbsa.geoid = metro.census.cbsa10.geoid,
+                  metro.census.cbsa.name = metro.census.cbsa10.name,
+                  metro.census.csa.geoid = metro.census.csa10.geoid,
+                  metro.census.csa.name = metro.census.csa10.name) %>% 
     dplyr::mutate(state.census.abbr = usdata::state2abbr(state.census.name))
   
   return("Data Loaded")
