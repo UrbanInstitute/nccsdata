@@ -1,10 +1,14 @@
+# Load packages
+library("reactable")
+
 #' This function filters the cbsa data and returns a table.
 #' 
 
-get_arg_values <-  function(...){
+get_arg_values <-  function(dataset, ...){
   
   # Read RDS
-  cbsa_df <- readRDS("cbsa_df.RDS")
+  RDS_ls <- readRDS("../data-raw/data_directory.ls")
+  cbsa_df <- readRDS(RDS_ls[[dataset]])
   
   # Create filter expressions
   filter_conditions <- enquos(...)
