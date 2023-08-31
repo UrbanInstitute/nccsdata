@@ -94,7 +94,7 @@ parse_geo <- function(census.level, ...){
       args = args,
       ex_args = ex_args,
       id_col = "tract.census.geoid",
-      geo.level = geo.level
+      census.level = census.level
     )
     } else if (geo.level == "BLOCK"){
     fips <- dat_filter(
@@ -102,7 +102,7 @@ parse_geo <- function(census.level, ...){
       args = args,
       ex_args = ex_args,
       id_col = "block.census.geoid",
-      geo.level = geo.level
+      census.level = census.level
     )    
   } else {
     stop("Invalid geo.level, select either 'BLOCK' or 'TRACT'")

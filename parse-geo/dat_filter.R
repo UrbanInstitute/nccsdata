@@ -22,7 +22,7 @@ dat_filter <- function(dat,
                        args = args, 
                        ex_args = ex_args, 
                        id_col,
-                       geo.level){
+                       census.level){
   
   if (all(names(args) %in% colnames(dat))){
     
@@ -37,7 +37,7 @@ dat_filter <- function(dat,
     absent_colnames <- setdiff(names(args), colnames(dat))
     
     stop(paste("The following columns are not present in the",
-               geo.level,
+               census.level,
                "dataset:",
                setdiff(names(args), colnames(dat))))
   }  
