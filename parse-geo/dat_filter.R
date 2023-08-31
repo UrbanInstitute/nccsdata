@@ -28,7 +28,7 @@ dat_filter <- function(dat,
     
     parsed_ids <- dat %>% 
       suppressWarnings(filter(!!! ex_args)) %>% 
-      select(id_col)
+      select(all_of(id_col))
     
     return(parsed_ids)
     
