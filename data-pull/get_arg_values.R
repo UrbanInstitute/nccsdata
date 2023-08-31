@@ -13,7 +13,8 @@ get_arg_values <-  function(dataset, visual = TRUE, ...){
   
   # Read RDS
   RDS_ls <- readRDS("data-raw/data_directory.RDS")
-  cbsa_df <- readRDS(RDS_ls[[dataset]])
+  cbsa_df <- readRDS(paste0("data-raw/",
+                            RDS_ls[[dataset]]))
   
   # Create filter expressions
   filter_conditions <- enquos(...)
@@ -32,3 +33,6 @@ get_arg_values <-  function(dataset, visual = TRUE, ...){
     return(filtered_df) 
   }
 }
+
+readRDS("data-raw/data_directory.RDS")[["cbsa"]]
+get_arg_values(dataset ="cbsa")
