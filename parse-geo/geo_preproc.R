@@ -15,8 +15,8 @@
 #' @note Can also be used to recreate the data.tables if files get corrupted.
 
 geo_data_get <- function(
-    block_s3_url = "s3://nccsdata/geo/xwalk_geoid/block_crosswalk.csv",
-    tract_s3_url = "s3://nccsdata/geo/xwalk_geoid/tract_crosswalk.csv"
+    block_s3_url = "s3://nccsdata/geo/xwalk/BLOCKX.csv",
+    tract_s3_url = "s3://nccsdata/geo/xwalk/TRACTX.csv"
 ){
   
   message("Loading Datasets")
