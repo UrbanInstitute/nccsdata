@@ -7,9 +7,24 @@ library("reactable")
 #' of user selected columns. It returns a filtered dataframes based on user
 #' conditions
 #' 
+#' @param dataset string. Name of dataset to load, "cbsa", "block", "tract".
+#' @param visual boolean. Option to return reactable visualization or filtered
+#' dataframe
+#' @param ... expression. User inputs of selected columns and values to filter
+#' by. E.g. (state.census.abbr = c("NY", "AL")). Leaving blank returns all 
+#' columns
 #' 
+#' @usage get_arg_values(dataset, visual)
+#' 
+#' @returns filtered dataframe or reactable based on  user-inputs
+#' 
+#' @examples 
+#' get_arg_values("cbsa", TRUE, state.census.name = c("Wyoming", "Montana"))
+#' get_arg_values("tract", TRUE, 
+#'                 metro.census.cbsa.geoid = c("10100", "10200"), 
+#'                 state.census.abbr = c("NY", "CA"))
 
-get_arg_values <-  function(dataset, visual = TRUE, ...){
+get_arg_values <-  function(dataset, visual = FALSE, ...){
   
   # Read RDS
   RDS_ls <- readRDS("data-raw/data_directory.RDS")
@@ -33,6 +48,3 @@ get_arg_values <-  function(dataset, visual = TRUE, ...){
     return(filtered_df) 
   }
 }
-
-readRDS("data-raw/data_directory.RDS")[["cbsa"]]
-get_arg_values(dataset ="cbsa")
