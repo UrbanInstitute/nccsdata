@@ -21,13 +21,15 @@ geo_data_get <- function(
   
   message("Loading Datasets")
   
-  # Load Data from S3
+  # Load Data from S3 and save as RDS
   
   block_dt <- save_object(block_s3_url) %>% 
-    data.table::fread()
+    data.table::fread() %>% 
+    saveRDS("block_dat.RDS")
   
   tract_dt <- save_object(tract_s3_url) %>%
-    data.table::fread()
+    data.table::fread() %>% 
+    saveRDS("tract_dat.RDS")
   
   # Create state abbreviations in tract data.table
   tract_dt <- tract_dt %>%
