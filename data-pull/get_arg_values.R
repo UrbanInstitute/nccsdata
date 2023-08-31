@@ -4,7 +4,7 @@ library("reactable")
 #' This function filters the cbsa data and returns a table.
 #' 
 
-get_arg_values <-  function(dataset, ...){
+get_arg_values <-  function(dataset, visual = TRUE, ...){
   
   # Read RDS
   RDS_ls <- readRDS("../data-raw/data_directory.RDS")
@@ -21,6 +21,9 @@ get_arg_values <-  function(dataset, ...){
   # Create filtered DF
   filtered_df <- suppressWarnings(dplyr::filter(cbsa_df,
                                                 !!! filter_conditions_exp))  
-  
-  return(filtered_df)
+  if (visual == TRUE){
+    return(reactable(filtered_df))
+  } else {
+    return(filtered_df) 
+  }
 }
