@@ -1,4 +1,7 @@
 #' Function that prettifies json
+#' 
+#' @export
+
 jsonify_f <- function(f)
 {
   f <- as.factor(f)
