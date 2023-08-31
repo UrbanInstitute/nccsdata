@@ -1,7 +1,12 @@
 # Load packages
 library("reactable")
 
-#' This function filters the cbsa data and returns a table.
+#' This function filters the cbsa dataframe.
+#' 
+#' @description This function takes in a cbsa dataset and a dynamic list
+#' of user selected columns. It returns a filtered dataframes based on user
+#' conditions
+#' 
 #' 
 
 get_arg_values <-  function(dataset, visual = TRUE, ...){
