@@ -7,7 +7,7 @@ library("reactable")
 get_arg_values <-  function(dataset, ...){
   
   # Read RDS
-  RDS_ls <- readRDS("../data-raw/data_directory.ls")
+  RDS_ls <- readRDS("../data-raw/data_directory.RDS")
   cbsa_df <- readRDS(RDS_ls[[dataset]])
   
   # Create filter expressions
