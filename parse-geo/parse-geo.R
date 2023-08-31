@@ -45,35 +45,35 @@ source("../utils/objs_exist.R")
 #' @param region.census.division string or vector. Vector of subregion names
 #' @param state.census.abbr string or vector. Vector of state abbreviations
 #' 
-#' @usage parse_geo(state.census.abbr = c("NY", "MD"))
+#' @usage parse_geo(census.level = "TRACT",
+#'                  state.census.abbr = c("NY", "MD"))
 #' 
 #' @return a list of FIPS codes for either Tract IDs or Block IDs.
 
-parse_geo <- function(geo.level, ...){
+parse_geo <- function(census.level, ...){
   
   # Check if data is already preloaded
   if (objs_exist("block_dt", "tract_dt")){
     print("Block and Tract datasets present")
   } else {
-    geo_preproc()
+    geo_data_get()
   }
   
   # Extract arguments
   args <- enquos(...)
-  ex_args <- unname(
-    purrr::imap(
+  ex_args <- unname(purrr::imap(
       args,
-      function(expr, name) quo(!!sym(name)==!!expr)
+      function(expr, name) quo( !! sym(name) == !! expr)
     )
   )
   
   # Evaluate arguments
-  if (geo.level == "TRACT"){
+  if (census.level == "TRACT"){
     fips <- validate_arg(
       dat = tract_dt,
       args = args,
       ex_args = ex_args,
-      id_col = "geo.tract",
+      id_col = "tract.census.geoid",
       geo.level = geo.level
     )
     } else if (geo.level == "BLOCK"){
@@ -81,7 +81,7 @@ parse_geo <- function(geo.level, ...){
       dat = block_dt,
       args = args,
       ex_args = ex_args,
-      id_col = "geo.block",
+      id_col = "block.census.geoid",
       geo.level = geo.level
     )    
   } else {
