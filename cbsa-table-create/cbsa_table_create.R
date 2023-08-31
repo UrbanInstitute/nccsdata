@@ -8,7 +8,7 @@ source("../utils/jsonify.R")
 #' Function to create cbsa arguments table and save to json
 #' 
 
-cbsa_table_create <- function(path_to_raw_cbsa){
+cbsa_table_create <- function(path_to_raw_cbsa = "cbsa2fipsxw.csv"){
   
   # Read csv
   cbsa_df <- read.csv(path_to_raw_cbsa)
