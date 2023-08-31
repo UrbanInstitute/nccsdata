@@ -10,7 +10,7 @@
 #' @return A single boolean value indicating whether all objects are present 
 #' in memory
 
-objs_exist() <- function(...) {
+objs_exist <- function(...) {
   
   ls <- list(...)
   all(sapply(ls, exists))
