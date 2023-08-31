@@ -57,10 +57,26 @@ source("dat_filter.R")
 parse_geo <- function(census.level, ...){
   
   # Check if data is already preloaded
-  if (objs_exist("block_dt", "tract_dt")){
-    print("Block and Tract datasets present")
+  
+  if (objs_exist("block_dat", "tract_dat")){
+    
+    message("Block and Tract datasets Loaded")
+    
+  } else if (all(file.exists("tract_dt.RDS", "block_dt.RDS"))){
+    
+    block_dat <- readRDS("block_dat.RDS")
+    tract_dat <- readRDS("tract_dat.RDS")
+    
+    message("Block and Tract datasets Loaded")
+    
   } else {
+    
+    message("Datasets not in memory. Pulling Data from S3")
+    
     geo_data_get()
+    block_dat <- readRDS("block_dat.RDS")
+    tract_dat <- readRDS("tract_dat.RDS")
+    
   }
   
   # Extract arguments
@@ -73,7 +89,7 @@ parse_geo <- function(census.level, ...){
   
   # Evaluate arguments
   if (census.level == "TRACT"){
-    fips <- validate_arg(
+    fips <- dat_filter(
       dat = tract_dt,
       args = args,
       ex_args = ex_args,
@@ -81,7 +97,7 @@ parse_geo <- function(census.level, ...){
       geo.level = geo.level
     )
     } else if (geo.level == "BLOCK"){
-    fips <- validate_arg(
+    fips <- dat_filter(
       dat = block_dt,
       args = args,
       ex_args = ex_args,
@@ -93,23 +109,4 @@ parse_geo <- function(census.level, ...){
   }
 
   return(list(fips))
-}
-
-
-
-#' Function to validate user inputs
-validate_arg <- function(dat, args = args, ex_args = ex_args, id_col,
-                         geo.level){
-  if (all(names(args) %in% colnames(dat))){
-    parsed_ids <- dat %>% 
-      suppressWarnings(filter(!!! ex_args)) %>% 
-      select(id_col)
-    return(parsed_ids)
-  } else {
-    absent_colnames <- setdiff(names(args), colnames(dat))
-    stop(paste("The following columns are not present in the",
-               geo.level,
-               "dataset:",
-               setdiff(names(args), colnames(dat))))
-  }  
 }
