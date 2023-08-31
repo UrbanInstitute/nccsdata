@@ -44,11 +44,15 @@ source("../utils/objs_exist.R")
 #' @param region.census.main string or vector. Vector of region names
 #' @param region.census.division string or vector. Vector of subregion names
 #' @param state.census.abbr string or vector. Vector of state abbreviations
+#' 
+#' @usage parse_geo(state.census.abbr = c("NY", "MD"))
+#' 
+#' @return a list of FIPS codes for either Tract IDs or Block IDs.
 
 parse_geo <- function(geo.level, ...){
   
   # Check if data is already preloaded
-  if (exists.m("block_dt", "tract_dt")){
+  if (objs_exist("block_dt", "tract_dt")){
     print("Block and Tract datasets present")
   } else {
     geo_preproc()
