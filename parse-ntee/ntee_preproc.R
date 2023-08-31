@@ -15,6 +15,8 @@
 #' 
 #' @note The disaggregated csv file can be edited and the function rerun
 #' to generate a new list of valid NTEE2 codes if needed.
+#' 
+#' @export
 
 ntee_preproc <- function(path_to_csv = "ntee-disaggregated.csv"){
   
