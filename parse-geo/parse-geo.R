@@ -16,9 +16,12 @@ source("../utils/objs_exist.R")
 #' @description Filters either the Block or Tract data.tables to return
 #' a list of FIPS codes that match conditions specified by the User
 #' 
-#' Parameters for the Block Tract
+#' Universal Parameters
 #' 
 #' @param census.level string. data.table to parse; "BLOCK" | "TRACT"
+#' 
+#' Parameters for the Block Tract
+#' 
 #' @param block.census.geoid string or vector. Vector of Block IDs (FIPS)
 #' @param tract.census.geoid string or vector. Vector of Tract IDs (FIPS)
 #' @param zcta.census.geoid string or vector. Vector of county IDs
