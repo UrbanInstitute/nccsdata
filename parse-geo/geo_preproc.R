@@ -7,14 +7,14 @@
 #' @param block_s3_url string. Path to S3 bucket with block crosswalk.
 #' @param tract_s3_url string. Path to S3 bucket with tract crosswalk.
 #' 
-#' @usage geo_preproc()
+#' @usage geo_data_get()
 #' 
 #' @return A string message indicating that the processed data.tables
 #' are available in memory
 #' 
 #' @note Can also be used to recreate the data.tables if files get corrupted.
 
-geo_preproc <- function(
+geo_data_get <- function(
     block_s3_url = "s3://nccsdata/geo/xwalk_geoid/block_crosswalk.csv",
     tract_s3_url = "s3://nccsdata/geo/xwalk_geoid/tract_crosswalk.csv"
 ){
@@ -23,21 +23,20 @@ geo_preproc <- function(
   
   # Load Data from S3
   
-  block_dt <- 
-    save_object(block_s3_url) %>%
+  block_dt <- save_object(block_s3_url) %>% 
     data.table::fread()
   
-  tract_dt <- 
-    save_object(tract_s3_url) %>%
+  tract_dt <- save_object(tract_s3_url) %>%
     data.table::fread()
   
   # Rename columns and create state abbreviations in tract data.table
-  tract_dt <- tract_dt %>% 
+  tract_dt <- tract_dt %>%
+    dplyr::rename() %>% 
     dplyr::rename_all(
       list(
         ~ paste0("geo.", .)
-      )
-    ) %>% 
+        )
+      ) %>% 
     dplyr::mutate(geo.state = usdata::state2abbr(geo.state_name))
   
   # Rename columns in block data.table
