@@ -9,6 +9,8 @@
 #' 
 #' @return A single boolean value indicating whether all objects are present 
 #' in memory
+#' 
+#' @export
 
 objs_exist <- function(...) {
   
