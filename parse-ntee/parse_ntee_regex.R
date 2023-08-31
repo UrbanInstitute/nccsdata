@@ -12,6 +12,7 @@
 #' 
 #' @return vector of matched NTEE2 codes
 #' 
+#' @export
 
 parse_ntee_regex <- function(regexp_vec, ntee_codes){
   
