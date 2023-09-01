@@ -23,7 +23,7 @@
 #'
 #' @export
 
-ntee_preproc <- function(path_to_rda = "data/ntee_disagg.rda"){
+ntee_preproc <- function(path_to_rda = "data/ntee_disagg_df.rda"){
 
   # Read csv file to extract different versions of NTEE Codes
   load(path_to_rda)
