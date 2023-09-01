@@ -34,6 +34,9 @@ This function takes user inputs across levels 1- 5 of the
 NTEE2 code structure and returns selected columns from the NTEE database.
 The use can choose to return a dataframe or reactable object.
 }
+\details{
+Function to interactively explore NTEE codes
+}
 \examples{
 ntee_preview("all", "A1x", "all", "all",TRUE)
 ntee_preview("ART", "Axx", "all", "all",TRUE)

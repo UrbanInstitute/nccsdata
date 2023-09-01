@@ -19,6 +19,10 @@ codes built from the old formatting. It uses the rules specified in
 https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md
 to derive the codes from level 1-5 used in NTEE2 from old NTEE codes
 }
+\details{
+This function preprocesses the disaggregated NTEE dataset and returns
+a vector of NTEE codes formatted according to NTEE2 standards.
+}
 \note{
 The disaggregated csv file can be edited and the function rerun
 to generate a new list of valid NTEE2 codes if needed.
