@@ -10,19 +10,25 @@ library("reactable")
 #' @param dataset string. Name of dataset to load, "cbsa", "block", "tract".
 #' @param visual boolean. Option to return reactable visualization or filtered
 #' dataframe
+#' @param within character vector. Vector of column variables to filter by 
+#' without explicit argument definition, filters all rows with columns 
+#' containing any of the within arguments. For example within = c("NY",
+#' "Alabama") will return all rows containing either NY or Alabama
 #' @param ... expression. User inputs of selected columns and values to filter
 #' by. E.g. (state.census.abbr = c("NY", "AL")). Leaving blank returns all 
 #' columns
 #' 
 #' @usage get_arg_values(dataset, visual)
 #' 
-#' @returns filtered dataframe or reactable based on  user-inputs
+#' @returns filtered dataframe or list with filtered dataframe and first 20
+#' rows of table visualized with reactable
 #' 
 #' @examples 
 #' get_arg_values("cbsa", TRUE, state.census.name = c("Wyoming", "Montana"))
 #' get_arg_values("tract", TRUE, 
 #'                 metro.census.cbsa.geoid = c("10100", "10200"), 
 #'                 state.census.abbr = c("NY", "CA"))
+#' get_arg_values("tract", TRUE, within = ("NY", "Alabama"))
 #' @export
 
 get_arg_values <-  function(dataset, 
@@ -35,22 +41,29 @@ get_arg_values <-  function(dataset,
   cbsa_df <- readRDS(paste0("data-raw/",
                             RDS_ls[[dataset]]))
   
-  # Variable constructor
+  # Create filter conditions
   
-  # Create filter expressions
   filter_conditions <- enquos(...)
   filter_conditions_exp <- unname(purrr::imap(
     filter_conditions,
     function(expr, name) quo( !! sym(name) == !! expr)
   )
   )
-  
-  # Create filtered DF
-  filtered_df <- suppressWarnings(dplyr::filter(cbsa_df,
-                                                !!! filter_conditions_exp))  
-  if (visual == TRUE){
-    return(reactable(filtered_df))
+
+  # Filter DF  
+  if (is.null(within)){
+    filtered_df <- suppressWarnings(dplyr::filter(cbsa_df,
+                                                  !!! filter_conditions_exp))
   } else {
-    return(filtered_df) 
+    filtered_df <- cbsa_df %>% 
+      dplyr::filter(if_any(.cols = dplyr::everything(),
+                           .fns = function(x) x %in% within))
+  }
+  
+  if (visual == TRUE){
+    return(list(reactable(head(filtered_df, 20)),
+                invisible(filtered_df)))
+  } else {
+    invisible(filtered_df) 
   }
 }
