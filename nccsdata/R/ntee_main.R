@@ -1,9 +1,7 @@
 #' Script with front end functions for users to access NTEE2 codes and
 #' filter NTEE dataset with codes
 #'
-#' @import dplyr
-#' @import reactable
-#'
+
 #' Function to interactively explore NTEE codes
 #'
 #' @description This function takes user inputs across levels 1- 5 of the
@@ -37,6 +35,8 @@
 #' ntee_preview("ART", "Axx", "all", "all",TRUE)
 #' ntee_preview("all", "Axx", "all", c("type.org", "univ"), FALSE)
 #'
+#' @import dplyr
+#' @import reactable
 #' @importFrom dplyr %>%
 #'
 #' @export

@@ -1,7 +1,5 @@
 #' Script containing helper functions for ntee_main.R
 #'
-#' @import dplyr
-#' @import data.table
 #'
 #' This function preprocesses the disaggregated NTEE dataset and returns
 #' a vector of NTEE codes formatted according to NTEE2 standards.
@@ -20,6 +18,9 @@
 #'
 #' @note The disaggregated csv file can be edited and the function rerun
 #' to generate a new list of valid NTEE2 codes if needed.
+#'
+#' @import dplyr
+#' @import data.table
 
 ntee_preproc <- function(path_to_rda = "data/ntee_disagg_df.rda"){
 
