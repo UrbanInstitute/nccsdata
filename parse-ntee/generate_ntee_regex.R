@@ -56,15 +56,6 @@ generate_ntee_regex <- function(ntee.group, ntee.code, ntee.orgtype){
     ntee.orgtype
   )
   
-  full_query <- paste(
-    level1_query,
-    "-",
-    level_2to4_query,
-    "-",
-    level_5_query,
-    sep = "")
-  
-  
   full_query <- data.table::CJ(
     level1_query,
     level_2to4_query,
