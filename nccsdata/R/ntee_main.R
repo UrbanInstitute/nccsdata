@@ -48,13 +48,13 @@ ntee_preview <- function(ntee.group = "all",
   ntee2_codes <- parse_ntee(ntee.group = ntee.group,
                             ntee.code = ntee.code,
                             ntee.orgtype = ntee.orgtype)
-  message(ntee2_codes)
+
   load("data/ntee_df.rda")
 
   # Specify columns to select
 
   if (any(cols == "all")){
-    col_names = colnames(ntee_df)
+    col_names = colnames(ntee_disagg_df)
   } else {
     col_names = cols
   }
@@ -136,6 +136,8 @@ parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
     regexp_vec = regex_queries,
     ntee_codes = ntee_code_ls[[1]]
   )
+
+
 
   # Return NTEE2 Codes
   return(list(ntee2_codes))

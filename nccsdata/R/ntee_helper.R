@@ -127,10 +127,12 @@ generate_ntee_regex <- function(ntee.group, ntee.code, ntee.orgtype){
     level1_query,
     level_2to4_query,
     level_5_query
-  )[, paste(level1_query,
-            level_2to4_query,
-            level_5_query,
-            sep = "-")]
+  )
+
+  #[, paste(level1_query,
+           # level_2to4_query,
+            #level_5_query,
+            #sep = "-")]
 
   return(full_query)
 }
