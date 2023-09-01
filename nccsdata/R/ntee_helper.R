@@ -20,8 +20,6 @@
 #'
 #' @note The disaggregated csv file can be edited and the function rerun
 #' to generate a new list of valid NTEE2 codes if needed.
-#'
-#' @export
 
 ntee_preproc <- function(path_to_rda = "data/ntee_disagg_df.rda"){
 
@@ -106,7 +104,7 @@ generate_ntee_regex <- function(ntee.group, ntee.code, ntee.orgtype){
     "[A-Z][0-9][A-Z0-9]",
 
     ifelse(
-      grepl("^[A-Z]$", ntee.code) | grepl("^[A-Z][xX][xX]$", ntee.code),
+      grepl("^[A-Z]$", ntee.code) | grepl("^[A-Z][xX]*[xX]$", ntee.code),
       paste(substring(ntee.code, 1, 1), "[0-9][A-Z0-9]", sep = ""),
 
       ifelse(
@@ -127,12 +125,10 @@ generate_ntee_regex <- function(ntee.group, ntee.code, ntee.orgtype){
     level1_query,
     level_2to4_query,
     level_5_query
-  )
-
-  #[, paste(level1_query,
-           # level_2to4_query,
-            #level_5_query,
-            #sep = "-")]
+  )[, paste(level1_query,
+            level_2to4_query,
+            level_5_query,
+            sep = "-")]
 
   return(full_query)
 }
@@ -196,7 +192,6 @@ parse_ntee_regex <- function(regexp_vec, ntee_codes){
     results <- ntee_codes[grep(regexp, ntee_codes)]
     matched_codes <- c(results, matched_codes)
   }
-
   return(unique(matched_codes))
 
 }
@@ -224,8 +219,6 @@ parse_ntee_regex <- function(regexp_vec, ntee_codes){
 #'                     level_2_4_codes, org_type_codes)
 #' @return String indicating whether input is valid or invalid. If invalid,
 #' points user to a list of acceptable codes.
-#'
-#' @export
 
 validate_inp <- function(ntee.group,
                          ntee.code,

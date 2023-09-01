@@ -37,6 +37,8 @@
 #' ntee_preview("ART", "Axx", "all", "all",TRUE)
 #' ntee_preview("all", "Axx", "all", c("type.org", "univ"), FALSE)
 #'
+#' @importFrom dplyr %>%
+#'
 #' @export
 
 ntee_preview <- function(ntee.group = "all",
@@ -61,7 +63,7 @@ ntee_preview <- function(ntee.group = "all",
 
   # Filter ntee_df
 
-  filtered_df <- ntee_df %>%
+  filtered_df <- ntee_disagg_df %>%
     dplyr::filter(ntee2.code %in% ntee2_codes[[1]]) %>%
     dplyr::select(dplyr::any_of(col_names))
 
