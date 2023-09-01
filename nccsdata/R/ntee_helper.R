@@ -26,7 +26,7 @@
 ntee_preproc <- function(path_to_rda = "data/ntee_disagg.rda"){
 
   # Read csv file to extract different versions of NTEE Codes
-  ntee_disagg_df <- load(path_to_rda)
+  load(path_to_rda)
 
   # Extract level 1 and level 2 parts of NTEE2 Code
   ntee2_level1 <- ntee_disagg_df$broad.category
