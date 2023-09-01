@@ -26,7 +26,7 @@
 ntee_preproc <- function(path_to_csv = "ntee-disaggregated.csv"){
   
   # Read csv file to extract different versions of NTEE Codes
-  ntee_disagg_df <- read.csv("data-raw/ntee-disaggregated.csv")
+  ntee_disagg_df <- readRDS("data-raw/ntee_disaggregated.RDS")
   
   # Extract level 1 and level 2 parts of NTEE2 Code
   ntee2_level1 <- ntee_disagg_df$broad.category
@@ -59,7 +59,7 @@ ntee_preproc <- function(path_to_csv = "ntee-disaggregated.csv"){
   
   # Append NTEE2 codes to disaggregated csv and save
   ntee_disagg_df$ntee2.code <- ntee_new_codes
-  saveRDS(ntee_disagg_df, "../data-raw/ntee_df.RDS")
+  saveRDS(ntee_disagg_df, "data-raw/ntee_df.RDS")
   
   return(list(ntee_new_codes, 
               ntee2_level1, 
