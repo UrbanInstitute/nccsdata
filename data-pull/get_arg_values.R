@@ -25,12 +25,17 @@ library("reactable")
 #'                 state.census.abbr = c("NY", "CA"))
 #' @export
 
-get_arg_values <-  function(dataset, visual = FALSE, ...){
+get_arg_values <-  function(dataset, 
+                            visual = FALSE,
+                            within = NULL,
+                            ...){
   
   # Read RDS
   RDS_ls <- readRDS("data-raw/data_directory.RDS")
   cbsa_df <- readRDS(paste0("data-raw/",
                             RDS_ls[[dataset]]))
+  
+  # Variable constructor
   
   # Create filter expressions
   filter_conditions <- enquos(...)
