@@ -43,8 +43,8 @@ A data frame with 25000 rows and 38 variables:
   \item{\code{Latitude}}{double COLUMN_DESCRIPTION}
   \item{\code{Addr_type}}{character COLUMN_DESCRIPTION}
   \item{\code{Score}}{double COLUMN_DESCRIPTION}
-  \item{\code{BLOCK.GEOID.10}}{character COLUMN_DESCRIPTION}
-  \item{\code{TRACT.GEOID.10}}{character COLUMN_DESCRIPTION} 
+  \item{\code{BLOCK.CENSUS.GEOID.10}}{character COLUMN_DESCRIPTION}
+  \item{\code{TRACT.CENSUS.GEOID.10}}{character COLUMN_DESCRIPTION} 
 }
 }
 \usage{
