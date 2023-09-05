@@ -27,9 +27,8 @@
 #' @rdname lm
 #' @export
 #' @importFrom data.table setDT
-#' @importFrom dtplyr rename
-#' @importFrom dtplyr mutate
-#' @importFrom dtplyr filter
+#' @import dtplyr
+#' @import dplyr, warn.conflicts = FALSE
 #' @importFrom stringr str_replace
 
 get_data <- function(state){
@@ -52,30 +51,30 @@ get_data <- function(state){
 
   # rename columns, wrangle data and filter
   tinybmf_dat <- tinybmf_dat %>%
-    dtplyr::rename(tract.census.geoid = TRACT.GEOID.10,
+    dplyr::rename(tract.census.geoid = TRACT.GEOID.10,
                    state.census.abbr = STATE,
-                   new.code = NTEE2) %>%
-    dtplyr::mutate(across("tract.census.geoid",
+                   ntee2.code = NTEE2) %>%
+    dplyr::mutate(across("tract.census.geoid",
                           stringr::str_replace,
                           "GEO-",
                           "")) %>%
-    dtplyr::filter(state.census.abbr %in% state)
+    dplyr::filter(state.census.abbr %in% state)
 
   tract_dat <- tract_dat %>%
-    dtplyr::mutate(tract.census.geoid = as.character(
-                                        as.numeric(tract.census.geoid)
-                                        )) %>%
-    dtplyr::filter(state.census.abbr %in% state)
+    dplyr::mutate(tract.census.geoid = as.character(tract.census.geoid)) %>%
+    dplyr::filter(state.census.abbr %in% state)
 
   block_dat <- block_dat %>%
-    dtplyr::mutate(block.census.geoid = as.character(
+    dplyr::mutate(block.census.geoid = as.character(
                                         as.numeric(block.census.geoid)
                                         ))
+
+  # set primary key
 
   # execute merge
 
   subset_dat <- tract_dat[tinybmf_dat, on = "tract.census.geoid"]
-  subset_dat <- ntee_dat[subset_dat, on = "new.code"]
+  subset_dat <- ntee_dat[subset_dat, on = "ntee2.code"]
 
   return(subset_dat)
 
