@@ -33,7 +33,7 @@ geo_data_get <- function(
   tract_dat <- save_object(tract_s3_url) %>%
     data.table::fread()
 
-  # Create state abbreviations in tract data.table
+  # Wrangle data in tract dataset
   tract_dat <- tract_dat %>%
     dplyr::rename(metro.census.cbsa.geoid = metro.census.cbsa10.geoid,
                   metro.census.cbsa.name = metro.census.cbsa10.name,
@@ -44,6 +44,14 @@ geo_data_get <- function(
                                        as.numeric(tract.census.geoid)
                                        )
                   )
+
+  # wrangle data in block dataset
+  block_dat <- block_dat %>%
+    dplyr::mutate(block.census.geoid = as.character(
+                                       as.numeric(block.census.geoid)
+                                       )
+                  )
+
 
   # Save data as rda
   save(tract_dat, file = "data/tract_dat.rda")
