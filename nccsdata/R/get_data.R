@@ -41,7 +41,7 @@ get_data <- function(ntee.level1 = "all",
   tinybmf_dat <- data.table::setDT(tinybmf)
   tract_dat <- data.table::setDT(tract_dat)
   block_dat <- data.table::setDT(block_dat)
-  ntee_dat <- data.table::setDT(ntee_disagg_df)
+  ntee_dat <- data.table::setDT(load("data/ntee_df.rda"))
   cbsa_dat <- data.table::setDT(cbsa_df)
 
   # rename columns, and wrangle data
@@ -58,11 +58,17 @@ get_data <- function(ntee.level1 = "all",
   ntee2_codes <- parse_ntee(ntee.group = ntee.level1,
                             ntee.code = ntee.level2,
                             ntee.orgtype = "all")
-  tinybmf_dat <- tinybmf_dat %>%
-    dplyr::filter(ntee2.code %in% ntee2_codes)
+  tinybmf_subset <- tinybmf_dat %>%
+    dplyr::filter(ntee2.code %in% ntee2_codes) %>%
+    dplyr::left_join(ntee_dat, by = ntee2.code)
+  } else {
+    tinybmf_subset <- tinybmf_dat %>%
+      dplyr::left_join(ntee_dat, by = ntee2.code)
   }
 
   # Apply geographic filters
+
+  # State filter
 
   # execute merge
 
