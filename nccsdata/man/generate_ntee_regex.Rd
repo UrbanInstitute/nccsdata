@@ -31,4 +31,5 @@ to filter NTEE2 codes based on user inputs.
 generate_ntee_regex("ART", "A23", "RG")
 generate_ntee_regex("all", "Axx", "RG")
 generate_ntee_regex("EDU", "B", "all")
+
 }

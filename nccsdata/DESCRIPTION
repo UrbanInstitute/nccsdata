@@ -13,7 +13,6 @@ Depends:
     R (>= 3.50)
 Imports: 
     dplyr,
-    magrittr,
     reactable,
     data.table,
     aws.s3,
