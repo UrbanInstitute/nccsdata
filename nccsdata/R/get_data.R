@@ -38,4 +38,10 @@ get_data <- function(state){
   load("data/tract_dat.rda")
   tract_dat <- data.table::setDT(tract_dat)
 
+  # load in block data as data.table
+  load("data/block_dat.rda")
+  block_dat <- data.table::setDT(block_dat)
+
+  # load in ntee data as data.table
+
 }
