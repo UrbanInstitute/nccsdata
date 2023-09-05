@@ -27,6 +27,9 @@
 #' @rdname lm
 #' @export
 #' @importFrom data.table setDT
+#' @importFrom dtplyr rename
+#' @importFrom dtplyr mutate
+#' @importFrom stringr str_replace
 
 get_data <- function(state){
 
@@ -45,5 +48,15 @@ get_data <- function(state){
   # load in ntee data as data.table
   load("data/ntee_df.rda")
   ntee_dat <- data.table::setDT(ntee_dat)
+
+  # rename columns, wrangle data and filter
+  tinybmf_dat <- tinybmf_dat %>%
+    dtplyr::rename(tract.census.geoid = TRACT.GEOID.10,
+                   state.census.abbr = STATE) %>%
+    dtplyr::mutate(across("tract.census.geoid",
+                          stringr::str_replace,
+                          "GEO-",
+                          "")) %>%
+    dtplyr::filter(state.census.abbr %in% state)
 
 }
