@@ -4,7 +4,7 @@
 \alias{preview_meta}
 \title{This function filters the cbsa dataframe.}
 \usage{
-get_arg_values(dataset, visual)
+preview_meta(dataset, visual, within)
 }
 \arguments{
 \item{dataset}{string. Name of dataset to load, "cbsa", "block", "tract".}
@@ -31,10 +31,10 @@ of user selected columns. It returns a filtered dataframes based on user
 conditions
 }
 \examples{
-get_arg_values("cbsa", TRUE, state.census.name = c("Wyoming", "Montana"))
-get_arg_values("tract", TRUE,
+preview_meta("cbsa", TRUE, state.census.name = c("Wyoming", "Montana"))
+preview_meta("tract", TRUE,
                 metro.census.cbsa.geoid = c("10100", "10200"),
                 state.census.abbr = c("NY", "CA"))
-get_arg_values("tract", TRUE, within = ("NY", "Alabama"))
+preview_meta("tract", TRUE, within = ("NY", "Alabama"))
 
 }
