@@ -35,7 +35,7 @@ get_data <- function(ntee.level1 = "all",
                      ntee.level2 = "all",
                      geo.state = NULL,
                      geo.metro = NULL,
-                     geo.region = NULL){
+                     geo.level = NULL){
 
   # load in datasets as data.table
   tinybmf_dat <- data.table::setDT(tinybmf)
@@ -45,7 +45,10 @@ get_data <- function(ntee.level1 = "all",
   ntee_dat <- data.table::setDT(ntee_disagg_df)
   cbsa_dat <- data.table::setDT(cbsa_df)
 
-  # rename columns, and wrangle data
+  # Data wrangling
+
+  # bmf data
+
   tinybmf_dat <- tinybmf_dat %>%
     dplyr::rename(tract.census.geoid = TRACT.GEOID.10,
                   block.census.geoid = BLOCK.GEOID.10,
@@ -55,6 +58,13 @@ get_data <- function(ntee.level1 = "all",
                           stringr::str_replace,
                           "GEO-",
                           ""))
+  # cbsa data
+
+  cbsa_ex_cols <- setdiff(colnames(cbsa_df), colnames(tract_dat))
+  cbsa_dat <- cbsa_dat %>%
+    dplyr::select(append("metro.census.cbsa.geoid", cbsa_ex_cols)) %>%
+    group_by(metro.census.cbsa.geoid)
+
   # Apply NTEE filters
   if (! ntee.level1 == "all" | ! ntee.level2 == "all"){
   ntee2_codes <- parse_ntee(ntee.group = ntee.level1,
@@ -72,12 +82,36 @@ get_data <- function(ntee.level1 = "all",
 
 
   # State filter
-
   if (! is.null(geo.state)) {
     tinybmf_subset <- tinybmf_subset %>%
-      dplyr::filter(state.census.abbr %in% geo.state) %>%
-      dplyr::left_join(tract_dat, by = "tract.census.geoid")
+      dplyr::filter(state.census.abbr %in% geo.state)
   }
+
+  # Census level
+  if (geo.level == "tract"){
+    tinybmf_subset <- tinybmf_subset %>%
+      dplyr::left_join(tract_dat, by = "tract.census.geoid")
+  } else if (geo.level == "block") {
+    tinybmf_subset <- tinybmf_subset %>%
+      dplyr::left_join(block_dat, by = "block.census.geoid")
+  } else if (geo.level == "both") {
+    tinybmf_subset <- tinybmf_subset %>%
+      dplyr::left_join(tract_dat, by = "tract.census.geoid") %>%
+      dplyr::left_join(block_dat, by = "block.census.geoid")
+  } else if (! is.null(geo.level)){
+    stop("Invalid geo.level, select either 'block', 'tract' or 'both'")
+  }
+
+  # CBSA filter
+  if (! is.null(geo.metro)){
+    tinybmf_subset <- tinybmf_subset %>%
+      dplyr::left_join(tract_dat, by = "tract.census.geoid") %>%
+      dplyr::select(metro.census.cbsa.geoid %in% geo.metro) %>%
+      dplyr::group_by("metro.census.cbsa.geoid") %>%
+      dplyr::left_join(cbsa_dat, by = "metro.census.cbsa.geoid") %>%
+      dplyr::ungroup()
+  }
+
 
   return(tinybmf_subset)
 
