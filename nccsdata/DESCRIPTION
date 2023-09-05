@@ -15,5 +15,7 @@ Imports:
     dplyr,
     magrittr,
     reactable,
-    data.table
+    data.table,
+    aws.s3,
+    dtplyr
 RoxygenNote: 7.2.3
