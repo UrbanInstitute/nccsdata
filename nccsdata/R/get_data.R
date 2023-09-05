@@ -28,7 +28,7 @@
 #' @export
 #' @importFrom data.table setDT
 #' @import dtplyr
-#' @import dplyr, warn.conflicts = FALSE
+#' @import dplyr
 #' @importFrom stringr str_replace
 
 get_data <- function(state){
