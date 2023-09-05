@@ -13,6 +13,8 @@
 #' are available in memory
 #'
 #' @note Can also be used to recreate the data.tables if files get corrupted.
+#'
+#' @import data.table
 
 geo_data_get <- function(
     block_s3_url = "s3://nccsdata/geo/xwalk/BLOCKX.csv",
