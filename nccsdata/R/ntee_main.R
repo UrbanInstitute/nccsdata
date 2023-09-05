@@ -142,6 +142,6 @@ parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
 
 
   # Return NTEE2 Codes
-  return(list(ntee2_codes))
+  return(ntee2_codes)
 
 }
