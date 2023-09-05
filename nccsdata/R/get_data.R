@@ -42,7 +42,6 @@ get_data <- function(ntee.level1 = "all",
   tract_dat <- data.table::setDT(tract_dat)
   block_dat <- data.table::setDT(block_dat)
   ntee_dat <- load("data/ntee_df.rda")
-  ntee_dat <- data.table::setDT(ntee_dat)
   cbsa_dat <- data.table::setDT(cbsa_df)
 
   # rename columns, and wrangle data
