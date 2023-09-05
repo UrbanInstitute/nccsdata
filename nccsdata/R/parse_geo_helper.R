@@ -68,7 +68,7 @@ geo_data_get <- function(
 #'
 #' @returns A list of fips codes based on filter criteria.
 #'
-#' @export
+#' @import dplyr
 
 dat_filter <- function(dat,
                        args = args,
@@ -79,8 +79,8 @@ dat_filter <- function(dat,
   if (all(names(args) %in% colnames(dat))){
 
     parsed_ids <- dat %>%
-      suppressWarnings(filter(!!! ex_args)) %>%
-      select(all_of(id_col))
+      suppressWarnings(dplyr::filter(!!! ex_args)) %>%
+      dplyr::select(dplyr::all_of(id_col))
 
     return(parsed_ids)
 
