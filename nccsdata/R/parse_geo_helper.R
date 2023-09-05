@@ -41,11 +41,11 @@ geo_data_get <- function(
                   metro.census.csa.name = metro.census.csa10.name) %>%
     dplyr::mutate(state.census.abbr = usdata::state2abbr(state.census.name))
 
-  # Save data as RDS
-  save(tract_dat, "data/tract_dat.rda")
-  save(block_dat, "data/block_dat.rda")
+  # Save data as rda
+  save(tract_dat, file = "data/tract_dat.rda")
+  save(block_dat, file = "data/block_dat.rda")
 
-  return("Data Loaded")
+  return("Data saved to disk")
 
 }
 
