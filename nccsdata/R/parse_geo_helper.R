@@ -65,7 +65,7 @@ geo_data_get <- function(
 #' @param exp_args string expression. Processed user arguments specified in
 #' parse_geo()
 #' @param id_col string. Name of column with Tract or Block IDs
-#' @geo.level name of data.table (Block/Census) for error messages.
+#' @param geo.level name of data.table (Block/Census) for error messages.
 #'
 #' @returns A list of fips codes based on filter criteria.
 #'
