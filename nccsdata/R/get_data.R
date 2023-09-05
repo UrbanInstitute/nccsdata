@@ -43,5 +43,7 @@ get_data <- function(state){
   block_dat <- data.table::setDT(block_dat)
 
   # load in ntee data as data.table
+  load("data/ntee_df.rda")
+  ntee_dat <- data.table::setDT(ntee_dat)
 
 }
