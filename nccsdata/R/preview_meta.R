@@ -15,17 +15,17 @@
 #' by. E.g. (state.census.abbr = c("NY", "AL")). Leaving blank returns all
 #' columns
 #'
-#' @usage get_arg_values(dataset, visual)
+#' @usage preview_meta(dataset, visual, within)
 #'
 #' @returns filtered dataframe or list with filtered dataframe and first 20
 #' rows of table visualized with reactable
 #'
 #' @examples
-#' get_arg_values("cbsa", TRUE, state.census.name = c("Wyoming", "Montana"))
-#' get_arg_values("tract", TRUE,
+#' preview_meta("cbsa", TRUE, state.census.name = c("Wyoming", "Montana"))
+#' preview_meta("tract", TRUE,
 #'                 metro.census.cbsa.geoid = c("10100", "10200"),
 #'                 state.census.abbr = c("NY", "CA"))
-#' get_arg_values("tract", TRUE, within = ("NY", "Alabama"))
+#' preview_meta("tract", TRUE, within = ("NY", "Alabama"))
 #'
 #' @import purrr
 #' @import dplyr
