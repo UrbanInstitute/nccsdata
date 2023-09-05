@@ -43,9 +43,9 @@ preview_meta <-  function(dataset,
   if (dataset == "cbsa"){
     data <- cbsa_df
   } else if (dataset == "tract"){
-    dat <- tract_dat
+    data <- tract_dat
   } else if (dataset == "block"){
-    dat <- block_dat
+    data <- block_dat
   } else {
     stop("Invalid dataset. Valid inputs include: 'cbsa', 'tract', 'block'")
   }
