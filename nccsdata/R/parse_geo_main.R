@@ -75,7 +75,7 @@ parse_geo <- function(census.level, ...){
     load("data/block_dat.rda")
     load("data/tract_dat.rda")
 
-    message("Block and Tract datasets Loaded")
+    message("Block and Tract datasets loaded")
   }
 
   # Extract arguments
