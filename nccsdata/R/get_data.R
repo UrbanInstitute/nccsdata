@@ -31,23 +31,18 @@
 #' @import dtplyr
 #' @import dplyr
 
-get_data <- function(state){
+get_data <- function(ntee.level1 = NULL,
+                     ntee.level2 = NULL,
+                     geo.state = NULL,
+                     geo.metro = NULL,
+                     geo.region = NULL){
 
-  # load in tinybmf data as data.table
-  load("data/tinybmf.rda")
+  # load in datasets as data.table
   tinybmf_dat <- data.table::setDT(tinybmf)
-
-  # load in tract data as data.table
-  load("data/tract_dat.rda")
   tract_dat <- data.table::setDT(tract_dat)
-
-  # load in block data as data.table
-  load("data/block_dat.rda")
   block_dat <- data.table::setDT(block_dat)
-
-  # load in ntee data as data.table
-  load("data/ntee_df.rda")
   ntee_dat <- data.table::setDT(ntee_disagg_df)
+  cbsa_dat <- data.table::setDT(cbsa_df)
 
   # rename columns, wrangle data and filter
   tinybmf_dat <- tinybmf_dat %>%
