@@ -44,7 +44,7 @@ get_data <- function(ntee.level1 = "all",
   ntee_dat <- data.table::setDT(ntee_disagg_df)
   cbsa_dat <- data.table::setDT(cbsa_df)
 
-  # rename columns, wrangle data and filter
+  # rename columns, and wrangle data
   tinybmf_dat <- tinybmf_dat %>%
     dplyr::rename(tract.census.geoid = TRACT.GEOID.10,
                    state.census.abbr = STATE,
@@ -52,20 +52,15 @@ get_data <- function(ntee.level1 = "all",
     dplyr::mutate(across("tract.census.geoid",
                           stringr::str_replace,
                           "GEO-",
-                          "")) %>%
-    dplyr::filter(state.census.abbr %in% state)
-
-  tract_dat <- tract_dat %>%
-    dplyr::filter(state.census.abbr %in% state)
-
-  block_dat <- block_dat %>%
-    dplyr::mutate(block.census.geoid = as.character(
-                                        as.numeric(block.census.geoid)
-                                        ))
-
+                          ""))
   # Apply NTEE filters
+  if (! ntee.level1 == "all" | ! ntee.level2 == "all"){
   ntee2_codes <- parse_ntee(ntee.group = ntee.level1,
-                            ntee.code = ntee.level2)
+                            ntee.code = ntee.level2,
+                            ntee.orgtype = "all")
+  tinybmf_dat <- tinybmf_dat %>%
+    dplyr::filter(ntee2.code %in% ntee2_codes)
+  }
 
   # Apply geographic filters
 
