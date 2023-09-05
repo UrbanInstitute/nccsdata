@@ -26,4 +26,11 @@
 #'  \code{\link[stats]{model.frame}}
 #' @rdname lm
 #' @export
-#' @importFrom stats model.frame
+#' @importFrom data.table setDT
+
+get_data <- function(state){
+
+  # Load in tinybmf data as data.table
+  load("data/tinybmf.rda")
+  tinybmf_dat <- data.table::setDT(tinybmf)
+}
