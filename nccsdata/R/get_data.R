@@ -48,12 +48,13 @@ get_data <- function(state){
 
   # load in ntee data as data.table
   load("data/ntee_df.rda")
-  ntee_dat <- data.table::setDT(ntee_dat)
+  ntee_dat <- data.table::setDT(ntee_disagg_df)
 
   # rename columns, wrangle data and filter
   tinybmf_dat <- tinybmf_dat %>%
     dtplyr::rename(tract.census.geoid = TRACT.GEOID.10,
-                   state.census.abbr = STATE) %>%
+                   state.census.abbr = STATE,
+                   new.code = NTEE2) %>%
     dtplyr::mutate(across("tract.census.geoid",
                           stringr::str_replace,
                           "GEO-",
