@@ -17,5 +17,6 @@ Imports:
     reactable,
     data.table,
     aws.s3,
-    dtplyr
+    dtplyr,
+    purrr
 RoxygenNote: 7.2.3
