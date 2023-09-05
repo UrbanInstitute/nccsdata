@@ -39,8 +39,16 @@ preview_meta <-  function(dataset,
                             within = NULL,
                             ...){
 
-  # Read RDS
-  data <- load(dd[dataset][[1]])
+  # Read in data
+  if (dataset == "cbsa"){
+    data <- cbsa_df
+  } else if (dataset == "tract"){
+    dat <- tract_dat
+  } else if (dataset == "block"){
+    dat <- block_dat
+  } else {
+    stop("Invalid dataset. Valid inputs include: 'cbsa', 'tract', 'block'")
+  }
 
   # Create filter conditions
 
