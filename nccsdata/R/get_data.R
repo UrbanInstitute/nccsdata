@@ -61,10 +61,10 @@ get_data <- function(ntee.level1 = "all",
                             ntee.orgtype = "all")
   tinybmf_subset <- tinybmf_dat %>%
     dplyr::filter(ntee2.code %in% ntee2_codes) %>%
-    dplyr::left_join(ntee_dat, by = ntee2.code)
+    dplyr::left_join(ntee_dat, by = "ntee2.code")
   } else {
     tinybmf_subset <- tinybmf_dat %>%
-      dplyr::left_join(ntee_dat, by = ntee2.code)
+      dplyr::left_join(ntee_dat, by = "ntee2.code")
   }
 
   # Apply geographic filters
@@ -75,9 +75,9 @@ get_data <- function(ntee.level1 = "all",
   if (! is.null(geo.state)) {
     tinybmf_subset <- tinybmf_subset %>%
       dplyr::filter(state.census.abbr %in% geo.state) %>%
-      dplyr::left_join(tract_dat, by = tract.census.geoid)
+      dplyr::left_join(tract_dat, by = "tract.census.geoid")
   }
 
-  return(subset_dat)
+  return(tinybmf_subset)
 
 }
