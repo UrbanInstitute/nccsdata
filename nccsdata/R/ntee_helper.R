@@ -155,6 +155,8 @@ generate_ntee_regex <- function(ntee.group, ntee.code, ntee.orgtype){
 #' @note
 #' See https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md
 #' for more details
+#'
+#' @export
 
 get_ntee_level_3_4 <- function(digits23, digits45){
 
