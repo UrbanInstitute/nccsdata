@@ -40,8 +40,8 @@ geo_data_get <- function(
     dplyr::mutate(state.census.abbr = usdata::state2abbr(state.census.name))
 
   # Save data as RDS
-  saveRDS(tract_dat, "tract_dat.RDS")
-  saveRDS(block_dat, "block_dat.RDS")
+  save(tract_dat, "data/tract_dat.rda")
+  save(block_dat, "data/block_dat.rda")
 
   return("Data Loaded")
 
