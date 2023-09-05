@@ -35,7 +35,7 @@ get_data <- function(ntee.level1 = "all",
                      ntee.level2 = "all",
                      geo.state = NULL,
                      geo.metro = NULL,
-                     geo.level = NULL){
+                     geo.level = "tract"){
 
   # load in datasets as data.table
   tinybmf_dat <- data.table::setDT(tinybmf)
@@ -98,7 +98,7 @@ get_data <- function(ntee.level1 = "all",
     tinybmf_subset <- tinybmf_subset %>%
       dplyr::left_join(tract_dat, by = "tract.census.geoid") %>%
       dplyr::left_join(block_dat, by = "block.census.geoid")
-  } else if (! is.null(geo.level)){
+  } else {
     stop("Invalid geo.level, select either 'block', 'tract' or 'both'")
   }
 
