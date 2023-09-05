@@ -20,7 +20,7 @@
 #' @param urbanrural.census.geoid string or vector. Vector of ZCTA IDs
 #' @param urbanrural.nces.geoid string or vector. Vector of NCES Locale IDs
 #'
-#' Parameters for the Census Tract
+#' Optional Parameters for the Census Tract
 #'
 #' @param tract.census.geoid string or vector. Vector of Tract IDs (FIPS)
 #' @param county.census.geoid string or vector. Vector of County IDs
