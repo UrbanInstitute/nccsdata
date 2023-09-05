@@ -139,8 +139,6 @@ parse_ntee <- function(ntee.group, ntee.code, ntee.orgtype){
     ntee_codes = ntee_code_ls[[1]]
   )
 
-
-
   # Return NTEE2 Codes
   return(ntee2_codes)
 
