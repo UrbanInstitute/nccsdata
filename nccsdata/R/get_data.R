@@ -61,7 +61,6 @@ get_data <- function(state){
     dplyr::filter(state.census.abbr %in% state)
 
   tract_dat <- tract_dat %>%
-    dplyr::mutate(tract.census.geoid = as.character(tract.census.geoid)) %>%
     dplyr::filter(state.census.abbr %in% state)
 
   block_dat <- block_dat %>%
