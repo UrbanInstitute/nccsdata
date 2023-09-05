@@ -4,7 +4,13 @@
 \alias{get_data}
 \title{FUNCTION_TITLE}
 \usage{
-get_data(state)
+get_data(
+  ntee.level1 = "all",
+  ntee.level2 = "all",
+  geo.state = NULL,
+  geo.metro = NULL,
+  geo.level = "tract"
+)
 }
 \arguments{
 \item{formula}{PARAM_DESCRIPTION}
