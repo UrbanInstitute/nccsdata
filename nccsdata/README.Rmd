@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # nccsdata
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/UrbanInstitute/nccs-data-package/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UrbanInstitute/nccs-data-package/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of nccsdata is to ...
