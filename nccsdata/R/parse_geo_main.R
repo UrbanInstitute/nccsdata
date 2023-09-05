@@ -62,8 +62,8 @@ parse_geo <- function(census.level, ...){
 
     message("Objects not in memory, checking disk")
 
-    block_dat <- load("block_dat.rda")
-    tract_dat <- load("tract_dat.rda")
+    block_dat <- load("data/block_dat.rda")
+    tract_dat <- load("data/tract_dat.rda")
 
     message("Block and Tract datasets loaded from disk")
 
