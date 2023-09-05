@@ -62,8 +62,13 @@ get_data <- function(state){
 
   tract_dat <- tract_dat %>%
     dtplyr::mutate(tract.census.geoid = as.character(
-                                         as.numeric(tract.census.geoid)
-                                         ))
+                                        as.numeric(tract.census.geoid)
+                                        ))
+
+  block_dat <- block_dat %>%
+    dtplyr::mutate(block.census.geoid = as.character(
+                                        as.numeric(block.census.geoid)
+                                        ))
 
 
 }
