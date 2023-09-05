@@ -25,7 +25,7 @@
 #' preview_meta("tract", TRUE,
 #'                 metro.census.cbsa.geoid = c("10100", "10200"),
 #'                 state.census.abbr = c("NY", "CA"))
-#' preview_meta("tract", TRUE, within = ("NY", "Alabama"))
+#' preview_meta("tract", TRUE, within = c("NY", "Alabama"))
 #'
 #' @import purrr
 #' @import dplyr
