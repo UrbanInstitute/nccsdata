@@ -68,12 +68,14 @@ get_data <- function(ntee.level1 = "all",
 
   # Apply geographic filters
 
+
   # State filter
 
-  # execute merge
-
-  subset_dat <- tract_dat[tinybmf_dat, on = "tract.census.geoid"]
-  subset_dat <- ntee_dat[subset_dat, on = "ntee2.code"]
+  if (! is.null(geo.state)) {
+    tinybmf_subset <- tinybmf_subset %>%
+      dplyr::filter(state.census.abbr %in% geo.state) %>%
+      dplyr::left_join(tract_dat, by = tract.census.geoid)
+  }
 
   return(subset_dat)
 
