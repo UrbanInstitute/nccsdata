@@ -39,7 +39,11 @@ geo_data_get <- function(
                   metro.census.cbsa.name = metro.census.cbsa10.name,
                   metro.census.csa.geoid = metro.census.csa10.geoid,
                   metro.census.csa.name = metro.census.csa10.name) %>%
-    dplyr::mutate(state.census.abbr = usdata::state2abbr(state.census.name))
+    dplyr::mutate(state.census.abbr = usdata::state2abbr(state.census.name),
+                  tract.census.geoid = as.character(
+                                       as.numeric(tract.census.geoid)
+                                       )
+                  )
 
   # Save data as rda
   save(tract_dat, file = "data/tract_dat.rda")
