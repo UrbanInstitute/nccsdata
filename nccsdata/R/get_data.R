@@ -31,8 +31,8 @@
 #' @import dtplyr
 #' @import dplyr
 
-get_data <- function(ntee.level1 = NULL,
-                     ntee.level2 = NULL,
+get_data <- function(ntee.level1 = "all",
+                     ntee.level2 = "all",
                      geo.state = NULL,
                      geo.metro = NULL,
                      geo.region = NULL){
@@ -63,7 +63,11 @@ get_data <- function(ntee.level1 = NULL,
                                         as.numeric(block.census.geoid)
                                         ))
 
-  # set primary key
+  # Apply NTEE filters
+  ntee2_codes <- parse_ntee(ntee.group = ntee.level1,
+                            ntee.code = ntee.level2)
+
+  # Apply geographic filters
 
   # execute merge
 
