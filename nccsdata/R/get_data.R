@@ -48,9 +48,10 @@ get_data <- function(ntee.level1 = "all",
   # rename columns, and wrangle data
   tinybmf_dat <- tinybmf_dat %>%
     dplyr::rename(tract.census.geoid = TRACT.GEOID.10,
-                   state.census.abbr = STATE,
-                   ntee2.code = NTEE2) %>%
-    dplyr::mutate(across("tract.census.geoid",
+                  block.census.geoid = BLOCK.GEOID.10,
+                  state.census.abbr = STATE,
+                  ntee2.code = NTEE2) %>%
+    dplyr::mutate(across(c("tract.census.geoid", "block.census.geoid"),
                           stringr::str_replace,
                           "GEO-",
                           ""))
