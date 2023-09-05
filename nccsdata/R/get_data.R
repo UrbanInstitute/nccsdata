@@ -30,7 +30,12 @@
 
 get_data <- function(state){
 
-  # Load in tinybmf data as data.table
+  # load in tinybmf data as data.table
   load("data/tinybmf.rda")
   tinybmf_dat <- data.table::setDT(tinybmf)
+
+  # load in tract data as data.table
+  load("data/tract_dat.rda")
+  tract_dat <- data.table::setDT(tract_dat)
+
 }
