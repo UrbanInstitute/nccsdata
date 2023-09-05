@@ -34,6 +34,7 @@ get_arg_values <-  function(dataset,
                             ...){
 
   # Read RDS
+  data <- load(dd[dataset][[1]])
 
   # Create filter conditions
 
@@ -46,7 +47,7 @@ get_arg_values <-  function(dataset,
 
   # Filter DF
   if (is.null(within)){
-    filtered_df <- suppressWarnings(dplyr::filter(cbsa_dat,
+    filtered_df <- suppressWarnings(dplyr::filter(data,
                                                   !!! filter_conditions_exp))
   } else {
     filtered_df <- cbsa_df %>%
