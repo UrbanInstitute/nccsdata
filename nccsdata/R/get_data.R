@@ -64,12 +64,19 @@ get_data <- function(state){
   tract_dat <- tract_dat %>%
     dtplyr::mutate(tract.census.geoid = as.character(
                                         as.numeric(tract.census.geoid)
-                                        ))
+                                        )) %>%
+    dtplyr::filter(state.census.abbr %in% state)
 
   block_dat <- block_dat %>%
     dtplyr::mutate(block.census.geoid = as.character(
                                         as.numeric(block.census.geoid)
                                         ))
 
+  # execute merge
+
+  subset_dat <- tract_dat[tinybmf_dat, on = "tract.census.geoid"]
+  subset_dat <- ntee_dat[subset_dat, on = "new.code"]
+
+  return(subset_dat)
 
 }
