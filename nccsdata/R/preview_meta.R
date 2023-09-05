@@ -26,9 +26,10 @@
 #'                 metro.census.cbsa.geoid = c("10100", "10200"),
 #'                 state.census.abbr = c("NY", "CA"))
 #' get_arg_values("tract", TRUE, within = ("NY", "Alabama"))
+#'
 #' @export
 
-get_arg_values <-  function(dataset,
+preview_meta <-  function(dataset,
                             visual = FALSE,
                             within = NULL,
                             ...){
