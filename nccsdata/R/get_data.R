@@ -27,9 +27,9 @@
 #' @rdname lm
 #' @export
 #' @importFrom data.table setDT
+#' @importFrom stringr str_replace
 #' @import dtplyr
 #' @import dplyr
-#' @importFrom stringr str_replace
 
 get_data <- function(state){
 
