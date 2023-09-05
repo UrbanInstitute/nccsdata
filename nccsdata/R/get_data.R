@@ -29,6 +29,7 @@
 #' @importFrom data.table setDT
 #' @importFrom dtplyr rename
 #' @importFrom dtplyr mutate
+#' @importFrom dtplyr filter
 #' @importFrom stringr str_replace
 
 get_data <- function(state){
@@ -58,5 +59,11 @@ get_data <- function(state){
                           "GEO-",
                           "")) %>%
     dtplyr::filter(state.census.abbr %in% state)
+
+  tract_dat <- tract_dat %>%
+    dtplyr::mutate(tract.census.geoid = as.character(
+                                         as.numeric(tract.census.geoid)
+                                         ))
+
 
 }
