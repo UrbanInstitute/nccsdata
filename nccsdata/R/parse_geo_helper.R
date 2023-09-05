@@ -16,6 +16,7 @@
 #'
 #' @import data.table
 #' @import dplyr
+#' @import aws.s3
 
 geo_data_get <- function(
     block_s3_url = "s3://nccsdata/geo/xwalk/BLOCKX.csv",
@@ -26,7 +27,7 @@ geo_data_get <- function(
 
   # Load Data from S3
 
-  block_dat <- save_object(block_s3_url) %>%
+  block_dat <- aws.s3::save_object(block_s3_url) %>%
     data.table::fread()
 
   tract_dat <- save_object(tract_s3_url) %>%
