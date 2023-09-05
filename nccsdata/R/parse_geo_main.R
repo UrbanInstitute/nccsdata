@@ -107,5 +107,5 @@ parse_geo <- function(census.level, ...){
     stop("Invalid geo.level, select either 'BLOCK' or 'TRACT'")
   }
 
-  return(list(fips))
+  return(fips)
 }
