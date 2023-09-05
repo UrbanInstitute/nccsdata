@@ -13,16 +13,16 @@ source("../utils/objs_exist.R")
 source("dat_filter.R")
 
 #' Function that returns FIPS codes that match dynamic User arguments
-#' 
+#'
 #' @description Filters either the Block or Tract data.tables to return
 #' a list of FIPS codes that match conditions specified by the User
-#' 
+#'
 #' Universal Parameters
-#' 
+#'
 #' @param census.level string. data.table to parse; "BLOCK" | "TRACT"
-#' 
+#'
 #' Parameters for the Block Tract
-#' 
+#'
 #' @param block.census.geoid string or vector. Vector of Block IDs (FIPS)
 #' @param tract.census.geoid string or vector. Vector of Tract IDs (FIPS)
 #' @param zcta.census.geoid string or vector. Vector of county IDs
@@ -31,10 +31,10 @@ source("dat_filter.R")
 #' @param vtd.census.geoid string or vector. Vector of Voting District IDs
 #' @param urbanrural.census.geoid string or vector. Vector of ZCTA IDs
 #' @param urbanrural.nces.geoid string or vector. Vector of NCES Locale IDs
-#' 
+#'
 #' Parameters for the Census Tract
-#' 
-#' @param tract.census.geoid string or vector. Vector of Tract IDs (FIPS) 
+#'
+#' @param tract.census.geoid string or vector. Vector of Tract IDs (FIPS)
 #' @param county.census.geoid string or vector. Vector of County IDs
 #' @param puma.census.geoid string or vector. Vector of PUMA IDs
 #' @param state.census.geoid string or vector. Vector of state IDs
@@ -48,42 +48,42 @@ source("dat_filter.R")
 #' @param region.census.main string or vector. Vector of region names
 #' @param region.census.division string or vector. Vector of subregion names
 #' @param state.census.abbr string or vector. Vector of state abbreviations
-#' 
+#'
 #' @usage parse_geo(census.level = "TRACT",
 #'                  state.census.abbr = c("NY", "MD"))
-#' 
+#'
 #' @return a list of FIPS codes for either Tract IDs or Block IDs.
-#' 
+#'
 #' @export
 
 parse_geo <- function(census.level, ...){
-  
+
   # Check if data is already preloaded
-  
+
   if (objs_exist("block_dat", "tract_dat")){
-    
+
     message("Objects in Memory")
-    
+
   } else if (all(file.exists("tract_dat.RDS", "block_dat.RDS"))){
-    
+
     message("Objects not in memory, Checking for RDS")
-    
+
     block_dat <- readRDS("block_dat.RDS")
     tract_dat <- readRDS("tract_dat.RDS")
-    
+
     message("Block and Tract datasets Loaded")
-    
+
   } else {
-    
+
     message("Datasets not in memory. Pulling Data from S3")
-    
+
     geo_data_get()
     block_dat <- readRDS("block_dat.RDS")
     tract_dat <- readRDS("tract_dat.RDS")
-    
+
     message("Block and Tract datasets Loaded")
   }
-  
+
   # Extract arguments
   args <- enquos(...)
   ex_args <- unname(purrr::imap(
@@ -91,7 +91,7 @@ parse_geo <- function(census.level, ...){
       function(expr, name) quo( !! sym(name) == !! expr)
     )
   )
-  
+
   # Evaluate arguments
   if (census.level == "TRACT"){
     fips <- dat_filter(
@@ -108,7 +108,7 @@ parse_geo <- function(census.level, ...){
       ex_args = ex_args,
       id_col = "block.census.geoid",
       census.level = census.level
-    )    
+    )
   } else {
     stop("Invalid geo.level, select either 'BLOCK' or 'TRACT'")
   }
