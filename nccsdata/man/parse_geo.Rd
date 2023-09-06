@@ -24,7 +24,7 @@ Parameters for the Block Tract}
 
 \item{urbanrural.nces.geoid}{string or vector. Vector of NCES Locale IDs
 
-Parameters for the Census Tract}
+Optional Parameters for the Census Tract}
 
 \item{tract.census.geoid}{string or vector. Vector of Tract IDs (FIPS)}
 
