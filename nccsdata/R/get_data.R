@@ -65,7 +65,7 @@ get_data <- function(ntee.level1 = "all",
     group_by(metro.census.cbsa.geoid)
 
   # Apply NTEE filters
-  if (! ntee.level1 == "all" | ! ntee.level2 == "all"){
+  if (any(! ntee.level1 == "all" | ! ntee.level2 == "all")){
   ntee2_codes <- parse_ntee(ntee.group = ntee.level1,
                             ntee.code = ntee.level2,
                             ntee.orgtype = "all")
