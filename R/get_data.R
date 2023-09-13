@@ -1,31 +1,30 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param formula PARAM_DESCRIPTION
-#' @param data PARAM_DESCRIPTION
-#' @param subset PARAM_DESCRIPTION
-#' @param weights PARAM_DESCRIPTION
-#' @param na.action PARAM_DESCRIPTION
-#' @param method PARAM_DESCRIPTION, Default: 'qr'
-#' @param model PARAM_DESCRIPTION, Default: TRUE
-#' @param x PARAM_DESCRIPTION, Default: FALSE
-#' @param y PARAM_DESCRIPTION, Default: FALSE
-#' @param qr PARAM_DESCRIPTION, Default: TRUE
-#' @param singular.ok PARAM_DESCRIPTION, Default: TRUE
-#' @param contrasts PARAM_DESCRIPTION, Default: NULL
-#' @param offset PARAM_DESCRIPTION
-#' @param ... PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso
-#'  \code{\link[stats]{model.frame}}
-#' @rdname lm
+#' @title Function to query bmf data and integrate it with census, cbsa and ntee
+#' metadata
+#'
+#' @description This function uses user inputs to query, filter and merge nccs
+#' data and additional census, cbsa and ntee metadata
+#'
+#' @param ntee.level1 string or vector. Nonprofit Industry Group. Default ==
+#' "all" includes all Industry Groups.
+#' @param ntee.level2 string or vector. Level 2-4 of NTEE code (Industry,
+#' Division and Subdivision). Default == "all" includes all codes.
+#' @param geo.state string or vector. Filter query by state abbreviations e.g.
+#' "NY", "CA". Default == NULL includes all states.
+#' @param geo.metro string or vector. Filter query by cbsa code. Default = NULL
+#' includes all metro cbsa codes.
+#' @param geo.level string. Census dataset to merge with. Default == "tract"
+#' which merges filtered bmf data with census tract data.
+#'
+#' @return data.table with queried data
+#'
+#' @usage get_data(ntee.level1,
+#'                 ntee.level2,
+#'                 geo.state,
+#'                 geo.metro,
+#'                 geo.level)
+#'
 #' @export
+#'
 #' @importFrom data.table setDT
 #' @importFrom stringr str_replace
 #' @importFrom rlang .data
