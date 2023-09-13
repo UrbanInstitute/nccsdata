@@ -46,16 +46,16 @@ geo_data_get <- function(
                   "metro.census.cbsa.name" = .data$metro.census.cbsa10.name,
                   "metro.census.csa.geoid" = .data$metro.census.csa10.geoid,
                   "metro.census.csa.name" = .data$metro.census.csa10.name) %>%
-    dplyr::mutate("state.census.abbr" = .data$usdata::state2abbr(state.census.name),
-                  .data$tract.census.geoid = as.character(
+    dplyr::mutate("state.census.abbr" = usdata::state2abbr(.data$state.census.name),
+                  "tract.census.geoid" = as.character(
                                              as.numeric(.data$tract.census.geoid)
                                              ))
 
   # wrangle data in block dataset
   block_dat <- block_dat %>%
-    dplyr::mutate(.data$block.census.geoid = as.character(
-                                             as.numeric(.data$block.census.geoid)
-                                             ))
+    dplyr::mutate("block.census.geoid" = as.character(
+                                         as.numeric(.data$block.census.geoid)
+                                         ))
 
   # Save data to internal storage
   usethis::use_data(block_dat,
