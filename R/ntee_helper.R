@@ -216,11 +216,11 @@ parse_ntee_regex <- function(regexp_vec, ntee_codes){
 #' Industry, Division and Subdivision
 #' @param ntee.orgtype character. 2-character alphabetical Organization Type
 #' code.
-#' @param ind_group_codes. character vector of all acceptable Industry Group
+#' @param ind_group_codes character vector of all acceptable Industry Group
 #' codes.
-#' @param level_2_4_codes. character vector of all acceptable Industry,
+#' @param level_2_4_codes character vector of all acceptable Industry,
 #' Division and Subdivision codes.
-#' @param org_type_codes. character vector of all acceptable Organization
+#' @param org_type_codes character vector of all acceptable Organization
 #' Type codes.
 #'
 #' @usage validate_inp(ntee.group, ntee.code, ntee.orgtype, ind_group_codes,
