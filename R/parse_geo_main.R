@@ -5,40 +5,13 @@
 #' @description Filters either the Block or Tract data.tables to return
 #' a list of FIPS codes that match conditions specified by the User
 #'
-#' Universal Parameters
-#'
 #' @param census.level string. data.table to parse; "BLOCK" | "TRACT"
+#' @param ... columns in either tract or block dataset for filtering.
 #'
-#' Parameters for the Block Tract
+#' @usage parse_geo(...)
 #'
-#' @param block.census.geoid string or vector. Vector of Block IDs (FIPS)
-#' @param tract.census.geoid string or vector. Vector of Tract IDs (FIPS)
-#' @param zcta.census.geoid string or vector. Vector of county IDs
-#' @param place.census.geoid string or vector. Vector of census place IDs
-#' @param county.census.geoid string or vector. Vector of County IDs
-#' @param vtd.census.geoid string or vector. Vector of Voting District IDs
-#' @param urbanrural.census.geoid string or vector. Vector of ZCTA IDs
-#' @param urbanrural.nces.geoid string or vector. Vector of NCES Locale IDs
-#'
-#' Optional Parameters for the Census Tract
-#'
-#' @param tract.census.geoid string or vector. Vector of Tract IDs (FIPS)
-#' @param county.census.geoid string or vector. Vector of County IDs
-#' @param puma.census.geoid string or vector. Vector of PUMA IDs
-#' @param state.census.geoid string or vector. Vector of state IDs
-#' @param state.census.name string or vector. Vector of state names
-#' @param metro.census.cbsa.geoid string or vector. Vector of cbsa IDs
-#' @param metro.census.cbsa.name string or vector. Vector of census area names
-#' @param metro.census.csa.geoid string or vector. Vector of csa IDs
-#' @param metro.census.csa.name string or vector. Vector of csa names
-#' @param region.woodard.nation string or vector. Vector of region names
-#' @param region.woodard.culture string or vector. Vector of culture labels
-#' @param region.census.main string or vector. Vector of region names
-#' @param region.census.division string or vector. Vector of subregion names
-#' @param state.census.abbr string or vector. Vector of state abbreviations
-#'
-#' @usage parse_geo(census.level = "TRACT",
-#'                  state.census.abbr = c("NY", "MD"))
+#' @examples  parse_geo(census.level = "TRACT",
+#'                      state.census.abbr = c("NY", "MD"))
 #'
 #' @return a list of FIPS codes for either Tract IDs or Block IDs.
 #'
