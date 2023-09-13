@@ -1,0 +1,69 @@
+# Script with functions that generate data in internal storage (R/sysdata.rda)
+
+#' Preprocess Census Block and Tract Crosswalks
+#'
+#' @description This function downloads the crosswalk datasets from an S3
+#' bucket, reads them as data.tables, reformats the column names, and creates
+#' a new column with state abbreviations for the Tract dataset.
+#'
+#' @param block_s3_url string. Path to S3 bucket with block crosswalk.
+#' @param tract_s3_url string. Path to S3 bucket with tract crosswalk.
+#'
+#' @usage geo_data_get(block_s3_url, tract_s3_url)
+#'
+#' @return A string message indicating that the processed data.tables
+#' are available in memory
+#'
+#' @note Can also be used to recreate the data.tables if files get corrupted.
+#'
+#' @importFrom data.table fread
+#' @importFrom rlang .data
+#' @importFrom dplyr rename
+#' @importFrom dplyr mutate
+#' @importFrom usdata state2abbr
+#' @importFrom aws.s3 save_object
+
+geo_data_get <- function(
+    block_s3_url = "s3://nccsdata/geo/xwalk/BLOCKX.csv",
+    tract_s3_url = "s3://nccsdata/geo/xwalk/TRACTX.csv"
+){
+
+  message("Loading Datasets")
+
+  # Load Data from S3
+
+  block_dat <- aws.s3::save_object(block_s3_url) %>%
+    data.table::fread()
+
+  tract_dat <- save_object(tract_s3_url) %>%
+    data.table::fread()
+
+  # Set global variables
+  utils::globalVariables(names(tract_dat))
+  utils::globalVariables(names(block_dat))
+
+  # Wrangle data in tract dataset
+  tract_dat <- tract_dat %>%
+    dplyr::rename("metro.census.cbsa.geoid" = .data$metro.census.cbsa10.geoid,
+                  "metro.census.cbsa.name" = .data$metro.census.cbsa10.name,
+                  "metro.census.csa.geoid" = .data$metro.census.csa10.geoid,
+                  "metro.census.csa.name" = .data$metro.census.csa10.name) %>%
+    dplyr::mutate("state.census.abbr" = usdata::state2abbr(.data$state.census.name),
+                  "tract.census.geoid" = as.character(
+                    as.numeric(.data$tract.census.geoid)
+                  ))
+
+  # wrangle data in block dataset
+  block_dat <- block_dat %>%
+    dplyr::mutate("block.census.geoid" = as.character(
+      as.numeric(.data$block.census.geoid)
+    ))
+
+  # Save data to internal storage
+  usethis::use_data(block_dat,
+                    tract_dat,
+                    internal = TRUE)
+
+  return("Census and Block datasets downloaded to internal storage.")
+
+}
