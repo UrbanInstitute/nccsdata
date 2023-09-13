@@ -38,6 +38,7 @@
 #' @import dplyr
 #' @import reactable
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 #'
 #' @export
 
@@ -62,7 +63,7 @@ ntee_preview <- function(ntee.group = "all",
   # Filter ntee_df
 
   filtered_df <- ntee_df %>%
-    dplyr::filter(ntee2.code %in% ntee2_codes) %>%
+    dplyr::filter(.data$ntee2.code %in% ntee2_codes) %>%
     dplyr::select(dplyr::any_of(col_names))
 
   # Decide on output format
