@@ -8,7 +8,7 @@
 #' @param census.level string. data.table to parse; "BLOCK" | "TRACT"
 #' @param ... columns in either tract or block dataset for filtering.
 #'
-#' @usage parse_geo(...)
+#' @usage parse_geo(census.level, ...)
 #'
 #' @examples  parse_geo(census.level = "TRACT",
 #'                      state.census.abbr = c("NY", "MD"))
