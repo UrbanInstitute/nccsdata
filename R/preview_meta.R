@@ -30,14 +30,14 @@
 #' @import purrr
 #' @import dplyr
 #' @import reactable
-#'
+#' @importFrom utils head
 #'
 #' @export
 
 preview_meta <-  function(dataset,
-                            visual = FALSE,
-                            within = NULL,
-                            ...){
+                          visual = FALSE,
+                          within = NULL,
+                          ...){
 
   # Read in data
   if (dataset == "cbsa"){
@@ -70,7 +70,7 @@ preview_meta <-  function(dataset,
   }
 
   if (visual == TRUE){
-    return(list(reactable(head(filtered_df, 20)),
+    return(list(reactable(utils::head(filtered_df, 20)),
                 invisible(filtered_df)))
   } else {
     invisible(filtered_df)
