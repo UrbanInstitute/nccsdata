@@ -15,13 +15,13 @@ Imports:
     dplyr,
     reactable,
     data.table,
-    aws.s3,
     dtplyr,
     purrr,
     jsonlite,
     stringr,
     usdata,
-    rlang
+    rlang,
+    utils
 RoxygenNote: 7.2.3
 URL: https://github.com/Thiyaghessan/nccsdata, https://thiyaghessan.github.io/nccsdata/, https://urbaninstitute.github.io/nccsdata/
 BugReports: https://github.com/Thiyaghessan/nccsdata/issues
