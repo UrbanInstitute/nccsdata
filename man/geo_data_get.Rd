@@ -4,7 +4,7 @@
 \alias{geo_data_get}
 \title{Preprocess Census Block and Tract Crosswalks}
 \usage{
-geo_data_get()
+geo_data_get(block_s3_url, tract_s3_url)
 }
 \arguments{
 \item{block_s3_url}{string. Path to S3 bucket with block crosswalk.}
