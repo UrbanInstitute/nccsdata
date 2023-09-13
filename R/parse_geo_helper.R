@@ -18,7 +18,7 @@
 #' @importFrom dplyr rename
 #' @importFrom dplyr mutate
 #' @importFrom usdata state2abbr
-#' @import aws.s3
+#' @importFrom aws.s3 save_object
 
 geo_data_get <- function(
     block_s3_url = "s3://nccsdata/geo/xwalk/BLOCKX.csv",
