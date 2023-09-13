@@ -21,11 +21,12 @@
 #'
 #' @import dplyr
 #' @import data.table
+#' @importFrom utils read.csv
 
 ntee_preproc <- function(path_to_csv = "data-raw/ntee-disaggregated.csv"){
 
   # Read csv file to extract different versions of NTEE Codes
-  ntee_df <- read.csv(path_to_csv)
+  ntee_df <- utils::read.csv(path_to_csv)
 
   # Extract level 1 and level 2 parts of NTEE2 Code
   ntee2_level1 <- ntee_df$broad.category
