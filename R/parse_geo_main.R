@@ -25,21 +25,6 @@
 
 parse_geo <- function(census.level, ...){
 
-  # Check if data is already preloaded
-
-  if (objs_exist("block_dat", "tract_dat")){
-
-    message("Datasets in internal storage")
-
-  } else {
-
-    message("Datasets not in internal storage. Pulling data from S3")
-
-    geo_data_get()
-
-    message("Block and Tract datasets downloaded")
-  }
-
   # Extract arguments
   args <- enquos(...)
   ex_args <- unname(purrr::imap(
