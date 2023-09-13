@@ -56,26 +56,15 @@ parse_geo <- function(census.level, ...){
 
   if (objs_exist("block_dat", "tract_dat")){
 
-    message("Objects in memory")
-
-  } else if (all(file.exists("data/tract_dat.rda", "data/block_dat.rda"))){
-
-    message("Objects not in memory, checking disk")
-
-    block_dat <- load("data/block_dat.rda")
-    tract_dat <- load("data/tract_dat.rda")
-
-    message("Block and Tract datasets loaded from disk")
+    message("Datasets in internal storage")
 
   } else {
 
-    message("Datasets not in disk. Pulling data from S3")
+    message("Datasets not in internal storage. Pulling data from S3")
 
     geo_data_get()
-    load("data/block_dat.rda")
-    load("data/tract_dat.rda")
 
-    message("Block and Tract datasets loaded")
+    message("Block and Tract datasets downloaded")
   }
 
   # Extract arguments

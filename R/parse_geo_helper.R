@@ -7,15 +7,17 @@
 #' @param block_s3_url string. Path to S3 bucket with block crosswalk.
 #' @param tract_s3_url string. Path to S3 bucket with tract crosswalk.
 #'
-#' @usage geo_data_get()
+#' @usage geo_data_get(block_s3_url, tract_s3_url)
 #'
 #' @return A string message indicating that the processed data.tables
 #' are available in memory
 #'
 #' @note Can also be used to recreate the data.tables if files get corrupted.
 #'
-#' @import data.table
-#' @import dplyr
+#' @importFrom data.table fread
+#' @importFrom dplyr rename
+#' @importFrom dplyr mutate
+#' @importFrom usdata state2abbr
 #' @import aws.s3
 
 geo_data_get <- function(
@@ -42,22 +44,21 @@ geo_data_get <- function(
     dplyr::mutate(state.census.abbr = usdata::state2abbr(state.census.name),
                   tract.census.geoid = as.character(
                                        as.numeric(tract.census.geoid)
-                                       )
-                  )
+                                       ))
 
   # wrangle data in block dataset
   block_dat <- block_dat %>%
     dplyr::mutate(block.census.geoid = as.character(
                                        as.numeric(block.census.geoid)
-                                       )
-                  )
+                                       ))
 
 
-  # Save data as rda
-  save(tract_dat, file = "data/tract_dat.rda")
-  save(block_dat, file = "data/block_dat.rda")
+  # Save data to internal storage
+  usethis::use_data(block_dat,
+                    tract_dat,
+                    internal = TRUE)
 
-  return("Data saved to disk")
+  return("Census and Block datasets downloaded to internal storage.")
 
 }
 
