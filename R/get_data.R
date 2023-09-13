@@ -28,6 +28,7 @@
 #' @export
 #' @importFrom data.table setDT
 #' @importFrom stringr str_replace
+#' @importFrom rlang .data
 #' @import dtplyr
 #' @import dplyr
 
@@ -49,20 +50,20 @@ get_data <- function(ntee.level1 = "all",
   # bmf data
 
   tinybmf_dat <- tinybmf_dat %>%
-    dplyr::rename(tract.census.geoid = TRACT.GEOID.10,
-                  block.census.geoid = BLOCK.GEOID.10,
-                  state.census.abbr = STATE,
-                  ntee2.code = NTEE2) %>%
+    dplyr::rename("tract.census.geoid" = .data$TRACT.GEOID.10,
+                  "block.census.geoid" = .data$BLOCK.GEOID.10,
+                  "state.census.abbr" = .data$STATE,
+                  "ntee2.code" = .data$NTEE2) %>%
     dplyr::mutate(across(c("tract.census.geoid", "block.census.geoid"),
-                          stringr::str_replace,
-                          "GEO-",
-                          ""))
+                         stringr::str_replace,
+                         "GEO-",
+                         ""))
   # cbsa data
 
   cbsa_ex_cols <- setdiff(colnames(cbsa_df), colnames(tract_dat))
   cbsa_dat <- cbsa_dat %>%
-    dplyr::select(append("metro.census.cbsa.geoid", cbsa_ex_cols)) %>%
-    group_by(metro.census.cbsa.geoid)
+    dplyr::select(append(.data$metro.census.cbsa.geoid, cbsa_ex_cols)) %>%
+    group_by(.data$metro.census.cbsa.geoid)
 
   # Apply NTEE filters
   if (any(! ntee.level1 == "all" | ! ntee.level2 == "all")){
@@ -70,7 +71,7 @@ get_data <- function(ntee.level1 = "all",
                             ntee.code = ntee.level2,
                             ntee.orgtype = "all")
   tinybmf_subset <- tinybmf_dat %>%
-    dplyr::filter(ntee2.code %in% ntee2_codes) %>%
+    dplyr::filter(.data$ntee2.code %in% ntee2_codes) %>%
     dplyr::left_join(ntee_dat, by = "ntee2.code")
   } else {
     tinybmf_subset <- tinybmf_dat %>%
@@ -83,7 +84,7 @@ get_data <- function(ntee.level1 = "all",
   # State filter
   if (! is.null(geo.state)) {
     tinybmf_subset <- tinybmf_subset %>%
-      dplyr::filter(state.census.abbr %in% geo.state)
+      dplyr::filter(.data$state.census.abbr %in% geo.state)
   }
 
   # Census level
@@ -105,7 +106,7 @@ get_data <- function(ntee.level1 = "all",
   if (! is.null(geo.metro)){
     tinybmf_subset <- tinybmf_subset %>%
       dplyr::left_join(tract_dat, by = "tract.census.geoid") %>%
-      dplyr::select(metro.census.cbsa.geoid %in% geo.metro) %>%
+      dplyr::select(.data$metro.census.cbsa.geoid %in% geo.metro) %>%
       dplyr::group_by("metro.census.cbsa.geoid") %>%
       dplyr::left_join(cbsa_dat, by = "metro.census.cbsa.geoid") %>%
       dplyr::ungroup()
