@@ -35,7 +35,7 @@ jsonify_f <- function(f)
 #'
 #' @param ... vector of objects.
 #'
-#' @usage objs_exist(c("block_dt", "tract_dt"))
+#' @usage objs_exist(...)
 #'
 #' @return A single boolean value indicating whether all objects are present
 #' in memory
