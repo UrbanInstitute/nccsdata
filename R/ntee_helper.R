@@ -22,18 +22,18 @@
 #' @import dplyr
 #' @import data.table
 
-ntee_preproc <- function(path_to_rda = "data/ntee_disagg_df.rda"){
+ntee_preproc <- function(path_to_csv = "data-raw/ntee-disaggregated.csv"){
 
   # Read csv file to extract different versions of NTEE Codes
-  load(path_to_rda)
+  ntee_df <- read.csv(path_to_csv)
 
   # Extract level 1 and level 2 parts of NTEE2 Code
-  ntee2_level1 <- ntee_disagg_df$broad.category
-  ntee2_level2 <- ntee_disagg_df$major.group
+  ntee2_level1 <- ntee_df$broad.category
+  ntee2_level2 <- ntee_df$major.group
 
   # Extract digits23 and digits 45
-  digits23 <- substring(ntee_disagg_df$old.code, 2, 3)
-  digits45 <- substring(ntee_disagg_df$old.code, 4, 5)
+  digits23 <- substring(ntee_df$old.code, 2, 3)
+  digits45 <- substring(ntee_df$old.code, 4, 5)
   digits45 <- replace(digits45, digits45 == "", "00")
 
   # Use digits23 and digits45 to get level 3 and 4 of new NTEE code
@@ -43,7 +43,7 @@ ntee_preproc <- function(path_to_rda = "data/ntee_disagg_df.rda"){
   ntee2_level_2_4 <- paste(ntee2_level2, ntee2_level_3_4, sep = "")
 
   # Extract level 5 code from disaggregated csv
-  ntee2_level5 <- ntee_disagg_df$type.org
+  ntee2_level5 <- ntee_df$type.org
 
   # Create population of NTEE2 codes
   ntee_new_codes <- paste(
@@ -57,8 +57,10 @@ ntee_preproc <- function(path_to_rda = "data/ntee_disagg_df.rda"){
   )
 
   # Append NTEE2 codes to disaggregated csv and save
-  ntee_disagg_df$ntee2.code <- ntee_new_codes
-  save(ntee_disagg_df, file = "data/ntee_df.rda")
+  ntee_df$ntee2.code <- ntee_new_codes
+  usethis::use_data(ntee_df, internal = TRUE)
+
+  message("CSV has been preprocessed and stored internally")
 
   return(list(ntee_new_codes,
               ntee2_level1,
