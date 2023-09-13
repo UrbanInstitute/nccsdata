@@ -71,9 +71,7 @@ parse_geo <- function(census.level, ...){
   args <- enquos(...)
   ex_args <- unname(purrr::imap(
     args,
-    function(expr, name) quo( !! sym(name) == !! expr)
-  )
-  )
+    function(expr, name) quo( !! sym(name) == !! expr)))
 
   # Evaluate arguments
   if (census.level == "TRACT"){
@@ -84,7 +82,7 @@ parse_geo <- function(census.level, ...){
       id_col = "tract.census.geoid",
       census.level = census.level
     )
-  } else if (geo.level == "BLOCK"){
+  } else if (census.level == "BLOCK"){
     fips <- dat_filter(
       dat = block_dat,
       args = args,
