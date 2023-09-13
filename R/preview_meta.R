@@ -15,7 +15,7 @@
 #' by. E.g. (state.census.abbr = c("NY", "AL")). Leaving blank returns all
 #' columns
 #'
-#' @usage preview_meta(dataset, visual, within)
+#' @usage preview_meta(dataset, visual, within, ...)
 #'
 #' @returns filtered dataframe or list with filtered dataframe and first 20
 #' rows of table visualized with reactable
