@@ -79,11 +79,16 @@ geo_data_get <- function(
 #'
 #' @param dat data table. Data table of either census or block data.
 #' @param args string expression. User arguments specified in parse_geo()
-#' @param exp_args string expression. Processed user arguments specified in
+#' @param ex_args string expression. Processed user arguments specified in
 #' parse_geo()
 #' @param id_col string. Name of column with Tract or Block IDs
-#' @param geo.level name of data.table (Block/Census) for error messages.
+#' @param census.level name of data.table (Block/Census) for error messages.
 #'
+#' @usage dat_filter(dat,
+#'                   args,
+#'                   ex_args,
+#'                   id_col,
+#'                   census.level)
 #' @returns A list of fips codes based on filter criteria.
 #'
 #' @import dplyr
