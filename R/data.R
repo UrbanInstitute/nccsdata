@@ -1,5 +1,5 @@
-#' @title Development dataset for testing. 
-#' @description Sample of 25,000 rows from the BMF with NTEE and GEO IDs. 
+#' @title Development dataset for testing.
+#' @description Sample of 25,000 rows from the BMF with NTEE and GEO IDs.
 #' @format A data frame with 25000 rows and 38 variables:
 #' \describe{
 #'   \item{\code{EIN}}{integer COLUMN_DESCRIPTION}
@@ -38,8 +38,8 @@
 #'   \item{\code{Latitude}}{double COLUMN_DESCRIPTION}
 #'   \item{\code{Addr_type}}{character COLUMN_DESCRIPTION}
 #'   \item{\code{Score}}{double COLUMN_DESCRIPTION}
-#'   \item{\code{BLOCK.CENSUS.GEOID.10}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{TRACT.CENSUS.GEOID.10}}{character COLUMN_DESCRIPTION} 
+#'   \item{\code{BLOCK.GEOID.10}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{TRACT.GEOID.10}}{character COLUMN_DESCRIPTION}
 #'}
 #' @details DETAILS
 "tinybmf"
