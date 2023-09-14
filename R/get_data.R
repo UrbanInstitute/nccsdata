@@ -31,11 +31,12 @@
 #' @import dtplyr
 #' @import dplyr
 
-get_data <- function(ntee.level1 = "all",
-                     ntee.level2 = "all",
-                     geo.state = NULL,
-                     geo.metro = NULL,
-                     geo.level = "tract"){
+get_data <- function(dsname = NULL,
+                     time = NULL,
+                     scope.orgtype = NULL,
+                     scope.formtype = NULL,
+                     ntee = NULL,
+                     geo = NULL){
 
   # load in datasets as data.table
   tinybmf_dat <- data.table::setDT(tinybmf)
