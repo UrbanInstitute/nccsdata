@@ -16,13 +16,13 @@ Industry, Division and Subdivision}
 \item{ntee.orgtype}{character. 2-character alphabetical Organization Type
 code.}
 
-\item{ind_group_codes.}{character vector of all acceptable Industry Group
+\item{ind_group_codes}{character vector of all acceptable Industry Group
 codes.}
 
-\item{level_2_4_codes.}{character vector of all acceptable Industry,
+\item{level_2_4_codes}{character vector of all acceptable Industry,
 Division and Subdivision codes.}
 
-\item{org_type_codes.}{character vector of all acceptable Organization
+\item{org_type_codes}{character vector of all acceptable Organization
 Type codes.}
 }
 \value{

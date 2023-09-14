@@ -4,7 +4,7 @@
 \alias{preview_meta}
 \title{This function filters the cbsa dataframe.}
 \usage{
-preview_meta(dataset, visual, within)
+preview_meta(dataset, visual, within, ...)
 }
 \arguments{
 \item{dataset}{string. Name of dataset to load, "cbsa", "block", "tract".}

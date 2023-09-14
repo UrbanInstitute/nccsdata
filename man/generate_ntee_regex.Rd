@@ -2,7 +2,7 @@
 % Please edit documentation in R/ntee_helper.R
 \name{generate_ntee_regex}
 \alias{generate_ntee_regex}
-\title{This function returns a regex query to parse NTEE2 Codes}
+\title{Script containing helper functions for ntee_main.R}
 \usage{
 generate_ntee_regex(ntee.group, ntee.code, ntee.orgtype)
 }
@@ -26,6 +26,9 @@ population of NTEE2 codes.
 \description{
 This function creates the regex query that will be used
 to filter NTEE2 codes based on user inputs.
+}
+\details{
+This function returns a regex query to parse NTEE2 Codes
 }
 \examples{
 generate_ntee_regex("ART", "A23", "RG")

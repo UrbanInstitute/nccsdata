@@ -4,19 +4,23 @@
 \alias{dat_filter}
 \title{Function to filter data table}
 \usage{
-dat_filter(dat, args = args, ex_args = ex_args, id_col, census.level)
+dat_filter(dat,
+                  args,
+                  ex_args,
+                  id_col,
+                  census.level)
 }
 \arguments{
 \item{dat}{data table. Data table of either census or block data.}
 
 \item{args}{string expression. User arguments specified in parse_geo()}
 
-\item{id_col}{string. Name of column with Tract or Block IDs}
-
-\item{exp_args}{string expression. Processed user arguments specified in
+\item{ex_args}{string expression. Processed user arguments specified in
 parse_geo()}
 
-\item{geo.level}{name of data.table (Block/Census) for error messages.}
+\item{id_col}{string. Name of column with Tract or Block IDs}
+
+\item{census.level}{name of data.table (Block/Census) for error messages.}
 }
 \value{
 A list of fips codes based on filter criteria.

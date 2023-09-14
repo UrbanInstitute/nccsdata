@@ -4,13 +4,13 @@
 \alias{objs_exist}
 \title{Check if ALL objects named one vector exist in memory}
 \usage{
-objs_exist(c("block_dt", "tract_dt"))
+objs_exist(...)
 }
 \arguments{
 \item{...}{vector of objects.}
 }
 \value{
-A single boolean value indicating whether all objects are present 
+A single boolean value indicating whether all objects are present
 in memory
 }
 \description{

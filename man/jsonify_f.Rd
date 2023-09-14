@@ -7,6 +7,9 @@ Function that prettifies json}
 \usage{
 jsonify_f(f)
 }
+\arguments{
+\item{f}{json string. String containing json text}
+}
 \description{
 Script with utility functions
 Function that prettifies json

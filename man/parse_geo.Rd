@@ -4,55 +4,12 @@
 \alias{parse_geo}
 \title{Script to return Block or Tract IDs from Census tables that match}
 \usage{
-parse_geo(census.level = "TRACT",
-                 state.census.abbr = c("NY", "MD"))
+parse_geo(census.level, ...)
 }
 \arguments{
-\item{census.level}{string. data.table to parse; "BLOCK" | "TRACT"
+\item{census.level}{string. data.table to parse; "BLOCK" | "TRACT"}
 
-Parameters for the Block Tract}
-
-\item{block.census.geoid}{string or vector. Vector of Block IDs (FIPS)}
-
-\item{zcta.census.geoid}{string or vector. Vector of county IDs}
-
-\item{place.census.geoid}{string or vector. Vector of census place IDs}
-
-\item{vtd.census.geoid}{string or vector. Vector of Voting District IDs}
-
-\item{urbanrural.census.geoid}{string or vector. Vector of ZCTA IDs}
-
-\item{urbanrural.nces.geoid}{string or vector. Vector of NCES Locale IDs
-
-Optional Parameters for the Census Tract}
-
-\item{tract.census.geoid}{string or vector. Vector of Tract IDs (FIPS)}
-
-\item{county.census.geoid}{string or vector. Vector of County IDs}
-
-\item{puma.census.geoid}{string or vector. Vector of PUMA IDs}
-
-\item{state.census.geoid}{string or vector. Vector of state IDs}
-
-\item{state.census.name}{string or vector. Vector of state names}
-
-\item{metro.census.cbsa.geoid}{string or vector. Vector of cbsa IDs}
-
-\item{metro.census.cbsa.name}{string or vector. Vector of census area names}
-
-\item{metro.census.csa.geoid}{string or vector. Vector of csa IDs}
-
-\item{metro.census.csa.name}{string or vector. Vector of csa names}
-
-\item{region.woodard.nation}{string or vector. Vector of region names}
-
-\item{region.woodard.culture}{string or vector. Vector of culture labels}
-
-\item{region.census.main}{string or vector. Vector of region names}
-
-\item{region.census.division}{string or vector. Vector of subregion names}
-
-\item{state.census.abbr}{string or vector. Vector of state abbreviations}
+\item{...}{columns in either tract or block dataset for filtering.}
 }
 \value{
 a list of FIPS codes for either Tract IDs or Block IDs.
@@ -60,9 +17,12 @@ a list of FIPS codes for either Tract IDs or Block IDs.
 \description{
 Filters either the Block or Tract data.tables to return
 a list of FIPS codes that match conditions specified by the User
-
-Universal Parameters
 }
 \details{
 Function that returns FIPS codes that match dynamic User arguments
+}
+\examples{
+ parse_geo(census.level = "TRACT",
+                     state.census.abbr = c("NY", "MD"))
+
 }
