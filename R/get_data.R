@@ -34,12 +34,11 @@
 get_data <- function(dsname = NULL,
                      time = NULL,
                      scope.orgtype = NULL,
-                     scope.formtype = NULL,
-                     ntee = NULL,
-                     geo = NULL){
+                     scope.formtype = NULL){
+
+  # Validate inputs
 
   # load in datasets as data.table
-  tinybmf_dat <- data.table::setDT(tinybmf)
   tract_dat <- data.table::setDT(tract_dat)
   block_dat <- data.table::setDT(block_dat)
   ntee_dat <- data.table::setDT(ntee_df)
