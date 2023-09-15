@@ -37,6 +37,10 @@ get_data <- function(dsname = NULL,
                      scope.formtype = NULL){
 
   # Validate inputs
+  validate_get_data(dsname = dsname,
+                    time = time,
+                    scope.orgtype = scope.orgtype,
+                    scope.formtype = scope.formtype)
 
   # load in datasets as data.table
   tract_dat <- data.table::setDT(tract_dat)
@@ -115,3 +119,6 @@ get_data <- function(dsname = NULL,
   return(tinybmf_subset)
 
 }
+
+#' @title Function to pull core data from S3 bucket.
+
