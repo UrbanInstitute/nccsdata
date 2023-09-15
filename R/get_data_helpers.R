@@ -60,3 +60,13 @@ validate_get_data <- function(dsname = NULL,
 
   return("Valid inputs detected. Retrieving data.")
 }
+
+
+#' @title function to construct filenames from aws s3 core bucket
+#'
+
+core_file_constructor <- function(time = NULL,
+                                  scope.orgtype = NULL,
+                                  scope.formtype = NULL){
+  files <- c()
+}
