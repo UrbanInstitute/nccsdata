@@ -47,5 +47,17 @@ get_data <- function(dsname = NULL,
 
 }
 
-#' @title Function to pull core data from S3 bucket.
+#' @title Function to download core data from S3 bucket.
+
+
+dl_core <- function(filenames){
+
+  base_url <- "https://nccsdata.s3.amazonaws.com/legacy/core/"
+
+  urls <- paste0(base_url, filenames)
+  valid_urls <- urls[RCurl::url.exists(urls)]
+
+  return(valid_urls)
+
+}
 
