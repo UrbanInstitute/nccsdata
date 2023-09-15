@@ -64,9 +64,41 @@ validate_get_data <- function(dsname = NULL,
 
 #' @title function to construct filenames from aws s3 core bucket
 #'
-
+#' @export
 core_file_constructor <- function(time = NULL,
                                   scope.orgtype = NULL,
                                   scope.formtype = NULL){
-  files <- c()
+  # Organization Type dictionary
+  orgtype_dic <- c("CHARITIES" = "CHARITIES-SCOPE-501C3",
+                   "PRIVFOUND" = "PRIVFOUND-SCOPE-501C3",
+                   "NONPROFIT" = "NONPROFIT-SCOPE-501CE")
+
+  # Base names
+  root_file <- "CORE-"
+  file_ext <- ".csv"
+
+  # Add years
+  files_year <- paste0(root_file, time)
+
+  # Add orgtype
+  orgtype_full <- orgtype_dic[scope.orgtype]
+
+  # Add orgtype
+  files_orgtype <- as.vector(outer(files_year,
+                                   orgtype_full,
+                                   paste,
+                                   sep = "-"))
+
+  # Add formtype
+  files_formtype <- paste(files_orgtype,
+                          scope.formtype,
+                          sep = "-")
+
+  # Add extension
+  files_fullname <- paste(files_formtype,
+                          file_ext,
+                          sep = "")
+
+  return(files_fullname)
+
 }
