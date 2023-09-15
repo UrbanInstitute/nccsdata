@@ -32,9 +32,9 @@
 #' @import dplyr
 
 get_data <- function(dsname = NULL,
-                     time = NULL,
-                     scope.orgtype = NULL,
-                     scope.formtype = NULL){
+                     time = "current",
+                     scope.orgtype = "NONPROFIT",
+                     scope.formtype = "PC"){
 
   # Validate inputs
   valid_msg <- validate_get_data(dsname = dsname,
