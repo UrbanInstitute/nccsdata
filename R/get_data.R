@@ -43,12 +43,6 @@ get_data <- function(dsname = NULL,
                                  scope.formtype = scope.formtype)
   message(valid_msg)
 
-  # load in datasets as data.table
-  tract_dat <- data.table::setDT(tract_dat)
-  block_dat <- data.table::setDT(block_dat)
-  ntee_dat <- data.table::setDT(ntee_df)
-  cbsa_dat <- data.table::setDT(cbsa_df)
-
   return("test")
 
 }
