@@ -1,10 +1,12 @@
+#' @title Function to validate inputs to get_data()
+#'
+#' @description This function validates each argument passed to get_data() and
+#' returns informative error messages if user inputs are incorrect.
 #' @export
 validate_get_data <- function(dsname = NULL,
                               time = "current",
                               scope.orgtype = "NONPROFIT",
-                              scope.formtype = "PC",
-                              ntee = NULL,
-                              geo = NULL){
+                              scope.formtype = "PC"){
 
   stopifnot(
 
