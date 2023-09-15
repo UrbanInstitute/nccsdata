@@ -82,8 +82,6 @@ core_file_constructor <- function(time = NULL,
 
   # Add orgtype
   orgtype_full <- orgtype_dic[scope.orgtype]
-
-  # Add orgtype
   files_orgtype <- as.vector(outer(files_year,
                                    orgtype_full,
                                    paste,
