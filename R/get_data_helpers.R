@@ -22,9 +22,9 @@
 #'
 #' @export
 validate_get_data <- function(dsname = NULL,
-                              time = "current",
-                              scope.orgtype = "NONPROFIT",
-                              scope.formtype = "PC"){
+                              time = NULL,
+                              scope.orgtype = NULL,
+                              scope.formtype = NULL){
 
   stopifnot(
 
