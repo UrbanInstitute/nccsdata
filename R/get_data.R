@@ -47,48 +47,12 @@ get_data <- function(dsname = NULL,
                                  scope.formtype = scope.formtype)
   message(valid_msg)
 
-  # Start with an empty list and add elements to it
-  ntee2_matches <- c()
+  ntee2_matches <- query_ntee(ntee.user = ntee,
+                              ntee.group = ntee.group,
+                              ntee.code = ntee.code,
+                              ntee.orgtype = ntee.orgtype)
 
-  ntee2_query_ls <- sort_ntee(ntee.user = ntee,
-                             ntee.group = ntee.group,
-                             ntee.code = ntee.code,
-                             ntee.orgtype = ntee.orgtype)
-
-  if (all(lengths(ntee2_query_ls) == 0)){
-
-    ntee2_matches <- ntee_df$ntee2.code
-
-  } else {
-
-    if (length(ntee2_query_ls$group) != 0){
-
-      group_matches <- parse_ntee(ntee.group = ntee2_query_ls$group,
-                                  ntee.code = "all",
-                                  ntee.orgtype = "all")
-      ntee2_matches <- c(ntee2_matches, group_matches)
-
-    }
-
-    if (length(ntee2_query_ls$code) != 0){
-
-      code_matches <- parse_ntee(ntee.group = "all",
-                                 ntee.code = ntee2_query_ls$code,
-                                 ntee.orgtype = "all")
-      ntee2_matches <- c(ntee2_matches, code_matches)
-
-    }
-
-    if (length(ntee2_query_ls$orgtype) != 0){
-
-      orgtype_matches <- parse_ntee(ntee.group = "all",
-                                    ntee.code = "all",
-                                    ntee.orgtype = ntee2_query_ls$orgtype)
-      ntee2_matches <- c(ntee2_matches, orgtype_matches)
-    }
-  }
-
-  return(unique(ntee2_matches))
+  return(ntee2_matches)
 
 }
 
