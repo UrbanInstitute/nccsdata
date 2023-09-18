@@ -199,28 +199,42 @@ validate_inp <- function(ntee.group,
 #' tyoe
 #'
 #' @description This function takes as input the ntee= argument from get_data()
-#' and sorts user inputs into group, code and organization type.
+#' and sorts user inputs into group, code and organization type. It then
+#' combines these user inputs with any pre-existing group, code and organization
+#' types.
 #'
-#' @param ntee.gco character vector. Vector of user inputs. gco is shorthand
-#' for group, code and orgtypes. The user inputs are progressively filtered
-#' until group, code and orgtypes are sorted into seperate vectors.
+#' @param ntee.user character vector. Vector of user inputs. The user inputs are
+#' progressively filtered until group, code and orgtypes are sorted into
+#' separate vectors.
+#' @param ntee.group character vector. Specific Industry Group codes submitted
+#' by user
+#' @param ntee.code character vector. Specific level 2-4 codes (Industry,
+#' Division, Subdivision) submitted by user.
+#' @param ntee.orgtype character vector. Specific level 5 codes (Organization
+#' Type) submittted by user.
 #'
-#' @usage sort_ntee(ntee.gco)
+#' @usage sort_ntee(ntee.user, ntee.group, ntee.code, ntee.orgtype)
 #'
-#' @return a list with the sorted ntee group, code and organization type
+#' @return a list with all ntee groups, codes and organization types being
+#' queried by the user
 #'
 #' @examples
-#' sort_ntee(ntee.gco = c("HEA", "B", "A2x", "C45", "RG", "AA"))
-#' sort_ntee(ntee.gco = c("HEA", "B", "A2x", "C45", "RG"))
-#' sort_ntee(ntee.gco = c("HEA", "B", "A2x", "C45"))
+#' sort_ntee(ntee = c("HEA", "B", "A2x", "C45", "RG", "AA"))
+#' sort_ntee(ntee = c("HEA", "B", "A2x", "C45", "RG"))
+#' sort_ntee(ntee = c("HEA", "B", "A2x", "C45"))
 
-sort_ntee <- function(ntee.gco){
+sort_ntee <- function(ntee.user, ntee.group, ntee.code, ntee.orgtype){
 
-  group <- ntee.gco[grepl("^[a-zA-Z][a-zA-Z][a-zA-Z]$", ntee.gco)]
-  ntee.co <- setdiff(ntee.gco, group)
-  orgtype <- ntee.co[grepl("^[a-zA-Z][a-zA-Z]$", ntee.co)]
-  ntee.c <- setdiff(ntee.co, orgtype)
+  group <- ntee.user[grepl("^[a-zA-Z][a-zA-Z][a-zA-Z]$", ntee.user)]
+  group <- unique(c(group, ntee.group))
+  ntee.user <- setdiff(ntee.user, group)
+
+  orgtype <- ntee.user[grepl("^[a-zA-Z][a-zA-Z]$", ntee.user)]
+  orgtype <- unique(c(orgtype, ntee.orgtype))
+  ntee.user <- setdiff(ntee.user, orgtype)
+
   code <- ntee.c[grepl("^[A-Z][0-9xX]*[A-Z0-9xX]*", ntee.c)]
+  code <- unique(c(code, ntee.code))
 
   ntee_sort_ls <- list(group  = group,
                        code = code,
