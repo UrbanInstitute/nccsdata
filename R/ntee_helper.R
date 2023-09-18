@@ -193,3 +193,38 @@ validate_inp <- function(ntee.group,
   }
 
 }
+
+
+#' @title Function to sort user ntee inputs into group, code and organization
+#' tyoe
+#'
+#' @description This function takes as input the ntee= argument from get_data()
+#' and sorts user inputs into group, code and organization type.
+#'
+#' @param ntee.gco character vector. Vector of user inputs. gco is shorthand
+#' for group, code and orgtypes. The user inputs are progressively filtered
+#' until group, code and orgtypes are sorted into seperate vectors.
+#'
+#' @usage sort_ntee(ntee.gco)
+#'
+#' @return a list with the sorted ntee group, code and organization type
+#'
+#' @examples
+#' sort_ntee(ntee.gco = c("HEA", "B", "A2x", "C45", "RG", "AA"))
+#' sort_ntee(ntee.gco = c("HEA", "B", "A2x", "C45", "RG"))
+#' sort_ntee(ntee.gco = c("HEA", "B", "A2x", "C45"))
+
+sort_ntee <- function(ntee.gco){
+
+  group <- ntee.gco[grepl("^[a-zA-Z][a-zA-Z][a-zA-Z]$", ntee.gco)]
+  ntee.co <- setdiff(ntee.gco, group)
+  orgtype <- ntee.co[grepl("^[a-zA-Z][a-zA-Z]$", ntee.co)]
+  ntee.c <- setdiff(ntee.co, orgtype)
+  code <- ntee.c[grepl("^[A-Z][0-9xX]*[A-Z0-9xX]*", ntee.c)]
+
+  ntee_sort_ls <- list(group  = group,
+                       code = code,
+                       orgtype = orgtype)
+
+  return(ntee_sort_ls)
+}
