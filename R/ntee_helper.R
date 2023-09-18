@@ -233,7 +233,7 @@ sort_ntee <- function(ntee.user, ntee.group, ntee.code, ntee.orgtype){
   orgtype <- unique(c(orgtype, ntee.orgtype))
   ntee.user <- setdiff(ntee.user, orgtype)
 
-  code <- ntee.c[grepl("^[A-Z][0-9xX]*[A-Z0-9xX]*", ntee.code)]
+  code <- ntee.user[grepl("^[A-Z][0-9xX]*[A-Z0-9xX]*", ntee.user)]
   code <- unique(c(code, ntee.code))
 
   ntee_sort_ls <- list(group  = group,
