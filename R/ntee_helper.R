@@ -245,3 +245,72 @@ sort_ntee <- function(ntee.user, ntee.group, ntee.code, ntee.orgtype){
 
   return(ntee_sort_ls)
 }
+
+
+#' @title function to match user queries to ntee2 codes
+#'
+#' @description This function runs seperate ntee queries on user inputs and
+#' combines the results
+#'
+#' @param ntee.user character vector. Vector of user inputs. The user inputs are
+#' progressively filtered until group, code and orgtypes are sorted into
+#' separate vectors.
+#' @param ntee.group character vector. Specific Industry Group codes submitted
+#' by user
+#' @param ntee.code character vector. Specific level 2-4 codes (Industry,
+#' Division, Subdivision) submitted by user.
+#' @param ntee.orgtype character vector. Specific level 5 codes (Organization
+#' Type) submittted by user.
+#'
+#' @usage query_ntee(ntee.group, ntee.code, ntee.orgtype)
+#'
+#' @returns a vector of matched unique ntee2 codes
+
+query_ntee <- function(ntee.user,
+                       ntee.group,
+                       ntee.code,
+                       ntee.orgtype){
+
+  ntee2_matches <- c()
+
+  ntee2_query_ls <- sort_ntee(ntee.user = ntee.user,
+                              ntee.group = ntee.group,
+                              ntee.code = ntee.code,
+                              ntee.orgtype = ntee.orgtype)
+
+  if (all(lengths(ntee2_query_ls) == 0)){
+
+    ntee2_matches <- ntee_df$ntee2.code
+
+  } else {
+
+    if (length(ntee2_query_ls$group) != 0){
+
+      group_matches <- parse_ntee(ntee.group = ntee2_query_ls$group,
+                                  ntee.code = "all",
+                                  ntee.orgtype = "all")
+      ntee2_matches <- c(ntee2_matches, group_matches)
+
+    }
+
+    if (length(ntee2_query_ls$code) != 0){
+
+      code_matches <- parse_ntee(ntee.group = "all",
+                                 ntee.code = ntee2_query_ls$code,
+                                 ntee.orgtype = "all")
+      ntee2_matches <- c(ntee2_matches, code_matches)
+
+    }
+
+    if (length(ntee2_query_ls$orgtype) != 0){
+
+      orgtype_matches <- parse_ntee(ntee.group = "all",
+                                    ntee.code = "all",
+                                    ntee.orgtype = ntee2_query_ls$orgtype)
+      ntee2_matches <- c(ntee2_matches, orgtype_matches)
+    }
+  }
+
+  return(unique(ntee2_matches))
+
+}
