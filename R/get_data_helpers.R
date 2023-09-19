@@ -178,7 +178,8 @@ s3_query <- function(bucket,
 
 #' @title function to construct queries for core bucket
 
-query_construct <- function(geo.state = NULL){
+query_construct <- function(geo.state,
+                            ntee){
 
   full_query <- "select * from s3object"
 
@@ -188,6 +189,14 @@ query_construct <- function(geo.state = NULL){
                          paste(sprintf("'%s'", geo.state),
                                collapse=","))
     full_query <- paste0(full_query, geo_query)
+  }
+
+  if (is.null(ntee) == FALSE){
+    sub_query <- " where NTEECC in (%s)"
+    ntee_query <- sprintf(sub_query,
+                          paste(sprintf("'%s'", ntee),
+                                collapse=","))
+    full_query <- paste0(full_query, ntee_query)
   }
 
   return(full_query)
