@@ -129,3 +129,48 @@ core_validate <- function(filenames){
   return(valid_keys)
 
 }
+
+#' @title Function to perform S3 Select query on core bucket
+#'
+#' @import paws
+
+core_select <- function(core.bucket = "legacy/core/",
+                       core.keys,
+                       time,
+                       scope.orgtype,
+                       scope.formtype,
+                       geo.state){
+
+  s3 <- paws::s3()
+
+  query <- "select * from s3object where STATE in (%s)"
+  query <- sprintf(query,
+                   paste(sprintf("'%s'", geo.state),
+                         collapse=","))
+
+  # Run a SQL query on data in a CSV in S3, and get the query's result set.
+  result <- s3$select_object_content(
+    Bucket = bucket,
+    Key = keys[1],
+    Expression = query,
+    ExpressionType = "SQL",
+    InputSerialization = list(
+      'CSV' = list(
+        FileHeaderInfo = "USE"
+      )
+    ),
+    OutputSerialization = list(
+      'CSV'= list(
+        QuoteFields = "ASNEEDED"
+      )
+    )
+  )
+
+  # Convert the resulting CSV data into an R data frame.
+  data <- read.csv(text = result$Payload$Records$Payload, header = FALSE)
+  return(data)
+
+}
+
+
+#' @title function to construct queries for core bucket
