@@ -34,7 +34,7 @@
 get_data <- function(dsname = NULL,
                      time = "current",
                      scope.orgtype = "NONPROFIT",
-                     scope.formtype = "PC",
+                     scope.formtype = "PZ",
                      geo.state = NULL,
                      ntee = NULL,
                      ntee.group = NULL,
@@ -53,21 +53,24 @@ get_data <- function(dsname = NULL,
                               ntee.code = ntee.code,
                               ntee.orgtype = ntee.orgtype)
 
-  # Get names of files
-  core_filenames <- core_file_constructor(time = time,
-                                          scope.orgtype = scope.orgtype,
-                                          scope.formtype = scope.formtype)
+  if (dsname == "core"){
+    filenames <- core_file_constructor(time = time,
+                                       scope.orgtype = scope.orgtype,
+                                       scope.formtype = scope.formtype)
+  }
 
   # Check if files exist
-  core_keys <- core_validate(filenames = core_filenames)
+  keys <- s3_validate(dsname = dsname,
+                      filenames = filenames)
 
   # Query keys
-
-  select_results <- core_select(time = time,
-                              scope.orgtype = scope.orgtype,
-                              scope.formtype = scope.formtype,
-                              geo.state = geo.state)
-  return(query_results)
+  select_results <- s3_query(bucket = "nccsdata",
+                             keys = keys,
+                             time = time,
+                             scope.orgtype = scope.orgtype,
+                             scope.formtype = scope.formtype,
+                             geo.state = geo.state)
+  return(select_results)
 
 }
 

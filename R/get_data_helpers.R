@@ -101,7 +101,7 @@ core_file_constructor <- function(time = NULL,
 
 }
 
-#' @title Function to validate constructed core file names and return s3 keys
+#' @title Function to validate constructed file names and return s3 keys
 #'
 #' @description This function takes constructed file names from
 #' core_file_constructor() and tests if the urls to those files exist. Then it
@@ -117,9 +117,10 @@ core_file_constructor <- function(time = NULL,
 #' @importFrom RCurl url.exists
 
 
-core_validate <- function(filenames){
+s3_validate <- function(dsname,
+                        filenames){
 
-  base_bucket <- "https://nccsdata.s3.amazonaws.com/legacy/core/"
+  base_bucket <- sprintf("https://nccsdata.s3.amazonaws.com/legacy/%s/", dsname)
   base_url <- "https://nccsdata.s3.amazonaws.com/"
 
   urls <- paste0(base_bucket, filenames)
@@ -132,31 +133,88 @@ core_validate <- function(filenames){
 
 #' @title Function to perform S3 Select query on core bucket
 #'
-#' @import paws
+#' @importFrom purrr map2
 
-core_select <- function(core.bucket = "legacy/core/",
-                       core.keys,
-                       time,
-                       scope.orgtype,
-                       scope.formtype,
-                       geo.state){
+s3_query <- function(bucket,
+                     keys,
+                     time,
+                     scope.orgtype,
+                     scope.formtype,
+                     geo.state){
+
+  header_query <- "SELECT * FROM s3object s LIMIT 1"
+  query <- query_construct(geo.state = geo.state)
+
+  # Execute queries
+  df_headers_ls <- lapply(keys,
+                          paws_s3_select,
+                          bucket = bucket,
+                          query = header_query,
+                          file.header = "NONE",
+                          csv.header = TRUE)
+  df_headers_ls <- lapply(df_headers_ls,
+                          colnames)
+
+  df_body_ls <- lapply(keys,
+                       paws_s3_select,
+                       bucket = bucket,
+                       query = query,
+                       file.header = "USE",
+                       csv.header = FALSE)
+
+  df_full <- purrr::map2(.x = df_body_ls,
+                         .y = df_headers_ls,
+                         .f = function(x, y){
+                           colnames(x) <- y
+                           return(x)
+                           })
+
+  return(df_full)
+
+}
+
+
+#' @title function to construct queries for core bucket
+
+query_construct <- function(geo.state = NULL){
+
+  full_query <- "select * from s3object"
+
+  if (is.null(geo.state) == FALSE){
+    sub_query <- " where STATE in (%s)"
+    geo_query <- sprintf(sub_query,
+                         paste(sprintf("'%s'", geo.state),
+                               collapse=","))
+    full_query <- paste0(full_query, geo_query)
+  }
+
+  return(full_query)
+}
+
+
+#' @title function to perform s3_select with paws
+#'
+#' @importFrom paws s3
+#'
+
+paws_s3_select <- function(bucket,
+                           key,
+                           query,
+                           file.header,
+                           csv.header){
 
   s3 <- paws::s3()
-
-  query <- "select * from s3object where STATE in (%s)"
-  query <- sprintf(query,
-                   paste(sprintf("'%s'", geo.state),
-                         collapse=","))
 
   # Run a SQL query on data in a CSV in S3, and get the query's result set.
   result <- s3$select_object_content(
     Bucket = bucket,
-    Key = keys[1],
+    Key = key,
     Expression = query,
     ExpressionType = "SQL",
     InputSerialization = list(
       'CSV' = list(
-        FileHeaderInfo = "USE"
+        FileHeaderInfo = file.header,
+        AllowQuotedRecordDelimiter = TRUE
       )
     ),
     OutputSerialization = list(
@@ -167,10 +225,8 @@ core_select <- function(core.bucket = "legacy/core/",
   )
 
   # Convert the resulting CSV data into an R data frame.
-  data <- read.csv(text = result$Payload$Records$Payload, header = FALSE)
+  data <- read.csv(text = result$Payload$Records$Payload,
+                   header = csv.header)
+
   return(data)
-
 }
-
-
-#' @title function to construct queries for core bucket
