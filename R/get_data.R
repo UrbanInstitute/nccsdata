@@ -53,8 +53,7 @@ get_data <- function(dsname = NULL,
                               ntee.code = ntee.code,
                               ntee.orgtype = ntee.orgtype)
   nteecc_df <- ntee_df %>%
-    filter(ntee2.code %in% ntee2_matches) %>%
-    select(old.code)
+    filter(ntee2.code %in% ntee2_matches)
   nteecc_matches <- nteecc_df$old.code
 
   if (dsname == "core"){
