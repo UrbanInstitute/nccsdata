@@ -53,25 +53,21 @@ get_data <- function(dsname = NULL,
                               ntee.code = ntee.code,
                               ntee.orgtype = ntee.orgtype)
 
-  query_results <- query_s3(time = time,
-                            scope.orgtype = scope.orgtype,
-                            scope.formtype = scope.formtype,
-                            geo.state = geo.state)
+  # Get names of files
+  core_filenames <- core_file_constructor(time = time,
+                                          scope.orgtype = scope.orgtype,
+                                          scope.formtype = scope.formtype)
+
+  # Check if files exist
+  core_keys <- core_validate(filenames = core_filenames)
+
+  # Query keys
+
+  query_results <- core_query(time = time,
+                              scope.orgtype = scope.orgtype,
+                              scope.formtype = scope.formtype,
+                              geo.state = geo.state)
   return(query_results)
-
-}
-
-#' @title Function to download core data from S3 bucket.
-
-
-dl_core <- function(filenames){
-
-  base_url <- "https://nccsdata.s3.amazonaws.com/legacy/core/"
-
-  urls <- paste0(base_url, filenames)
-  valid_urls <- urls[RCurl::url.exists(urls)]
-
-  return(valid_urls)
 
 }
 
@@ -79,23 +75,19 @@ dl_core <- function(filenames){
 #'
 #' @import paws
 
-query_s3 <- function(time,
-                     scope.orgtype,
-                     scope.formtype,
-                     geo.state){
-
-  core_files <- core_file_constructor(time = time,
-                                      scope.orgtype = scope.orgtype,
-                                      scope.formtype = scope.formtype)
-
-  bucket_root <- "legacy/core/"
-  keys <- paste0(bucket_root, core_files)
-  bucket <- "nccsdata"
+core_query <- function(core.bucket = "legacy/core/",
+                       core.keys,
+                       time,
+                       scope.orgtype,
+                       scope.formtype,
+                       geo.state){
 
   s3 <- paws::s3()
 
   query <- "select * from s3object where STATE in (%s)"
-  query <- sprintf(query, paste(sprintf("'%s'",geo.state), collapse=","))
+  query <- sprintf(query,
+                   paste(sprintf("'%s'", geo.state),
+                         collapse=","))
 
   # Run a SQL query on data in a CSV in S3, and get the query's result set.
   result <- s3$select_object_content(
