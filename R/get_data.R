@@ -35,6 +35,7 @@ get_data <- function(dsname = NULL,
                      time = "current",
                      scope.orgtype = "NONPROFIT",
                      scope.formtype = "PC",
+                     geo.state = NULL,
                      ntee = NULL,
                      ntee.group = NULL,
                      ntee.code = NULL,
@@ -52,7 +53,11 @@ get_data <- function(dsname = NULL,
                               ntee.code = ntee.code,
                               ntee.orgtype = ntee.orgtype)
 
-  return(ntee2_matches)
+  query_results <- query_s3(time = time,
+                            scope.orgtype = scope.orgtype,
+                            scope.formtype = scope.formtype,
+                            geo.state = geo.state)
+  return(query_results)
 
 }
 
@@ -69,4 +74,51 @@ dl_core <- function(filenames){
   return(valid_urls)
 
 }
+
+#' @title Function to perform S3 Select query on
+#'
+#' @import paws
+
+query_s3 <- function(time,
+                     scope.orgtype,
+                     scope.formtype,
+                     geo.state){
+
+  core_files <- core_file_constructor(time = time,
+                                      scope.orgtype = scope.orgtype,
+                                      scope.formtype = scope.formtype)
+
+  bucket_root <- "legacy/core/"
+  keys <- paste0(bucket_root, core_files)
+  bucket <- "nccsdata"
+
+  s3 <- paws::s3()
+
+  query <- "select * from s3object where STATE in (%s)"
+  query <- sprintf(query, paste(sprintf("'%s'",geo.state), collapse=","))
+
+  # Run a SQL query on data in a CSV in S3, and get the query's result set.
+  result <- s3$select_object_content(
+    Bucket = bucket,
+    Key = keys[1],
+    Expression = query,
+    ExpressionType = "SQL",
+    InputSerialization = list(
+      'CSV' = list(
+        FileHeaderInfo = "USE"
+      )
+    ),
+    OutputSerialization = list(
+      'CSV'= list(
+        QuoteFields = "ASNEEDED"
+      )
+    )
+  )
+
+  # Convert the resulting CSV data into an R data frame.
+  data <- read.csv(text = result$Payload$Records$Payload, header = FALSE)
+  return(data)
+
+}
+
 
