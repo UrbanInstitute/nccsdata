@@ -48,10 +48,13 @@ get_data <- function(dsname = NULL,
                                  scope.formtype = scope.formtype)
   message(valid_msg)
 
+  # NTEE parsing
   ntee2_matches <- query_ntee(ntee.user = ntee,
                               ntee.group = ntee.group,
                               ntee.code = ntee.code,
                               ntee.orgtype = ntee.orgtype)
+
+  # Geo parsing
 
   # Put into seperate function
   nteecc_df <- ntee_df %>%
@@ -74,7 +77,13 @@ get_data <- function(dsname = NULL,
                              time = time,
                              scope.orgtype = scope.orgtype,
                              scope.formtype = scope.formtype,
-                             geo.state = geo.state)
+                             geo.state = geo.state,
+                             ntee = nteecc_matches)
+
+  # Merge with ntee dataset
+
+  # Merge with geo dataset
+
   return(select_results)
 
 }
