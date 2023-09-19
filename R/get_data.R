@@ -52,6 +52,10 @@ get_data <- function(dsname = NULL,
                               ntee.group = ntee.group,
                               ntee.code = ntee.code,
                               ntee.orgtype = ntee.orgtype)
+  nteecc_df <- ntee_df %>%
+    filter(ntee2.code %in% ntee2_matches) %>%
+    select(old.code)
+  nteecc_matches <- nteecc_df$old.code
 
   if (dsname == "core"){
     filenames <- core_file_constructor(time = time,
