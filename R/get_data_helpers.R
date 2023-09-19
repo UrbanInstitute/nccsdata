@@ -140,10 +140,12 @@ s3_query <- function(bucket,
                      time,
                      scope.orgtype,
                      scope.formtype,
-                     geo.state){
+                     geo.state,
+                     ntee){
 
   header_query <- "SELECT * FROM s3object s LIMIT 1"
-  query <- query_construct(geo.state = geo.state)
+  query <- query_construct(geo.state = geo.state,
+                           ntee = ntee)
 
   # Execute queries
   df_headers_ls <- lapply(keys,
