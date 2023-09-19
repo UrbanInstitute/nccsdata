@@ -192,7 +192,7 @@ query_construct <- function(geo.state,
   }
 
   if (is.null(ntee) == FALSE){
-    sub_query <- " where NTEECC in (%s)"
+    sub_query <- " and NTEECC in (%s)"
     ntee_query <- sprintf(sub_query,
                           paste(sprintf("'%s'", ntee),
                                 collapse=","))
