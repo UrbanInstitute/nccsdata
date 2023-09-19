@@ -52,6 +52,8 @@ get_data <- function(dsname = NULL,
                               ntee.group = ntee.group,
                               ntee.code = ntee.code,
                               ntee.orgtype = ntee.orgtype)
+
+  # Put into seperate function
   nteecc_df <- ntee_df %>%
     filter(ntee2.code %in% ntee2_matches)
   nteecc_matches <- nteecc_df$old.code
