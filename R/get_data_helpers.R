@@ -190,7 +190,7 @@ query_construct <- function(geo.state,
                                collapse=","))
     full_query <- paste0(full_query, geo_query)
   }
-
+  # add where/and selection
   if (is.null(ntee) == FALSE){
     sub_query <- " and NTEECC in (%s)"
     ntee_query <- sprintf(sub_query,
