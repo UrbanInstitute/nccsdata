@@ -133,13 +133,17 @@ s3_validate <- function(dsname,
 
 #' @title Function to perform S3 Select query on core bucket
 #'
+#' @description This function queries core/bmf .csv S3 objects and returns
+#' rows that satisfy user-specified filter conditions
+#'
+#' @param bucket character scalar. Name of s3 bucket to query
+#' @param keys character scalar. s3 object key
+#' @param scop
+#'
 #' @importFrom purrr map2
 
 s3_query <- function(bucket,
                      keys,
-                     time,
-                     scope.orgtype,
-                     scope.formtype,
                      geo.state,
                      ntee){
 

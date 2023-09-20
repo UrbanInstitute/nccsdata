@@ -74,9 +74,6 @@ get_data <- function(dsname = NULL,
   # Query keys
   select_results <- s3_query(bucket = "nccsdata",
                              keys = keys,
-                             time = time,
-                             scope.orgtype = scope.orgtype,
-                             scope.formtype = scope.formtype,
                              geo.state = geo.state,
                              ntee = nteecc_matches)
 
