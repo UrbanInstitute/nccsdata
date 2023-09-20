@@ -240,6 +240,7 @@ query_construct <- function(geo.state,
 #' @usage paws_s3_select(bucket, key, query, file.header, csv.header)
 #'
 #' @importFrom paws s3
+#' @importFrom utils read.csv
 
 paws_s3_select <- function(bucket,
                            key,
@@ -269,8 +270,8 @@ paws_s3_select <- function(bucket,
   )
 
   # Convert the resulting CSV data into an R data frame.
-  data <- read.csv(text = result$Payload$Records$Payload,
-                   header = csv.header)
+  data <- utils::read.csv(text = result$Payload$Records$Payload,
+                          header = csv.header)
 
   return(data)
 }
