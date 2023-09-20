@@ -12,14 +12,14 @@ get_data(ntee.level1,
                 geo.level)
 }
 \arguments{
+\item{geo.state}{string or vector. Filter query by state abbreviations e.g.
+"NY", "CA". Default == NULL includes all states.}
+
 \item{ntee.level1}{string or vector. Nonprofit Industry Group. Default ==
 "all" includes all Industry Groups.}
 
 \item{ntee.level2}{string or vector. Level 2-4 of NTEE code (Industry,
 Division and Subdivision). Default == "all" includes all codes.}
-
-\item{geo.state}{string or vector. Filter query by state abbreviations e.g.
-"NY", "CA". Default == NULL includes all states.}
 
 \item{geo.metro}{string or vector. Filter query by cbsa code. Default = NULL
 includes all metro cbsa codes.}
