@@ -132,7 +132,7 @@ core_file_constructor <- function(time,
 #'
 #' @returns vector of valid s3 bucket keys for core data sets
 #'
-#' @usage s3_validate(filenames)
+#' @usage s3_validate(dsname, filenames)
 #'
 #' @importFrom RCurl url.exists
 
@@ -164,7 +164,7 @@ s3_validate <- function(dsname,
 #'
 #' @return list of queried dataframes. One for each key supplied.
 #'
-#' @usage s3_query(bucket, keys, geo.state, ntee)
+#' @usage s3_query(bucket, keys, geo.state, ntee.cc)
 #'
 #' @importFrom purrr map2
 
@@ -216,7 +216,7 @@ s3_query <- function(bucket,
 #'
 #' @return a completed SQL query
 #'
-#' @usage query_construct(geo.state, ntee)
+#' @usage query_construct(geo.state, ntee.cc)
 
 query_construct <- function(geo.state,
                             ntee.cc){

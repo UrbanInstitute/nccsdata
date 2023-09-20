@@ -18,7 +18,7 @@
 #' PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).
 #' @param geo.state character vector. Filter query by state abbreviations e.g.
 #' "NY", "CA". Default == NULL includes all states.
-#' @param ntee. character vector. Vector of user inputs. The user inputs are
+#' @param ntee character vector. Vector of user inputs. The user inputs are
 #' progressively filtered until group, code and orgtypes are sorted into
 #' separate vectors.
 #' @param ntee.group character vector. Specific Industry Group codes submitted
