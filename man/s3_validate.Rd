@@ -4,9 +4,12 @@
 \alias{s3_validate}
 \title{Function to validate constructed file names and return s3 keys}
 \usage{
-s3_validate(filenames)
+s3_validate(dsname, filenames)
 }
 \arguments{
+\item{dsname}{character scalar. Name of data series to query from S3.
+Valid inputs are "core" and "bmf", not both.}
+
 \item{filenames}{character vector. Vector of file names returned by
 core_file_constructor}
 }

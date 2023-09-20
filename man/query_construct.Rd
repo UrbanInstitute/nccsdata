@@ -4,12 +4,12 @@
 \alias{query_construct}
 \title{function to construct SQL queries for s3 select}
 \usage{
-query_construct(geo.state, ntee)
+query_construct(geo.state, ntee.cc)
 }
 \arguments{
 \item{geo.state}{character vector. Vector of state abbreviations}
 
-\item{ntee}{character vector. Vector of ntee codes found in NTEECC}
+\item{ntee.cc}{character vector. Vector of ntee codes found in NTEECC}
 }
 \value{
 a completed SQL query

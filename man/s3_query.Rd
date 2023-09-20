@@ -4,7 +4,7 @@
 \alias{s3_query}
 \title{Function to perform S3 Select query on s3 bucket}
 \usage{
-s3_query(bucket, keys, geo.state, ntee)
+s3_query(bucket, keys, geo.state, ntee.cc)
 }
 \arguments{
 \item{bucket}{character scalar. Name of s3 bucket to query}
@@ -13,7 +13,7 @@ s3_query(bucket, keys, geo.state, ntee)
 
 \item{geo.state}{character vector. Vector of state abbreviations}
 
-\item{ntee}{character vector. Vector of ntee codes found in NTEECC}
+\item{ntee.cc}{character vector. Vector of ntee codes found in NTEECC}
 }
 \value{
 list of queried dataframes. One for each key supplied.
