@@ -131,14 +131,20 @@ s3_validate <- function(dsname,
 
 }
 
-#' @title Function to perform S3 Select query on core bucket
+#' @title Function to perform S3 Select query on s3 bucket
 #'
-#' @description This function queries core/bmf .csv S3 objects and returns
-#' rows that satisfy user-specified filter conditions
+#' @description This function queries multiple core/bmf .csv S3 objects and
+#' returns a list of object subsets that satisfy user-specified filter
+#' conditions.
 #'
 #' @param bucket character scalar. Name of s3 bucket to query
-#' @param keys character scalar. s3 object key
-#' @param scop
+#' @param keys character vector. s3 object keys
+#' @param geo.state character vector. Vector of state abbreviations
+#' @param ntee character vector. Vector of ntee codes found in NTEECC
+#'
+#' @return list of queried dataframes. One for each key supplied.
+#'
+#' @usage s3_query(bucket, keys, geo.state, ntee)
 #'
 #' @importFrom purrr map2
 
