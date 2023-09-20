@@ -205,8 +205,21 @@ query_construct <- function(geo.state,
 
 #' @title function to perform s3_select with paws
 #'
-#' @importFrom paws s3
+#' @description This function uses paws to perform aws s3 select queries on a
+#' user provided object key and bucket.
 #'
+#' @param bucket character scalar. Name of s3 bucket.
+#' @param key character scalar. s3 object key.
+#' @param query character scalar. Desired SQL query.
+#' @param file.header character scalar. Option to use header columns in SQL
+#' query. Acceptable inputs are USE | NONE | IGNORE
+#' @param csv.header boolean. Option to return csv with first row as header.
+#'
+#' @return dataframe with query results
+#'
+#' @usage paws_s3_select(bucket, key, query, file.header, csv.header)
+#'
+#' @importFrom paws s3
 
 paws_s3_select <- function(bucket,
                            key,
