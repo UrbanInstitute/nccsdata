@@ -176,7 +176,17 @@ s3_query <- function(bucket,
 }
 
 
-#' @title function to construct queries for core bucket
+#' @title function to construct SQL queries for s3 select
+#'
+#' @description This function takes in filter arguments from get_data() and
+#' constructs a SQL query for s3 select
+#'
+#' @param geo.state character vector. Vector of state abbreviations
+#' @param ntee character vector. Vector of ntee codes found in NTEECC
+#'
+#' @return a completed SQL query
+#'
+#' @usage query_construct(geo.state, ntee)
 
 query_construct <- function(geo.state,
                             ntee){
