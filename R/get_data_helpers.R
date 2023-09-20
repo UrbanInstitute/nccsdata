@@ -125,6 +125,8 @@ core_file_constructor <- function(time,
 #' core_file_constructor() and tests if the urls to those files exist. Then it
 #' extracts s3 bucket keys from the validated urls for downstream s3 queries.
 #'
+#' @param dsname character scalar. Name of data series to query from S3.
+#' Valid inputs are "core" and "bmf", not both.
 #' @param filenames character vector. Vector of file names returned by
 #' core_file_constructor
 #'
@@ -158,7 +160,7 @@ s3_validate <- function(dsname,
 #' @param bucket character scalar. Name of s3 bucket to query
 #' @param keys character vector. s3 object keys
 #' @param geo.state character vector. Vector of state abbreviations
-#' @param ntee character vector. Vector of ntee codes found in NTEECC
+#' @param ntee.cc character vector. Vector of ntee codes found in NTEECC
 #'
 #' @return list of queried dataframes. One for each key supplied.
 #'
@@ -210,7 +212,7 @@ s3_query <- function(bucket,
 #' constructs a SQL query for s3 select
 #'
 #' @param geo.state character vector. Vector of state abbreviations
-#' @param ntee character vector. Vector of ntee codes found in NTEECC
+#' @param ntee.cc character vector. Vector of ntee codes found in NTEECC
 #'
 #' @return a completed SQL query
 #'

@@ -4,24 +4,41 @@
 #' @description This function uses user inputs to query, filter and merge nccs
 #' data and additional census, cbsa and ntee metadata
 #'
-#' @param ntee.level1 string or vector. Nonprofit Industry Group. Default ==
-#' "all" includes all Industry Groups.
-#' @param ntee.level2 string or vector. Level 2-4 of NTEE code (Industry,
-#' Division and Subdivision). Default == "all" includes all codes.
-#' @param geo.state string or vector. Filter query by state abbreviations e.g.
+#' @param dsname character scalar. Name of data series to query from S3.
+#' Valid inputs are "core" and "bmf", not both.
+#' @param time character vector. Dates of core/bmf files to query. Valid
+#' inputs range from 1989-2022. Default value is "current" for 2022.
+#' @param scope.orgtype character scalar. Organization type to query from
+#' core/bmf s3 bucket. Valid inputs are 'CHARITIES' for charities (501C3-PC),
+#' 'PRIVFOUND' for private foundations (501C3-PF) and 'NONPROFIT' for all
+#' nonprofits (501CE)
+#' @param scope.formtype character scalar. Form type to query from core/bmf s3
+#' bucket. Valid inputs are 'PC'(nonprofits that file the full version),
+#' 'EZ'(nonprofits that file 990EZs only), '
+#' PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).
+#' @param geo.state character vector. Filter query by state abbreviations e.g.
 #' "NY", "CA". Default == NULL includes all states.
-#' @param geo.metro string or vector. Filter query by cbsa code. Default = NULL
-#' includes all metro cbsa codes.
-#' @param geo.level string. Census dataset to merge with. Default == "tract"
-#' which merges filtered bmf data with census tract data.
+#' @param ntee. character vector. Vector of user inputs. The user inputs are
+#' progressively filtered until group, code and orgtypes are sorted into
+#' separate vectors.
+#' @param ntee.group character vector. Specific Industry Group codes submitted
+#' by user
+#' @param ntee.code character vector. Specific level 2-4 codes (Industry,
+#' Division, Subdivision) submitted by user.
+#' @param ntee.orgtype character vector. Specific level 5 codes (Organization
+#' Type) submitted by user.
 #'
 #' @return data.table with queried data
 #'
-#' @usage get_data(ntee.level1,
-#'                 ntee.level2,
+#' @usage get_data(dsname,
+#'                 time,
+#'                 scope.orgtype,
+#'                 scope.formtype,
 #'                 geo.state,
-#'                 geo.metro,
-#'                 geo.level)
+#'                 ntee,
+#'                 ntee.group,
+#'                 ntee.code,
+#'                 ntee.orgtype)
 #'
 #' @export
 #'
