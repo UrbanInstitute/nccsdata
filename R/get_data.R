@@ -75,7 +75,7 @@ get_data <- function(dsname = NULL,
   select_results <- s3_query(bucket = "nccsdata",
                              keys = keys,
                              geo.state = geo.state,
-                             ntee = nteecc_matches)
+                             ntee.cc = nteecc_matches)
 
   # Merge with ntee dataset
 

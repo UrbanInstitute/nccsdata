@@ -151,11 +151,11 @@ s3_validate <- function(dsname,
 s3_query <- function(bucket,
                      keys,
                      geo.state,
-                     ntee){
+                     ntee.cc){
 
   header_query <- "SELECT * FROM s3object s LIMIT 1"
   query <- query_construct(geo.state = geo.state,
-                           ntee = ntee)
+                           ntee.cc = ntee.cc)
 
   # Execute queries
   df_headers_ls <- lapply(keys,
@@ -199,7 +199,7 @@ s3_query <- function(bucket,
 #' @usage query_construct(geo.state, ntee)
 
 query_construct <- function(geo.state,
-                            ntee){
+                            ntee.cc){
 
   full_query <- "select * from s3object"
 
@@ -211,10 +211,10 @@ query_construct <- function(geo.state,
     full_query <- paste0(full_query, geo_query)
   }
   # add where/and selection
-  if (is.null(ntee) == FALSE){
+  if (is.null(ntee.cc) == FALSE){
     sub_query <- " and NTEECC in (%s)"
     ntee_query <- sprintf(sub_query,
-                          paste(sprintf("'%s'", ntee),
+                          paste(sprintf("'%s'", ntee.cc),
                                 collapse=","))
     full_query <- paste0(full_query, ntee_query)
   }
