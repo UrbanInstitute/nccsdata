@@ -64,10 +64,28 @@ validate_get_data <- function(dsname = NULL,
 
 #' @title function to construct filenames from aws s3 core bucket
 #'
+#' @description This function constructs names for .csv files found in the
+#' nccsdata bucket for nccs core files based on user inputs
+#'
+#' @param time character vector. Dates of core/bmf files to query. Valid
+#' inputs range from 1989-2022. Default value is "current" for 2022.
+#' @param scope.orgtype character scalar. Organization type to query from
+#' core/bmf s3 bucket. Valid inputs are 'CHARITIES' for charities (501C3-PC),
+#' 'PRIVFOUND' for private foundations (501C3-PF) and 'NONPROFIT' for all
+#' nonprofits (501CE)
+#' @param scope.formtype character scalar. Form type to query from core/bmf s3
+#' bucket. Valid inputs are 'PC'(nonprofits that file the full version),
+#' 'EZ'(nonprofits that file 990EZs only), '
+#' PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).
+#'
+#' @return character vector. Vector of .csv filenames to query in s3 bucket.
+#'
+#' @usage core_file_constructor(time, scope.orgtype, scope.formtype)
+#'
 #' @export
-core_file_constructor <- function(time = NULL,
-                                  scope.orgtype = NULL,
-                                  scope.formtype = NULL){
+core_file_constructor <- function(time,
+                                  scope.orgtype,
+                                  scope.formtype){
   # Organization Type dictionary
   orgtype_dic <- c("CHARITIES" = "CHARITIES-SCOPE-501C3",
                    "PRIVFOUND" = "PRIVFOUND-SCOPE-501C3",
