@@ -130,7 +130,7 @@ core_file_constructor <- function(time,
 #'
 #' @returns vector of valid s3 bucket keys for core data sets
 #'
-#' @usage core_validate(filenames)
+#' @usage s3_validate(filenames)
 #'
 #' @importFrom RCurl url.exists
 
