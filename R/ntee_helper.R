@@ -224,7 +224,7 @@ validate_inp <- function(ntee.group,
 #' sort_ntee(ntee.user = c("HEA", "B", "A2x", "C45", "RG"),
 #'           ntee.code = c("A2x", "Bxx"))
 #' sort_ntee(ntee.user = c("HEA", "B", "A2x", "C45"),
-#'           ntee.orgtype = c("AA", "RG))
+#'           ntee.orgtype = c("AA", "RG"))
 
 sort_ntee <- function(ntee.user, ntee.group, ntee.code, ntee.orgtype){
 
