@@ -262,7 +262,7 @@ sort_ntee <- function(ntee.user, ntee.group, ntee.code, ntee.orgtype){
 #' @param ntee.orgtype character vector. Specific level 5 codes (Organization
 #' Type) submittted by user.
 #'
-#' @usage query_ntee(ntee.group, ntee.code, ntee.orgtype)
+#' @usage query_ntee(ntee.user, ntee.group, ntee.code, ntee.orgtype)
 #'
 #' @returns a vector of matched unique ntee2 codes
 
