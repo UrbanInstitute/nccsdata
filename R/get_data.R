@@ -28,8 +28,7 @@
 #' @importFrom data.table setDT
 #' @importFrom stringr str_replace
 #' @importFrom rlang .data
-#' @import dtplyr
-#' @import dplyr
+#' @importFrom dplyr filter
 
 get_data <- function(dsname = NULL,
                      time = "current",
@@ -58,7 +57,7 @@ get_data <- function(dsname = NULL,
 
   # Put into seperate function
   nteecc_df <- ntee_df %>%
-    filter(.data$ntee2.code %in% ntee2_matches)
+    dplyr::filter(.data$ntee2.code %in% ntee2_matches)
   nteecc_matches <- nteecc_df$old.code
 
   if (dsname == "core"){
