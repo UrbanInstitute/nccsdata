@@ -82,7 +82,8 @@ fips_map <- function(geo.state,
   if (! is.null(geo.state)){
 
     cbsa_fips <- cbsa_df %>%
-      dplyr::filter(.data$state.census.abbr %in% geo.state) %>%
+      dplyr::mutate("state.census.abbr" = tolower(.data$state.census.abbr))
+      dplyr::filter(.data$state.census.abbr %in% tolower(geo.state)) %>%
       dplyr::pull(.data$metro.census.cbsa.geoid)
 
     cbsa_fips_all<- c(cbsa_fips_all,
