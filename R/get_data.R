@@ -65,17 +65,10 @@ get_data <- function(dsname = NULL,
   message(valid_msg)
 
   # NTEE parsing
-  ntee2_matches <- query_ntee(ntee.user = ntee,
-                              ntee.group = ntee.group,
-                              ntee.code = ntee.code,
-                              ntee.orgtype = ntee.orgtype)
-
-  # Geo parsing
-
-  # Put into seperate function
-  nteecc_df <- ntee_df %>%
-    dplyr::filter(.data$ntee2.code %in% ntee2_matches)
-  nteecc_matches <- nteecc_df$old.code
+  nteecc_matches <- nteecc_map(ntee.user = ntee,
+                               ntee.group = ntee.group,
+                               ntee.code = ntee.code,
+                               ntee.orgtype = ntee.orgtype)
 
   if (dsname == "core"){
     filenames <- core_file_constructor(time = time,
