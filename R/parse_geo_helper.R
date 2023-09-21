@@ -49,3 +49,50 @@ dat_filter <- function(dat,
                setdiff(names(args), colnames(dat))))
   }
 }
+
+
+#' @title function that maps fips codes to user arguments
+#'
+#' @description This function takes in the geographic arguments from get_data()
+#' and maps them to fips codes found in the core datasets. These codes can
+#' then be used to filter the core datasets.
+#'
+#' @param geo.state character vector. State abbreviations for filtering e.g.
+#' "NY", "CA".
+#' @param geo.city character vector. City names for filtering e.g. "Chicago",
+#' "montgomery". Case insensitive
+#' @param geo.county character vector. County names for filtering e.g.
+#' "cullman", "dale". Case insensitive.
+#'
+#' @return character vector. county fips codes for filtering core datasets.
+#'
+#' @usage fips_map(geo.state, geo.city, geo.county)
+#'
+#' @importFrom dplyr mutate
+#' @importFrom dplyr filter
+#' @importFrom dplyr pull
+
+fips_map <- function(geo.state,
+                     geo.city,
+                     geo.county){
+
+
+  city_str_filter <- paste(tolower(geo.city),
+                           collapse = "|")
+  county_str_filter <- paste(tolower(geo.county),
+                             collapse = "|")
+
+  cbsa_city_id <- cbsa_df %>%
+    dplyr::mutate("metro.census.cbsa.name" = tolower(.data$metro.census,cbsa.name),
+                  "census.county.name" = tolower(.data$census.county.name)) %>%
+    dplyr::filter(.data$state.census.abbr %in% geo.state |
+                    grepl(city_str_filter, .data$metro.census,cbsa.name) |
+                    grepl(county_str_filter, .data$census.county.name)) %>%
+    dplyr::pull(.data$metro.census.cbsa.geoid)
+
+  county_fips <- tract_dat %>%
+    dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_city_id) %>%
+    dplyr::pull(.data$county.census.geoid)
+
+  return(county_fips)
+}
