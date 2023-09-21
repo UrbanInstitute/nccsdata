@@ -68,6 +68,7 @@ get_data <- function(dsname = NULL,
                      ntee.group = NULL,
                      ntee.code = NULL,
                      ntee.orgtype = NULL,
+                     census.level = NULL,
                      aws = FALSE){
 
   # Validate inputs
@@ -124,7 +125,7 @@ get_data <- function(dsname = NULL,
 
   # conditional filtering
 
-  if (all(lengths(ntee, ntee.group, ntee.code, ntee.orgtype) > 0)){
+  if (! is.null(c(ntee, ntee.group, ntee.code, ntee.orgtype))){
 
     # NTEE parsing
     nteecc_matches <- nteecc_map(ntee.user = ntee,
@@ -137,7 +138,7 @@ get_data <- function(dsname = NULL,
 
   }
 
-  if (all(lengths(geo.state, geo.city, geo.county) > 0)){
+  if (! is.null(c(geo.state, geo.city, geo.county))){
 
     # FIPS parsing
     fips_matches <- fips_map(geo.state,
@@ -147,13 +148,69 @@ get_data <- function(dsname = NULL,
     df_full <- df_full %>%
       dplyr::filter(.data$FIPS %in% fips_matches)
 
+  } else {
+
+    fips_matches <- tract_dat$county.census.geoid
+    fips_matches <- as.character(ifelse(length(fips_matches) == 4,
+                                        paste0("0", fips_matches),
+                                        fips_matches))
+
   }
 
   # Merge with ntee dataset
+  core_ntee <- df_full %>%
+    dplyr::left_join(ntee_df,
+                     by = c("NTEECC" = "old.code"))
 
   # Merge with geo dataset
+  tract_dat_merge <- tract_dat %>%
+    dplyr::mutate("county.census.geoid" = ifelse(
+      length(.data$county.census.geoid) == 4,
+      paste0("0", .data$county.census.geoid),
+      .data$county.census.geoid
+    ),
+    "county.census.geoid" = as.character(.data$county.census.geoid)
+  ) %>%
+    dplyr::rename("FIPS" = .data$county.census.geoid) %>%
+    dplyr::group_by(.data$FIPS)
 
-  return(df_full)
+  if (is.null(census.level)){
+
+    core_ntee_geo <- core_ntee
+
+  } else if (census.level == "block"){
+
+    block_merge_dt <- tract_dat_merge %>%
+      dplyr::filter(.data$FIPS %in% fips_matches) %>%
+      dplyr::select(.data$tract.census.geoid,
+                    .data$FIPS)
+
+    block_merge_dt <- block_dat %>%
+      dplyr::mutate("tract.census.geoid" = as.character(.data$tract.census.geoid)) %>%
+      dplyr::left_join(block_merge_dt,
+                       by = "tract.census.geoid") %>%
+      dplyr::group_by(.data$FIPS)
+
+    core_ntee_geo <- core_ntee %>%
+      dplyr::group_by(.data$FIPS) %>%
+      dplyr::left_join(block_merge_dt,
+                       by = "FIPS") %>%
+      dplyr::ungroup()
+
+  } else if (census.level == "tract"){
+
+    core_ntee_geo <- core_ntee %>%
+      dplyr::group_by(.data$FIPS) %>%
+      dplyr::left_join(tract_dat_merge,
+                       by = "FIPS") %>%
+      dplyr::ungroup()
+
+  }
+
+
+  # merge with bmf
+
+  return(core_ntee_geo)
 
 }
 
