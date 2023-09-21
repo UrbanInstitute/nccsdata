@@ -82,7 +82,7 @@ fips_map <- function(geo.state,
   if (! is.null(geo.state)){
 
     cbsa_fips <- cbsa_df %>%
-      dplyr::mutate("state.census.abbr" = tolower(.data$state.census.abbr))
+      dplyr::mutate("state.census.abbr" = tolower(.data$state.census.abbr)) %>%
       dplyr::filter(.data$state.census.abbr %in% tolower(geo.state)) %>%
       dplyr::pull(.data$metro.census.cbsa.geoid)
 
@@ -98,7 +98,7 @@ fips_map <- function(geo.state,
     cbsa_fips <- cbsa_df %>%
       dplyr::mutate("metro.census.cbsa.name" = tolower(.data$metro.census.cbsa.name)) %>%
       dplyr::filter(grepl(city_str_filter, .data$metro.census.cbsa.name)) %>%
-      dplyr::pull(.data$metro.census.cbsa.geoid)
+      dplyr::pull("metro.census.cbsa.geoid")
 
     cbsa_fips_all <- c(cbsa_fips_all, cbsa_fips)
 
@@ -111,7 +111,7 @@ fips_map <- function(geo.state,
     cbsa_fips <- cbsa_df %>%
       dplyr::mutate("census.county.name" = tolower(.data$census.county.name)) %>%
       dplyr::filter(grepl(county_str_filter, .data$census.county.name)) %>%
-      dplyr::pull(.data$metro.census.cbsa.geoid)
+      dplyr::pull("metro.census.cbsa.geoid")
 
     cbsa_fips_all <- c(cbsa_fips_all, cbsa_fips)
 
@@ -119,7 +119,7 @@ fips_map <- function(geo.state,
 
   county_fips <- tract_dat %>%
     dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_fips_all) %>%
-    dplyr::pull(.data$county.census.geoid)
+    dplyr::pull("county.census.geoid")
 
   county_fips <- unlist(lapply(county_fips,
                                function(x) ifelse(nchar(x) == 4,
