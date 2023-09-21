@@ -46,3 +46,46 @@ objs_exist <- function(...) {
   all(sapply(ls, exists))
 
 }
+
+
+#' @title Function to validate constructed file names and return s3 keys
+#'
+#' @description This function takes constructed file names from
+#' core_file_constructor() and tests if the urls to those files exist. Then it
+#' extracts s3 bucket keys from the validated urls for downstream s3 queries or
+#' returns the validated urls themselves for local download.
+#'
+#' @param dsname character scalar. Name of data series to query from S3.
+#' Valid inputs are "core" and "bmf", not both.
+#' @param filenames character vector. Vector of file names returned by
+#' core_file_constructor
+#' @param bucket.str character scalar. Url of legacy core/bmf bucket for
+#' string formatting
+#' @param base.url character scalar. Base url of nccsdata s3 bucket.
+#' @param return.key boolean. Default == FALSE to return url links to s3
+#' buckets. Default == TRUE returns bucket keys for s3_select queries.
+#'
+#' @returns vector of valid s3 bucket keys for core data sets
+#'
+#' @usage obj_validate(dsname, filenames)
+#'
+#' @importFrom RCurl url.exists
+
+
+obj_validate <- function(dsname,
+                         filenames,
+                         bucket.str = "https://nccsdata.s3.amazonaws.com/legacy/%s/",
+                         base.url = "https://nccsdata.s3.amazonaws.com/",
+                         return.key = FALSE){
+
+  base_bucket <- sprintf(bucket.str, dsname)
+
+  urls <- paste0(base_bucket, filenames)
+  valid_urls <- urls[RCurl::url.exists(urls)]
+  valid_keys <- gsub(base.url, "", valid_urls)
+
+  ifelse(return.key == FALSE,
+         return(valid_urls),
+         return(valid_keys))
+
+}

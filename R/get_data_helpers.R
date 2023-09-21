@@ -119,38 +119,6 @@ core_file_constructor <- function(time,
 
 }
 
-#' @title Function to validate constructed file names and return s3 keys
-#'
-#' @description This function takes constructed file names from
-#' core_file_constructor() and tests if the urls to those files exist. Then it
-#' extracts s3 bucket keys from the validated urls for downstream s3 queries.
-#'
-#' @param dsname character scalar. Name of data series to query from S3.
-#' Valid inputs are "core" and "bmf", not both.
-#' @param filenames character vector. Vector of file names returned by
-#' core_file_constructor
-#'
-#' @returns vector of valid s3 bucket keys for core data sets
-#'
-#' @usage s3_validate(dsname, filenames)
-#'
-#' @importFrom RCurl url.exists
-
-
-s3_validate <- function(dsname,
-                        filenames){
-
-  base_bucket <- sprintf("https://nccsdata.s3.amazonaws.com/legacy/%s/", dsname)
-  base_url <- "https://nccsdata.s3.amazonaws.com/"
-
-  urls <- paste0(base_bucket, filenames)
-  valid_urls <- urls[RCurl::url.exists(urls)]
-  valid_keys <- gsub(base_url, "", valid_urls)
-
-  return(valid_keys)
-
-}
-
 #' @title Function to perform S3 Select query on s3 bucket
 #'
 #' @description This function queries multiple core/bmf .csv S3 objects and
