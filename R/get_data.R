@@ -165,7 +165,7 @@ get_data <- function(dsname = NULL,
   # Merge with geo dataset
   tract_dat_merge <- tract_dat %>%
     dplyr::mutate("county.census.geoid" = ifelse(
-      length(.data$county.census.geoid) == 4,
+      nchar(.data$county.census.geoid) == 4,
       paste0("0", .data$county.census.geoid),
       .data$county.census.geoid
     ),
@@ -174,16 +174,21 @@ get_data <- function(dsname = NULL,
     dplyr::rename("FIPS" = .data$county.census.geoid) %>%
     dplyr::group_by(.data$FIPS)
 
+  message(tract_dat_merge$FIPS[1:5])
+
   if (is.null(census.level)){
 
     core_ntee_geo <- core_ntee
 
   } else if (census.level == "block"){
 
+
     block_merge_dt <- tract_dat_merge %>%
       dplyr::filter(.data$FIPS %in% fips_matches) %>%
       dplyr::select(.data$tract.census.geoid,
                     .data$FIPS)
+
+    message(fips_matches[1:5])
 
     block_merge_dt <- block_dat %>%
       dplyr::mutate("tract.census.geoid" = as.character(.data$tract.census.geoid)) %>%
