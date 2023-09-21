@@ -103,7 +103,7 @@ fips_map <- function(geo.state,
 
   }
 
-  if (! is.null(geo.city)){
+  if (! is.null(geo.county)){
 
     county_str_filter <- paste(tolower(geo.county),
                                collapse = "|")
@@ -125,5 +125,5 @@ fips_map <- function(geo.state,
                                                   paste0("0", x),
                                                   x)))
 
-  return(county_fips)
+  return(unique(county_fips))
 }
