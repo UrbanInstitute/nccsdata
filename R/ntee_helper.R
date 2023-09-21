@@ -316,3 +316,43 @@ query_ntee <- function(ntee.user,
   return(unique(ntee2_matches))
 
 }
+
+
+#' @title This function maps ntee2 codes to ntee.cc codes
+#'
+#' @description This function takes as an input ntee2 codes inferred from
+#' user inputs in get_data() and maps them to ntee.cc codes for merging
+#' found in ntee_df
+#'
+#' @param ntee.user character vector. Vector of user inputs. The user inputs are
+#' progressively filtered until group, code and orgtypes are sorted into
+#' separate vectors.
+#' @param ntee.group character vector. Specific Industry Group codes submitted
+#' by user
+#' @param ntee.code character vector. Specific level 2-4 codes (Industry,
+#' Division, Subdivision) submitted by user.
+#' @param ntee.orgtype character vector. Specific level 5 codes (Organization
+#' Type) submittted by user.
+#'
+#' @return character vector. ntee.cc codes for merging in the core dataset.
+#'
+#' @usage nteecc_map(ntee.user, ntee.group, ntee.code, ntee.orgtype)
+
+nteecc_map <- function(ntee.user,
+                       ntee.group,
+                       ntee.code,
+                       ntee.orgtype){
+
+  # NTEE parsing
+  ntee2_matches <- query_ntee(ntee.user = ntee.user,
+                              ntee.group = ntee.group,
+                              ntee.code = ntee.code,
+                              ntee.orgtype = ntee.orgtype)
+
+  nteecc_df <- ntee_df %>%
+    dplyr::filter(.data$ntee2.code %in% ntee2_matches)
+
+  nteecc_matches <- nteecc_df$old.code
+
+  return(nteecc_matches)
+}
