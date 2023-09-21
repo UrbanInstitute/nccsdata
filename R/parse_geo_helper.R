@@ -77,22 +77,53 @@ fips_map <- function(geo.state,
                      geo.county){
 
 
-  city_str_filter <- paste(tolower(geo.city),
-                           collapse = "|")
-  county_str_filter <- paste(tolower(geo.county),
-                             collapse = "|")
+  cbsa_fips_all <- c()
 
-  cbsa_city_id <- cbsa_df %>%
-    dplyr::mutate("metro.census.cbsa.name" = tolower(.data$metro.census,cbsa.name),
-                  "census.county.name" = tolower(.data$census.county.name)) %>%
-    dplyr::filter(.data$state.census.abbr %in% geo.state |
-                    grepl(city_str_filter, .data$metro.census,cbsa.name) |
-                    grepl(county_str_filter, .data$census.county.name)) %>%
-    dplyr::pull(.data$metro.census.cbsa.geoid)
+  if (! is.null(geo.state)){
+
+    cbsa_fips <- cbsa_df %>%
+      dplyr::filter(.data$state.census.abbr %in% geo.state) %>%
+      dplyr::pull(.data$metro.census.cbsa.geoid)
+
+    cbsa_fips_all<- c(cbsa_fips_all,
+                      cbsa_fips)
+
+  }
+
+  if (! is.null(geo.city)){
+
+    city_str_filter <- paste(tolower(geo.city),
+                             collapse = "|")
+    cbsa_fips <- cbsa_df %>%
+      dplyr::mutate("metro.census.cbsa.name" = tolower(.data$metro.census.cbsa.name)) %>%
+      dplyr::filter(grepl(city_str_filter, .data$metro.census.cbsa.name)) %>%
+      dplyr::pull(.data$metro.census.cbsa.geoid)
+
+    cbsa_fips_all <- c(cbsa_fips_all, cbsa_fips)
+
+  }
+
+  if (! is.null(geo.city)){
+
+    county_str_filter <- paste(tolower(geo.county),
+                               collapse = "|")
+    cbsa_fips <- cbsa_df %>%
+      dplyr::mutate("census.county.name" = tolower(.data$census.county.name)) %>%
+      dplyr::filter(grepl(county_str_filter, .data$census.county.name)) %>%
+      dplyr::pull(.data$metro.census.cbsa.geoid)
+
+    cbsa_fips_all <- c(cbsa_fips_all, cbsa_fips)
+
+  }
 
   county_fips <- tract_dat %>%
-    dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_city_id) %>%
+    dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_fips_all) %>%
     dplyr::pull(.data$county.census.geoid)
+
+  county_fips <- unlist(lapply(county_fips,
+                               function(x) ifelse(nchar(x) == 4,
+                                                  paste0("0", x),
+                                                  x)))
 
   return(county_fips)
 }
