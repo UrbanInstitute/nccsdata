@@ -189,7 +189,7 @@ s3_query <- function(bucket,
 query_construct <- function(fips,
                             ntee.cc){
 
-  full_query <- "SELECT * FROM S30bject"
+  full_query <- "SELECT * FROM S3Object"
   first_suffix <- " WHERE"
   second_suffix <- " AND"
 
