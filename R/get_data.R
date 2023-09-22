@@ -55,7 +55,6 @@
 #' @importFrom rlang .data
 #' @importFrom dplyr filter
 #' @importFrom dplyr %>%
-#' @importFrom readr get_csv
 
 get_data <- function(dsname = NULL,
                      time = "2015",
