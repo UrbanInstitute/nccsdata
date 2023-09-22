@@ -112,9 +112,25 @@ get_data <- function(dsname = NULL,
 
     return(core_dt)
 
-  } else{
+  } else if (dsname == "bmf"){
 
-    return(message("no bmf yet!"))
+    url <- "https://nccsdata.s3.us-east-1.amazonaws.com/current/bmf/bmf-master.rds"
+    download.file( url, destfile="bmf.rds" )
+    bmf <- readRDS( "data-raw/bmf.rds" )
+    file.remove("bmf.rds")
+
+    data.table::setDT(bmf)
+    bmf <- bmf[, FIPS:=as.numeric(FIPS)]
+
+    if (! is.null(fips_matches)){
+      bmf <- bmf[FIPS %in% fips_matches, ]
+    }
+
+    if (! is.null(nteecc_matches)){
+      bmf <- bmf[NTEECC %in% nteecc_matches, ]
+    }
+
+    return(bmf)
 
   }
 
