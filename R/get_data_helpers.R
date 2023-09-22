@@ -138,11 +138,11 @@ core_file_constructor <- function(time,
 
 s3_query <- function(bucket,
                      keys,
-                     geo.state,
-                     ntee.cc){
+                     ntee.cc,
+                     fips){
 
   header_query <- "SELECT * FROM s3object s LIMIT 1"
-  query <- query_construct(geo.state = geo.state,
+  query <- query_construct(fips = fips,
                            ntee.cc = ntee.cc)
 
   # Execute queries
@@ -186,25 +186,36 @@ s3_query <- function(bucket,
 #'
 #' @usage query_construct(geo.state, ntee.cc)
 
-query_construct <- function(geo.state,
+query_construct <- function(fips,
                             ntee.cc){
 
-  full_query <- "select * from s3object"
+  full_query <- "SELECT * FROM S30bject"
+  first_suffix <- " WHERE"
+  second_suffix <- " AND"
 
-  if (is.null(geo.state) == FALSE){
-    sub_query <- " where STATE in (%s)"
+  if (! is.null(fips)){
+
+    sub_query <- " WHERE FIPS in (%s)"
+
     geo_query <- sprintf(sub_query,
-                         paste(sprintf("'%s'", geo.state),
+                         paste(sprintf("'%s'", fips),
                                collapse=","))
+
     full_query <- paste0(full_query, geo_query)
   }
   # add where/and selection
-  if (is.null(ntee.cc) == FALSE){
-    sub_query <- " and NTEECC in (%s)"
+  if (! is.null(ntee.cc)){
+
+    sub_query <- ifelse(grepl("WHERE", full_query),
+                        " AND NTEECC in (%s)",
+                        " WHERE NTEECC in (%s)")
+
     ntee_query <- sprintf(sub_query,
                           paste(sprintf("'%s'", ntee.cc),
                                 collapse=","))
+
     full_query <- paste0(full_query, ntee_query)
+
   }
 
   return(full_query)
