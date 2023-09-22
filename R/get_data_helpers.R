@@ -198,7 +198,7 @@ query_construct <- function(fips,
     sub_query <- " WHERE FIPS IN (%s)"
 
     geo_query <- sprintf(sub_query,
-                         paste(sprintf("%s", fips),
+                         paste(sprintf("'%s'", fips),
                                collapse=","))
 
     full_query <- paste0(full_query, geo_query)
@@ -207,8 +207,8 @@ query_construct <- function(fips,
   if (! is.null(ntee.cc)){
 
     sub_query <- ifelse(grepl("WHERE", full_query),
-                        " AND NTEECC in (%s)",
-                        " WHERE NTEECC in (%s)")
+                        " AND NTEECC IN (%s)",
+                        " WHERE NTEECC IN (%s)")
 
     ntee_query <- sprintf(sub_query,
                           paste(sprintf("'%s'", ntee.cc),
@@ -217,7 +217,7 @@ query_construct <- function(fips,
     full_query <- paste0(full_query, ntee_query)
 
   }
-
+  message(full_query)
   return(full_query)
 }
 
