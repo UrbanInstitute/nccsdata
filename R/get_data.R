@@ -232,6 +232,7 @@ get_core <- function(dsname,
 #' ntee codes.
 #'
 #' @param url character scalar. Link to object in s3 bucket.
+#' @param dest_path character scalar. Path to download bmf file to
 #' @param ntee_matches character vector. Vector of nteecc codes returned from
 #'nteecc_map()
 #' @param fips_matches numeric vector. Vector of fips codes returned from
@@ -243,12 +244,13 @@ get_core <- function(dsname,
 #' @importFrom data.table setkey
 
 get_bmf <- function(url,
+                    dest_path = "bmf.rds",
                     ntee_matches,
                     fips_matches){
 
-  download.file(url, destfile="bmf.rds")
-  bmf <- readRDS("bmf.rds")
-  file.remove("bmf.rds")
+  download.file(url, destfile=dest_path)
+  bmf <- readRDS(dest_path)
+  file.remove(dest_path)
 
   data.table::setDT(bmf)
   bmf <- bmf[, FIPS:=as.numeric(FIPS)]
