@@ -232,7 +232,7 @@ get_core <- function(dsname,
 #' ntee codes.
 #'
 #' @param url character scalar. Link to object in s3 bucket.
-#' @param dest_path character scalar. Path to download bmf file to
+#' @param dest_path character scalar. Path to download bmf file to.
 #' @param ntee_matches character vector. Vector of nteecc codes returned from
 #'nteecc_map()
 #' @param fips_matches numeric vector. Vector of fips codes returned from
