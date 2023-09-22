@@ -126,5 +126,5 @@ fips_map <- function(geo.state,
                                                   paste0("0", x),
                                                   x)))
 
-  return(unique(as.character(county_fips)))
+  return(unique(county_fips))
 }
