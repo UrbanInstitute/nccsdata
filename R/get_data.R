@@ -123,10 +123,12 @@ get_data <- function(dsname = NULL,
     bmf <- bmf[, FIPS:=as.numeric(FIPS)]
 
     if (! is.null(fips_matches)){
+      data.table::setkey(dt_full, FIPS)
       bmf <- bmf[FIPS %in% fips_matches, ]
     }
 
     if (! is.null(nteecc_matches)){
+      data.table::setkey(dt_full, NTEECC)
       bmf <- bmf[NTEECC %in% nteecc_matches, ]
     }
 
