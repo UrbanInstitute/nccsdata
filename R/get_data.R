@@ -247,7 +247,7 @@ get_bmf <- function(url,
                     fips_matches){
 
   download.file(url, destfile="bmf.rds")
-  bmf <- readRDS("data-raw/bmf.rds")
+  bmf <- readRDS("bmf.rds")
   file.remove("bmf.rds")
 
   data.table::setDT(bmf)
