@@ -50,7 +50,7 @@
 #'
 #' @export
 #'
-#' @importFrom data.table as.data.table
+#' @importFrom data.table setDT
 #' @importFrom data.table rbindlist
 #' @importFrom rlang .data
 #' @importFrom dplyr filter
