@@ -195,10 +195,10 @@ query_construct <- function(fips,
 
   if (! is.null(fips)){
 
-    sub_query <- " WHERE FIPS in (%s)"
+    sub_query <- " WHERE FIPS IN (%s)"
 
     geo_query <- sprintf(sub_query,
-                         paste(sprintf("'%s'", fips),
+                         paste(sprintf("%s", fips),
                                collapse=","))
 
     full_query <- paste0(full_query, geo_query)
