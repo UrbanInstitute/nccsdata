@@ -114,27 +114,15 @@ get_data <- function(dsname = NULL,
 
   } else if (dsname == "bmf"){
 
-    url <- "https://nccsdata.s3.us-east-1.amazonaws.com/current/bmf/bmf-master.rds"
-    download.file( url, destfile="bmf.rds" )
-    bmf <- readRDS( "data-raw/bmf.rds" )
-    file.remove("bmf.rds")
-
-    data.table::setDT(bmf)
-    bmf <- bmf[, FIPS:=as.numeric(FIPS)]
-
-    if (! is.null(fips_matches)){
-      data.table::setkey(dt_full, FIPS)
-      bmf <- bmf[FIPS %in% fips_matches, ]
-    }
-
-    if (! is.null(nteecc_matches)){
-      data.table::setkey(dt_full, NTEECC)
-      bmf <- bmf[NTEECC %in% nteecc_matches, ]
-    }
+    bmf <- get_bmf(url = "https://nccsdata.s3.us-east-1.amazonaws.com/current/bmf/bmf-master.rds",
+                   ntee_matches = nteecc_matches,
+                   fips_matches = fips_matches)
 
     return(bmf)
 
   }
+
+  return(message("No data selected"))
 
 }
 
@@ -235,3 +223,46 @@ get_core <- function(dsname,
 }
 
 
+#' @title Function to download master bmf file and filter it based on ntee
+#' and FIPS codes
+#'
+#' @description This function downloads an .rds file from a public s3 bucket,
+#' reads it into memory, and deletes the file. It then converts the data.frame
+#' into a data.table and filters it based on user-specified FIPS codes and
+#' ntee codes.
+#'
+#' @param url character scalar. Link to object in s3 bucket.
+#' @param ntee_matches character vector. Vector of nteecc codes returned from
+#'nteecc_map()
+#' @param fips_matches numeric vector. Vector of fips codes returned from
+#' fips_map()
+#'
+#' @return data.table. Data.table with filtered master bmf file.
+#'
+#' @importFrom data.table setDT
+#' @importFrom data.table setkey
+
+get_bmf <- function(url,
+                    ntee_matches,
+                    fips_matches){
+
+  download.file(url, destfile="bmf.rds")
+  bmf <- readRDS("data-raw/bmf.rds")
+  file.remove("bmf.rds")
+
+  data.table::setDT(bmf)
+  bmf <- bmf[, FIPS:=as.numeric(FIPS)]
+
+  if (! is.null(fips_matches)){
+    data.table::setkey(dt_full, FIPS)
+    bmf <- bmf[FIPS %in% fips_matches, ]
+  }
+
+  if (! is.null(nteecc_matches)){
+    data.table::setkey(dt_full, NTEECC)
+    bmf <- bmf[NTEECC %in% nteecc_matches, ]
+  }
+
+  return(bmf)
+
+}
