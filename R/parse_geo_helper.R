@@ -121,10 +121,5 @@ fips_map <- function(geo.state,
     dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_fips_all) %>%
     dplyr::pull("county.census.geoid")
 
-  county_fips <- unlist(lapply(county_fips,
-                               function(x) ifelse(nchar(x) == 4,
-                                                  paste0("0", x),
-                                                  x)))
-
   return(unique(county_fips))
 }
