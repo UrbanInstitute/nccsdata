@@ -217,7 +217,7 @@ query_construct <- function(fips,
     full_query <- paste0(full_query, ntee_query)
 
   }
-  message(full_query)
+
   return(full_query)
 }
 
