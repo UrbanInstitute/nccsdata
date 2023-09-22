@@ -11,9 +11,9 @@ s3_query(bucket, keys, geo.state, ntee.cc)
 
 \item{keys}{character vector. s3 object keys}
 
-\item{geo.state}{character vector. Vector of state abbreviations}
-
 \item{ntee.cc}{character vector. Vector of ntee codes found in NTEECC}
+
+\item{geo.state}{character vector. Vector of state abbreviations}
 }
 \value{
 list of queried dataframes. One for each key supplied.

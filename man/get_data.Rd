@@ -10,6 +10,8 @@ get_data(dsname,
                 scope.orgtype,
                 scope.formtype,
                 geo.state,
+                geo.city,
+                geo.county,
                 ntee,
                 ntee.group,
                 ntee.code,
@@ -35,6 +37,12 @@ PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).}
 \item{geo.state}{character vector. Filter query by state abbreviations e.g.
 "NY", "CA". Default == NULL includes all states.}
 
+\item{geo.city}{character vector. City names for filtering e.g. "Chicago",
+"montgomery". Case insensitive}
+
+\item{geo.county}{character vector. County names for filtering e.g.
+"cullman", "dale". Case insensitive.}
+
 \item{ntee}{character vector. Vector of user inputs. The user inputs are
 progressively filtered until group, code and orgtypes are sorted into
 separate vectors.}
@@ -47,6 +55,9 @@ Division, Subdivision) submitted by user.}
 
 \item{ntee.orgtype}{character vector. Specific level 5 codes (Organization
 Type) submitted by user.}
+
+\item{aws}{boolean. Whether to use aws.s3::s3_select() in executing queries.
+Default == FALSE, select TRUE to use s3_select. Must have aws account to use.}
 }
 \value{
 data.table with queried data

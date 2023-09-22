@@ -7,9 +7,9 @@
 query_construct(geo.state, ntee.cc)
 }
 \arguments{
-\item{geo.state}{character vector. Vector of state abbreviations}
-
 \item{ntee.cc}{character vector. Vector of ntee codes found in NTEECC}
+
+\item{geo.state}{character vector. Vector of state abbreviations}
 }
 \value{
 a completed SQL query
