@@ -89,3 +89,30 @@ obj_validate <- function(dsname,
          return(valid_keys))
 
 }
+
+#' @title Function to read csv files from a public s3 bucket url. Saves the
+#' file as a data.table.
+#'
+#' @description This function is used in lapply to map a list of urls to a
+#' list of data.tables.
+#'
+#' @param url character scalar. Link to public s3 object.
+#'
+#' @returns data.table
+#'
+#' @usage load_df(url)
+#'
+#' @importFrom readr read_csv
+#' @importFrom readr cols
+#' @importFrom data.table as.data.table
+#' @importFrom dplyr %>%
+
+load_dt <- function(url){
+  df <- readr::read_csv(
+    url,
+    col_types = readr::cols(default = "?",
+                            FIPS = "i")
+  ) %>%
+    data.table::as.data.table()
+  return(dt)
+}
