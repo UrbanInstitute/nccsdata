@@ -58,7 +58,7 @@
 #' @importFrom readr get_csv
 
 get_data <- function(dsname = NULL,
-                     time = "current",
+                     time = "2015",
                      scope.orgtype = "NONPROFIT",
                      scope.formtype = "PZ",
                      geo.state = NULL,
@@ -68,62 +68,15 @@ get_data <- function(dsname = NULL,
                      ntee.group = NULL,
                      ntee.code = NULL,
                      ntee.orgtype = NULL,
-                     census.level = NULL,
                      aws = FALSE){
 
   # Validate inputs
-  valid_msg <- validate_get_data(dsname = dsname,
-                                 time = time,
-                                 scope.orgtype = scope.orgtype,
-                                 scope.formtype = scope.formtype)
-  message(valid_msg)
+  message(validate_get_data(dsname = dsname,
+                            time = time,
+                            scope.orgtype = scope.orgtype,
+                            scope.formtype = scope.formtype))
 
-  if (dsname == "core"){
-    filenames <- core_file_constructor(time = time,
-                                       scope.orgtype = scope.orgtype,
-                                       scope.formtype = scope.formtype)
-  }
-
-  if (aws == FALSE){
-
-    urls <- obj_validate(dsname = dsname,
-                         filenames = filenames)
-
-    # download all, filter, collapse
-
-    # download
-
-    load_df <- function(url){
-      df <- readr::read_csv( url ) %>%
-        data.table::as.data.table()
-      return(df)
-    }
-
-    df_ls <- lapply(urls,
-                    load_df)
-
-    # collapse
-    df_full <- data.table::rbindlist(df_ls,
-                                     fill = TRUE)
-
-  } else {
-
-    # Check if files exist
-    keys <- s3_validate(dsname = dsname,
-                        filenames = filenames)
-
-    # Query keys
-    df_ls <- s3_query(bucket = "nccsdata",
-                               keys = keys,
-                               geo.state = geo.state,
-                               ntee.cc = nteecc_matches)
-
-    # collapse
-    df_full <- data.table::rbindlist(df_ls,
-                                     fill = TRUE)
-  }
-
-  # conditional filtering
+  # Get filters
 
   if (! is.null(c(ntee, ntee.group, ntee.code, ntee.orgtype))){
 
@@ -133,9 +86,8 @@ get_data <- function(dsname = NULL,
                                  ntee.code = ntee.code,
                                  ntee.orgtype = ntee.orgtype)
 
-    df_full <- df_full %>%
-      dplyr::filter(.data$NTEECC %in% nteecc_matches)
-
+  } else {
+    nteecc_matches <- NULL
   }
 
   if (! is.null(c(geo.state, geo.city, geo.county))){
@@ -145,77 +97,123 @@ get_data <- function(dsname = NULL,
                              geo.city,
                              geo.county)
 
-    df_full <- df_full %>%
-      dplyr::filter(.data$FIPS %in% fips_matches)
+  } else {
+    fips_matches <- NULL
+  }
+
+  if (dsname == "core"){
+
+    core_dt <- get_core(dsname = dsname,
+                        time = time,
+                        scope.orgtype = scope.orgtype,
+                        scope.formtype = scope.formtype,
+                        ntee_matches = nteecc_matches,
+                        fips_matches = fips_matches,
+                        aws = aws)
+
+    return(core_dt)
+
+  } else{
+
+    return(message("no bmf yet!"))
+
+  }
+
+}
+
+
+#' @title Function to get core dataset.
+#'
+#' @description This function executes either the s3_select query or data
+#' download and local merge on a specified subset of the core dataset. It then
+#' merges the dataset with the ntee dataframe.
+#'
+#' @param dsname character scalar. Name of data series to query from S3.
+#' Valid inputs are "core" and "bmf", not both.
+#' @param time character vector. Dates of core/bmf files to query. Valid
+#' inputs range from 1989-2022. Default value is "current" for 2022.
+#' @param scope.orgtype character scalar. Organization type to query from
+#' core/bmf s3 bucket. Valid inputs are 'CHARITIES' for charities (501C3-PC),
+#' 'PRIVFOUND' for private foundations (501C3-PF) and 'NONPROFIT' for all
+#' nonprofits (501CE)
+#' @param scope.formtype character scalar. Form type to query from core/bmf s3
+#' bucket. Valid inputs are 'PC'(nonprofits that file the full version),
+#' 'EZ'(nonprofits that file 990EZs only), '
+#' PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).
+#' @param ntee_matches character vector. Vector of nteecc codes returned from
+#'nteecc_map()
+#' @param fips_matches numeric vector. Vector of fips codes returned from
+#' fips_map()
+#' @param aws boolean. Whether to use aws.s3::s3_select() in executing queries.
+#' Default == FALSE, select TRUE to use s3_select. Must have aws account to use.
+#'
+#' @return a fully merged core data.table for the end user
+#'
+#' @usage get_core(dsname,time, scope.orgtype, scope.formtype,ntee_matches,
+#' fips_matches, aws)
+
+get_core <- function(dsname,
+                     time,
+                     scope.orgtype,
+                     scope.formtype,
+                     ntee_matches,
+                     fips_matches,
+                     aws){
+
+  filenames <- core_file_constructor(time = time,
+                                     scope.orgtype = scope.orgtype,
+                                     scope.formtype = scope.formtype)
+
+  ntee_dat <- ntee_df %>%
+    rename("NTEECC" = .data$old.code) %>%
+    data.table::setDT()
+
+  if (aws == FALSE){
+
+    urls <- obj_validate(dsname = dsname,filenames = filenames)
+    dt_ls <- lapply(urls, load_dt)
+    dt_full <- data.table::rbindlist(dt_ls, fill = TRUE)
+
+    if (! is.null(ntee_matches)){
+
+      data.table::setkey(dt_full, NTEECC)
+      dt_full <- dt_full[NTEECC %in% ntee_matches, ]
+
+    }
+
+    dt_full <- dt_full[ntee_dat, on = "NTEECC"]
+
+    if (! is.null(fips_matches)){
+
+      data.table::setkey(dt_full, FIPS)
+      dt_full <- dt_full[FIPS %in% fips_matches, ]
+
+    }
 
   } else {
 
-    fips_matches <- tract_dat$county.census.geoid
-    fips_matches <- as.character(ifelse(length(fips_matches) == 4,
-                                        paste0("0", fips_matches),
-                                        fips_matches))
+    # Must be character for SQL Query
+    fips_matches <- ifelse(nchar(fips_matches == 4),
+                           paste0("0", fips_matches),
+                           fips_matches)
+
+    keys <- obj_validate(dsname = dsname,
+                         filenames = filenames,
+                         return.key = TRUE)
+
+    dt_ls <- s3_query(bucket = "nccsdata",
+                      keys = keys,
+                      ntee.cc = ntee_matches,
+                      fips = fips_matches)
+
+    dt_full <- data.table::rbindlist(dt_ls, fill = TRUE)
+
+    dt_full <- dt_full[ntee_dat, on = "NTEECC"]
 
   }
 
-  # Merge with ntee dataset
-  core_ntee <- df_full %>%
-    dplyr::left_join(ntee_df,
-                     by = c("NTEECC" = "old.code"))
-
-  # Merge with geo dataset
-  tract_dat_merge <- tract_dat %>%
-    dplyr::mutate("county.census.geoid" = ifelse(
-      nchar(.data$county.census.geoid) == 4,
-      paste0("0", .data$county.census.geoid),
-      .data$county.census.geoid
-    ),
-    "county.census.geoid" = as.character(.data$county.census.geoid)
-  ) %>%
-    dplyr::rename("FIPS" = .data$county.census.geoid) %>%
-    dplyr::group_by(.data$FIPS)
-
-  message(tract_dat_merge$FIPS[1:5])
-
-  if (is.null(census.level)){
-
-    core_ntee_geo <- core_ntee
-
-  } else if (census.level == "block"){
-
-
-    block_merge_dt <- tract_dat_merge %>%
-      dplyr::filter(.data$FIPS %in% fips_matches) %>%
-      dplyr::select(.data$tract.census.geoid,
-                    .data$FIPS)
-
-    message(fips_matches[1:5])
-
-    block_merge_dt <- block_dat %>%
-      dplyr::mutate("tract.census.geoid" = as.character(.data$tract.census.geoid)) %>%
-      dplyr::left_join(block_merge_dt,
-                       by = "tract.census.geoid") %>%
-      dplyr::group_by(.data$FIPS)
-
-    core_ntee_geo <- core_ntee %>%
-      dplyr::group_by(.data$FIPS) %>%
-      dplyr::left_join(block_merge_dt,
-                       by = "FIPS") %>%
-      dplyr::ungroup()
-
-  } else if (census.level == "tract"){
-
-    core_ntee_geo <- core_ntee %>%
-      dplyr::group_by(.data$FIPS) %>%
-      dplyr::left_join(tract_dat_merge,
-                       by = "FIPS") %>%
-      dplyr::ungroup()
-
-  }
-
-
-  # merge with bmf
-
-  return(core_ntee_geo)
+  remove(dt_ls)
+  return(dt_full)
 
 }
 
