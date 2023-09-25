@@ -213,7 +213,7 @@ get_core <- function(dsname,
 
     dt_full <- data.table::rbindlist(dt_ls, fill = TRUE)
 
-    dt_full <- dt_full[ntee_dat, on = "NTEECC"]
+    dt_full <- ntee_dat[dt_full, on = "NTEECC"]
 
   }
 
