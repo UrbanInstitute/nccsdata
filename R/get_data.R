@@ -186,7 +186,7 @@ get_core <- function(dsname,
 
     }
 
-    dt_full <- dt_full[ntee_dat, on = "NTEECC"]
+    dt_full <- ntee_dat[dt_full, on = "NTEECC"]
 
     if (! is.null(fips_matches)){
 
