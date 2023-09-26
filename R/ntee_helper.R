@@ -353,9 +353,5 @@ nteecc_map <- function(ntee.user,
     dplyr::filter(.data$ntee2.code %in% ntee2_matches) %>%
     dplyr::pull(.data$old.code)
 
-  nteecc_matches <- ifelse(length(nteecc_matches) == 0,
-                           NULL,
-                           nteecc_matches)
-
   return(nteecc_matches)
 }
