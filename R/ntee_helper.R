@@ -282,7 +282,7 @@ query_ntee <- function(ntee.user,
 
   if (all(lengths(ntee2_query_ls) == 0)){
 
-    ntee2_matches <- ntee_df$ntee2.code
+    ntee2_matches <- NULL
 
   } else {
 
@@ -349,10 +349,9 @@ nteecc_map <- function(ntee.user,
                               ntee.code = ntee.code,
                               ntee.orgtype = ntee.orgtype)
 
-  nteecc_df <- ntee_df %>%
-    dplyr::filter(.data$ntee2.code %in% ntee2_matches)
-
-  nteecc_matches <- nteecc_df$old.code
+  nteecc_matches <- ntee_df %>%
+    dplyr::filter(.data$ntee2.code %in% ntee2_matches) %>%
+    dplyr::pull(.data$old.code)
 
   return(nteecc_matches)
 }
