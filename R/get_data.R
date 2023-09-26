@@ -169,9 +169,9 @@ get_core <- function(dsname,
   } else {
 
     # Must be character for SQL Query
-    filters$county_fips_matches <- ifelse(nchar(county_fips_matches == 4),
-                                          paste0("0", county_fips_matches),
-                                          county_fips_matches)
+    filters$county_fips_matches <- ifelse(nchar(filters$county_fips_matches == 4),
+                                          paste0("0", filters$county_fips_matches),
+                                          filters$county_fips_matches)
 
     keys <- obj_validate(dsname = dsname,
                          filenames = filenames,
