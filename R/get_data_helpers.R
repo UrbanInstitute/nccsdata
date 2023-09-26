@@ -119,160 +119,40 @@ core_file_constructor <- function(time,
 
 }
 
-#' @title Function to perform S3 Select query on s3 bucket
+
+#' @title Function to filter a data.table with user-provided arguments
 #'
-#' @description This function queries multiple core/bmf .csv S3 objects and
-#' returns a list of object subsets that satisfy user-specified filter
-#' conditions.
+#' @description This function takes a list of filters and filters either the
+#' core or bmf data.table objects.
 #'
-#' @param bucket character scalar. Name of s3 bucket to query
-#' @param keys character vector. s3 object keys
-#' @param geo.state character vector. Vector of state abbreviations
-#' @param ntee.cc character vector. Vector of ntee codes found in NTEECC
+#' @param dt data.table. Data.table to filter
+#' @param filters list. List of column filters to apply
 #'
-#' @return list of queried dataframes. One for each key supplied.
+#' @usage filter_data(dt, filters)
 #'
-#' @usage s3_query(bucket, keys, geo.state, ntee.cc)
-#'
-#' @importFrom purrr map2
+#' @returns filtered data.table
 
-s3_query <- function(bucket,
-                     keys,
-                     ntee.cc,
-                     fips){
+filter_data <- function(dt,
+                        filters){
 
-  header_query <- "SELECT * FROM s3object s LIMIT 1"
-  query <- query_construct(fips = fips,
-                           ntee.cc = ntee.cc)
+  filter_map <- list(nteecc_matches = "NTEECC",
+                     state_matches = "STATE",
+                     city_matches = "CITY",
+                     county_fips_matches = "FIPS")
 
-  # Execute queries
-  df_headers_ls <- lapply(keys,
-                          paws_s3_select,
-                          bucket = bucket,
-                          query = header_query,
-                          file.header = "NONE",
-                          csv.header = TRUE)
-  df_headers_ls <- lapply(df_headers_ls,
-                          colnames)
+  for (filter in names(filters)){
 
-  df_body_ls <- lapply(keys,
-                       paws_s3_select,
-                       bucket = bucket,
-                       query = query,
-                       file.header = "USE",
-                       csv.header = FALSE)
+    if (! rlang::is_empty(filters[[filter]])){
 
-  df_full <- purrr::map2(.x = df_body_ls,
-                         .y = df_headers_ls,
-                         .f = function(x, y){
-                           colnames(x) <- y
-                           return(x)
-                           })
+      col_name <- as.name(filter_map[[filter]])
 
-  return(df_full)
+      data.table::setkeyv(dt, filter_map[[filter]])
+      dt <- dt[eval(col_name) %in% filters[[filter]], ]
 
-}
-
-
-#' @title function to construct SQL queries for s3 select
-#'
-#' @description This function takes in filter arguments from get_data() and
-#' constructs a SQL query for s3 select
-#'
-#' @param geo.state character vector. Vector of state abbreviations
-#' @param ntee.cc character vector. Vector of ntee codes found in NTEECC
-#'
-#' @return a completed SQL query
-#'
-#' @usage query_construct(geo.state, ntee.cc)
-#'
-#' @importFrom rlang is_empty
-
-query_construct <- function(fips,
-                            ntee.cc){
-
-  full_query <- "SELECT * FROM S3Object"
-  first_suffix <- " WHERE"
-  second_suffix <- " AND"
-
-  if (! rlang::is_empty(fips)){
-
-    sub_query <- " WHERE FIPS IN (%s)"
-
-    geo_query <- sprintf(sub_query,
-                         paste(sprintf("'%s'", fips),
-                               collapse=","))
-
-    full_query <- paste0(full_query, geo_query)
-  }
-  # add where/and selection
-  if (! rlang::is_empty(ntee.cc)){
-
-    sub_query <- ifelse(grepl("WHERE", full_query),
-                        " AND NTEECC IN (%s)",
-                        " WHERE NTEECC IN (%s)")
-
-    ntee_query <- sprintf(sub_query,
-                          paste(sprintf("'%s'", ntee.cc),
-                                collapse=","))
-
-    full_query <- paste0(full_query, ntee_query)
+    }
 
   }
 
-  return(full_query)
-}
+  return(dt)
 
-
-#' @title function to perform s3_select with paws
-#'
-#' @description This function uses paws to perform aws s3 select queries on a
-#' user provided object key and bucket.
-#'
-#' @param bucket character scalar. Name of s3 bucket.
-#' @param key character scalar. s3 object key.
-#' @param query character scalar. Desired SQL query.
-#' @param file.header character scalar. Option to use header columns in SQL
-#' query. Acceptable inputs are USE | NONE | IGNORE
-#' @param csv.header boolean. Option to return csv with first row as header.
-#'
-#' @return dataframe with query results
-#'
-#' @usage paws_s3_select(bucket, key, query, file.header, csv.header)
-#'
-#' @importFrom paws s3
-#' @importFrom utils read.csv
-
-paws_s3_select <- function(bucket,
-                           key,
-                           query,
-                           file.header,
-                           csv.header){
-
-  s3 <- paws::s3()
-
-  # Run a SQL query on data in a CSV in S3, and get the query's result set.
-  result <- s3$select_object_content(
-    Bucket = bucket,
-    Key = key,
-    Expression = query,
-    ExpressionType = "SQL",
-    InputSerialization = list(
-      'CSV' = list(
-        FileHeaderInfo = file.header,
-        AllowQuotedRecordDelimiter = TRUE
-      )
-    ),
-    OutputSerialization = list(
-      'CSV'= list(
-        QuoteFields = "ASNEEDED"
-      )
-    )
-  )
-
-  # Convert the resulting CSV data into an R data frame.
-  data <- utils::read.csv(text = result$Payload$Records$Payload,
-                          header = csv.header)
-
-  return(data)
 }

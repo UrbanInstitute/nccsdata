@@ -75,19 +75,14 @@ get_data <- function(dsname = NULL,
                             scope.orgtype = scope.orgtype,
                             scope.formtype = scope.formtype))
 
-  # Get filters
-
-
-  # NTEE filters
-  nteecc_matches <- nteecc_map(ntee.user = ntee,
-                               ntee.group = ntee.group,
-                               ntee.code = ntee.code,
-                               ntee.orgtype = ntee.orgtype)
-
-  # FIPS filters
-  fips_matches <- fips_map(geo.state,
-                           geo.city,
-                           geo.county)
+  # Create filters
+  filter_ls <- list(nteecc_matches = nteecc_map(ntee.user = ntee,
+                                                ntee.group = ntee.group,
+                                                ntee.code = ntee.code,
+                                                ntee.orgtype = ntee.orgtype),
+                    state_matches = toupper(geo.state),
+                    city_matches = toupper(geo.city),
+                    county_fips_matches = fips_map(geo.county = geo.county))
 
   if (dsname == "core"){
 
@@ -95,8 +90,7 @@ get_data <- function(dsname = NULL,
                         time = time,
                         scope.orgtype = scope.orgtype,
                         scope.formtype = scope.formtype,
-                        ntee_matches = nteecc_matches,
-                        fips_matches = fips_matches,
+                        filters = filter_ls,
                         aws = aws)
 
     return(core_dt)
@@ -104,8 +98,7 @@ get_data <- function(dsname = NULL,
   } else if (dsname == "bmf"){
 
     bmf <- get_bmf(url = "https://nccsdata.s3.us-east-1.amazonaws.com/current/bmf/bmf-master.rds",
-                   ntee_matches = nteecc_matches,
-                   fips_matches = fips_matches)
+                   filters = filter_ls)
 
     return(bmf)
 
@@ -134,24 +127,20 @@ get_data <- function(dsname = NULL,
 #' bucket. Valid inputs are 'PC'(nonprofits that file the full version),
 #' 'EZ'(nonprofits that file 990EZs only), '
 #' PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).
-#' @param ntee_matches character vector. Vector of nteecc codes returned from
-#'nteecc_map()
-#' @param fips_matches numeric vector. Vector of fips codes returned from
-#' fips_map()
+#' @param filters list. List of column filters to apply
 #' @param aws boolean. Whether to use aws.s3::s3_select() in executing queries.
 #' Default == FALSE, select TRUE to use s3_select. Must have aws account to use.
 #'
 #' @return a fully merged core data.table for the end user
 #'
 #' @usage get_core(dsname,time, scope.orgtype, scope.formtype,ntee_matches,
-#' fips_matches, aws)
+#' geo_filters, aws)
 
 get_core <- function(dsname,
                      time,
                      scope.orgtype,
                      scope.formtype,
-                     ntee_matches,
-                     fips_matches,
+                     filters,
                      aws){
 
   filenames <- core_file_constructor(time = time,
@@ -164,49 +153,47 @@ get_core <- function(dsname,
 
   if (aws == FALSE){
 
-    urls <- obj_validate(dsname = dsname,filenames = filenames)
+    # Download datasets to disk
+    urls <- obj_validate(dsname = dsname,
+                         filenames = filenames)
     dt_ls <- lapply(urls, load_dt)
-    dt_full <- data.table::rbindlist(dt_ls, fill = TRUE)
+    dt_full <- data.table::rbindlist(dt_ls,
+                                     fill = TRUE)
 
-    if (! rlang::is_empty(ntee_matches)){
+    # Filter datasets
+    dt_filtered <- filter_data(dt = dt_full,
+                               filters = filters)
 
-      data.table::setkey(dt_full, NTEECC)
-      dt_full <- dt_full[NTEECC %in% ntee_matches, ]
-
-    }
-
-    if (! rlang::is_empty(fips_matches)){
-
-      data.table::setkey(dt_full, FIPS)
-      dt_full <- dt_full[FIPS %in% fips_matches, ]
-
-    }
+    remove(dt_ls)
 
   } else {
 
     # Must be character for SQL Query
-    fips_matches <- ifelse(nchar(fips_matches == 4),
-                           paste0("0", fips_matches),
-                           fips_matches)
+    filters$county_fips_matches <- ifelse(nchar(county_fips_matches == 4),
+                                          paste0("0", county_fips_matches),
+                                          county_fips_matches)
 
     keys <- obj_validate(dsname = dsname,
                          filenames = filenames,
                          return.key = TRUE)
 
-    dt_ls <- s3_query(bucket = "nccsdata",
+    dt_filtered_ls <- s3_query(bucket = "nccsdata",
                       keys = keys,
-                      ntee.cc = ntee_matches,
-                      fips = fips_matches)
+                      filters = filters)
 
-    dt_full <- data.table::rbindlist(dt_ls, fill = TRUE)
+    dt_filtered <- data.table::rbindlist(dt_filtered_ls,
+                                         fill = TRUE)
+
+    remove(dt_filtered_ls)
 
   }
 
   # Merge data
-  dt_full <- ntee_dat[dt_full, on = "NTEECC"]
+  dt_merged <- ntee_dat[dt_filtered, on = "NTEECC"]
+  remove(dt_filtered)
 
-  remove(dt_ls)
-  return(dt_full)
+
+  return(dt_merged)
 
 }
 
@@ -221,10 +208,7 @@ get_core <- function(dsname,
 #'
 #' @param url character scalar. Link to object in s3 bucket.
 #' @param dest_path character scalar. Path to download bmf file to.
-#' @param ntee_matches character vector. Vector of nteecc codes returned from
-#'nteecc_map()
-#' @param fips_matches numeric vector. Vector of fips codes returned from
-#' fips_map()
+#' @param filters list. List of column filters to apply
 #'
 #' @return data.table. Data.table with filtered master bmf file.
 #'
@@ -233,8 +217,7 @@ get_core <- function(dsname,
 
 get_bmf <- function(url,
                     dest_path = "bmf.rds",
-                    ntee_matches,
-                    fips_matches){
+                    filters){
 
   download.file(url, destfile=dest_path)
   bmf <- readRDS(dest_path)
@@ -243,16 +226,11 @@ get_bmf <- function(url,
   data.table::setDT(bmf)
   bmf <- bmf[, FIPS:=as.numeric(FIPS)]
 
-  if (! is.null(fips_matches)){
-    data.table::setkey(dt_full, FIPS)
-    bmf <- bmf[FIPS %in% fips_matches, ]
-  }
+  bmf_filtered <- filter_data(dt = bmf,
+                              filters = filters)
 
-  if (! is.null(nteecc_matches)){
-    data.table::setkey(dt_full, NTEECC)
-    bmf <- bmf[NTEECC %in% nteecc_matches, ]
-  }
+  remove(bmf)
 
-  return(bmf)
+  return(bmf_filtered)
 
 }
