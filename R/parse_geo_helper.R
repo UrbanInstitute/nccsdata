@@ -57,10 +57,6 @@ dat_filter <- function(dat,
 #' and maps them to fips codes found in the core datasets. These codes can
 #' then be used to filter the core datasets.
 #'
-#' @param geo.state character vector. State abbreviations for filtering e.g.
-#' "NY", "CA".
-#' @param geo.city character vector. City names for filtering e.g. "Chicago",
-#' "montgomery". Case insensitive
 #' @param geo.county character vector. County names for filtering e.g.
 #' "cullman", "dale". Case insensitive.
 #'
@@ -72,37 +68,10 @@ dat_filter <- function(dat,
 #' @importFrom dplyr filter
 #' @importFrom dplyr pull
 
-fips_map <- function(geo.state,
-                     geo.city,
-                     geo.county){
+fips_map <- function(geo.county){
 
 
   cbsa_fips_all <- c()
-
-  if (! is.null(geo.state)){
-
-    cbsa_fips <- cbsa_df %>%
-      dplyr::mutate("state.census.abbr" = tolower(.data$state.census.abbr)) %>%
-      dplyr::filter(.data$state.census.abbr %in% tolower(geo.state)) %>%
-      dplyr::pull(.data$metro.census.cbsa.geoid)
-
-    cbsa_fips_all<- c(cbsa_fips_all,
-                      cbsa_fips)
-
-  }
-
-  if (! is.null(geo.city)){
-
-    city_str_filter <- paste(tolower(geo.city),
-                             collapse = "|")
-    cbsa_fips <- cbsa_df %>%
-      dplyr::mutate("metro.census.cbsa.name" = tolower(.data$metro.census.cbsa.name)) %>%
-      dplyr::filter(grepl(city_str_filter, .data$metro.census.cbsa.name)) %>%
-      dplyr::pull("metro.census.cbsa.geoid")
-
-    cbsa_fips_all <- c(cbsa_fips_all, cbsa_fips)
-
-  }
 
   if (! is.null(geo.county)){
 
