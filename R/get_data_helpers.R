@@ -185,6 +185,8 @@ s3_query <- function(bucket,
 #' @return a completed SQL query
 #'
 #' @usage query_construct(geo.state, ntee.cc)
+#'
+#' @importFrom rlang is_empty
 
 query_construct <- function(fips,
                             ntee.cc){
@@ -193,7 +195,7 @@ query_construct <- function(fips,
   first_suffix <- " WHERE"
   second_suffix <- " AND"
 
-  if (! is.null(fips)){
+  if (! rlang::is_empty(fips)){
 
     sub_query <- " WHERE FIPS IN (%s)"
 
@@ -204,7 +206,7 @@ query_construct <- function(fips,
     full_query <- paste0(full_query, geo_query)
   }
   # add where/and selection
-  if (! is.null(ntee.cc)){
+  if (! rlang::is_empty(ntee.cc)){
 
     sub_query <- ifelse(grepl("WHERE", full_query),
                         " AND NTEECC IN (%s)",
