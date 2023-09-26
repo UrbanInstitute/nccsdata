@@ -77,28 +77,17 @@ get_data <- function(dsname = NULL,
 
   # Get filters
 
-  if (! is.null(c(ntee, ntee.group, ntee.code, ntee.orgtype))){
 
-    # NTEE parsing
-    nteecc_matches <- nteecc_map(ntee.user = ntee,
-                                 ntee.group = ntee.group,
-                                 ntee.code = ntee.code,
-                                 ntee.orgtype = ntee.orgtype)
+  # NTEE filters
+  nteecc_matches <- nteecc_map(ntee.user = ntee,
+                               ntee.group = ntee.group,
+                               ntee.code = ntee.code,
+                               ntee.orgtype = ntee.orgtype)
 
-  } else {
-    nteecc_matches <- NULL
-  }
-
-  if (! is.null(c(geo.state, geo.city, geo.county))){
-
-    # FIPS parsing
-    fips_matches <- fips_map(geo.state,
-                             geo.city,
-                             geo.county)
-
-  } else {
-    fips_matches <- NULL
-  }
+  # FIPS filters
+  fips_matches <- fips_map(geo.state,
+                           geo.city,
+                           geo.county)
 
   if (dsname == "core"){
 
@@ -179,16 +168,14 @@ get_core <- function(dsname,
     dt_ls <- lapply(urls, load_dt)
     dt_full <- data.table::rbindlist(dt_ls, fill = TRUE)
 
-    if (! is.null(ntee_matches)){
+    if (! rlang::is_empty(ntee_matches)){
 
       data.table::setkey(dt_full, NTEECC)
       dt_full <- dt_full[NTEECC %in% ntee_matches, ]
 
     }
 
-    dt_full <- ntee_dat[dt_full, on = "NTEECC"]
-
-    if (! is.null(fips_matches)){
+    if (! rlang::is_empty(fips_matches)){
 
       data.table::setkey(dt_full, FIPS)
       dt_full <- dt_full[FIPS %in% fips_matches, ]
@@ -213,9 +200,10 @@ get_core <- function(dsname,
 
     dt_full <- data.table::rbindlist(dt_ls, fill = TRUE)
 
-    dt_full <- ntee_dat[dt_full, on = "NTEECC"]
-
   }
+
+  # Merge data
+  dt_full <- ntee_dat[dt_full, on = "NTEECC"]
 
   remove(dt_ls)
   return(dt_full)
