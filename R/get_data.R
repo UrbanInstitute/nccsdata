@@ -46,7 +46,8 @@
 #'                 ntee,
 #'                 ntee.group,
 #'                 ntee.code,
-#'                 ntee.orgtype)
+#'                 ntee.orgtype,
+#'                 aws)
 #'
 #' @export
 
