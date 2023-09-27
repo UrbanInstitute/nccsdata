@@ -214,12 +214,13 @@ get_core <- function(dsname,
 #'
 #' @importFrom data.table setDT
 #' @importFrom data.table setkey
+#' @importFrom utils download.file
 
 get_bmf <- function(url,
                     dest_path = "bmf.rds",
                     filters){
 
-  download.file(url, destfile=dest_path)
+  utils::download.file(url, destfile=dest_path)
   bmf <- readRDS(dest_path)
   file.remove(dest_path)
 
