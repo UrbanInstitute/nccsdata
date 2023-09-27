@@ -23,7 +23,9 @@ See https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/ma
 for more details
 }
 \examples{
+\dontrun{
 get_ntee_level_3_4("23", "45")
 get_ntee_level_3_4("03", "22")
+}
 
 }
