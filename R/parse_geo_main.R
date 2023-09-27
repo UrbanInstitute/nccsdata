@@ -15,11 +15,7 @@
 #'
 #' @return a list of FIPS codes for either Tract IDs or Block IDs.
 #'
-#' @import data.table
-#' @import dplyr
-#' @import purrr
-#' @import usdata
-#' @import stringr
+#' @importFrom purrr imap
 #'
 #' @export
 
