@@ -5,7 +5,7 @@
 \title{Function to get core dataset.}
 \usage{
 get_core(dsname,time, scope.orgtype, scope.formtype,ntee_matches,
-fips_matches, aws)
+geo_filters, aws)
 }
 \arguments{
 \item{dsname}{character scalar. Name of data series to query from S3.
@@ -24,11 +24,7 @@ bucket. Valid inputs are 'PC'(nonprofits that file the full version),
 'EZ'(nonprofits that file 990EZs only), '
 PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).}
 
-\item{ntee_matches}{character vector. Vector of nteecc codes returned from
-nteecc_map()}
-
-\item{fips_matches}{numeric vector. Vector of fips codes returned from
-fips_map()}
+\item{filters}{list. List of column filters to apply}
 
 \item{aws}{boolean. Whether to use aws.s3::s3_select() in executing queries.
 Default == FALSE, select TRUE to use s3_select. Must have aws account to use.}

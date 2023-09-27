@@ -7,12 +7,6 @@
 fips_map(geo.state, geo.city, geo.county)
 }
 \arguments{
-\item{geo.state}{character vector. State abbreviations for filtering e.g.
-"NY", "CA".}
-
-\item{geo.city}{character vector. City names for filtering e.g. "Chicago",
-"montgomery". Case insensitive}
-
 \item{geo.county}{character vector. County names for filtering e.g.
 "cullman", "dale". Case insensitive.}
 }
