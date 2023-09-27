@@ -19,8 +19,7 @@
 #' @return message describing the data that is being queried.
 #'
 #' @usage validate_get_data(dsname, time, scope.orgtype, scope.formtype)
-#'
-#' @export
+
 validate_get_data <- function(dsname = NULL,
                               time = NULL,
                               scope.orgtype = NULL,
@@ -81,8 +80,7 @@ validate_get_data <- function(dsname = NULL,
 #' @return character vector. Vector of .csv filenames to query in s3 bucket.
 #'
 #' @usage core_file_constructor(time, scope.orgtype, scope.formtype)
-#'
-#' @export
+
 core_file_constructor <- function(time,
                                   scope.orgtype,
                                   scope.formtype){
