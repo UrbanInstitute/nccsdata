@@ -6,7 +6,7 @@
 #'
 #' @usage jsonify_f(f)
 #'
-#' @import jsonlite
+#' @importFrom jsonlite toJSON
 
 jsonify_f <- function(f)
 {
