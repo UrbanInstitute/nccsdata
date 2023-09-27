@@ -133,8 +133,9 @@ get_data <- function(dsname = NULL,
 #'
 #' @return a fully merged core data.table for the end user
 #'
-#' @usage get_core(dsname,time, scope.orgtype, scope.formtype,ntee_matches,
-#' geo_filters, aws)
+#' @usage get_core(dsname,time, scope.orgtype, scope.formtype,filters, aws)
+#'
+#' @importFrom data.table rbindlist
 
 get_core <- function(dsname,
                      time,
