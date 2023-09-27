@@ -49,12 +49,6 @@
 #'                 ntee.orgtype)
 #'
 #' @export
-#'
-#' @importFrom data.table setDT
-#' @importFrom data.table rbindlist
-#' @importFrom rlang .data
-#' @importFrom dplyr filter
-#' @importFrom dplyr %>%
 
 get_data <- function(dsname = NULL,
                      time = "2015",
