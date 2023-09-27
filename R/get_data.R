@@ -7,7 +7,7 @@
 #' @param dsname character scalar. Name of data series to query from S3.
 #' Valid inputs are "core" and "bmf", not both.
 #' @param time character vector. Dates of core/bmf files to query. Valid
-#' inputs range from 1989-2022. Default value is "current" for 2022.
+#' inputs range from 1989-2022.
 #' @param scope.orgtype character scalar. Organization type to query from
 #' core/bmf s3 bucket. Valid inputs are 'CHARITIES' for charities (501C3-PC),
 #' 'PRIVFOUND' for private foundations (501C3-PF) and 'NONPROFIT' for all
@@ -36,18 +36,6 @@
 #'
 #' @return data.table with queried data
 #'
-#' @usage get_data(dsname,
-#'                 time,
-#'                 scope.orgtype,
-#'                 scope.formtype,
-#'                 geo.state,
-#'                 geo.city,
-#'                 geo.county,
-#'                 ntee,
-#'                 ntee.group,
-#'                 ntee.code,
-#'                 ntee.orgtype,
-#'                 aws)
 #'
 #' @export
 
