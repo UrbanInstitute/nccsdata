@@ -215,17 +215,20 @@ get_core <- function(dsname,
 #' @importFrom data.table setDT
 #' @importFrom data.table setkey
 #' @importFrom utils download.file
+#' @importFrom data.table :=
 
 get_bmf <- function(url,
                     dest_path = "bmf.rds",
                     filters){
+
+  FIPS <- NULL # for global variable binding
 
   utils::download.file(url, destfile=dest_path)
   bmf <- readRDS(dest_path)
   file.remove(dest_path)
 
   data.table::setDT(bmf)
-  bmf <- bmf[, FIPS:=as.numeric(FIPS)]
+  bmf <- bmf[, FIPS := as.numeric(FIPS)]
 
   bmf_filtered <- filter_data(dt = bmf,
                               filters = filters)
