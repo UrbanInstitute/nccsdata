@@ -83,8 +83,10 @@ generate_ntee_regex <- function(ntee.group, ntee.code, ntee.orgtype){
 #' @return The level 3 and 4 codes concatenated together in a string
 #'
 #' @examples
+#' \dontrun{
 #' get_ntee_level_3_4("23", "45")
 #' get_ntee_level_3_4("03", "22")
+#' }
 #'
 #' @note
 #' See https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md
