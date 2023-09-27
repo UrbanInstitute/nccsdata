@@ -4,7 +4,7 @@
 \alias{fips_map}
 \title{function that maps fips codes to user arguments}
 \usage{
-fips_map(geo.state, geo.city, geo.county)
+fips_map(geo.county)
 }
 \arguments{
 \item{geo.county}{character vector. County names for filtering e.g.

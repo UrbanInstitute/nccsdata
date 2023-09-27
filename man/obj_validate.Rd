@@ -4,7 +4,7 @@
 \alias{obj_validate}
 \title{Function to validate constructed file names and return s3 keys}
 \usage{
-obj_validate(dsname, filenames)
+obj_validate(dsname, filenames, bucket.str, base.url, return.key)
 }
 \arguments{
 \item{dsname}{character scalar. Name of data series to query from S3.

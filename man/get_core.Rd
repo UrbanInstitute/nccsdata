@@ -4,8 +4,7 @@
 \alias{get_core}
 \title{Function to get core dataset.}
 \usage{
-get_core(dsname,time, scope.orgtype, scope.formtype,ntee_matches,
-geo_filters, aws)
+get_core(dsname,time, scope.orgtype, scope.formtype,filters, aws)
 }
 \arguments{
 \item{dsname}{character scalar. Name of data series to query from S3.

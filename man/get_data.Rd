@@ -5,24 +5,27 @@
 \title{Function to query bmf data and integrate it with census, cbsa and ntee
 metadata}
 \usage{
-get_data(dsname,
-                time,
-                scope.orgtype,
-                scope.formtype,
-                geo.state,
-                geo.city,
-                geo.county,
-                ntee,
-                ntee.group,
-                ntee.code,
-                ntee.orgtype)
+get_data(
+  dsname = NULL,
+  time = "2015",
+  scope.orgtype = "NONPROFIT",
+  scope.formtype = "PZ",
+  geo.state = NULL,
+  geo.city = NULL,
+  geo.county = NULL,
+  ntee = NULL,
+  ntee.group = NULL,
+  ntee.code = NULL,
+  ntee.orgtype = NULL,
+  aws = FALSE
+)
 }
 \arguments{
 \item{dsname}{character scalar. Name of data series to query from S3.
 Valid inputs are "core" and "bmf", not both.}
 
 \item{time}{character vector. Dates of core/bmf files to query. Valid
-inputs range from 1989-2022. Default value is "current" for 2022.}
+inputs range from 1989-2022.}
 
 \item{scope.orgtype}{character scalar. Organization type to query from
 core/bmf s3 bucket. Valid inputs are 'CHARITIES' for charities (501C3-PC),

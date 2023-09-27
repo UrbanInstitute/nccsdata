@@ -5,7 +5,7 @@
 \title{Function to read csv files from a public s3 bucket url. Saves the
 file as a data.table.}
 \usage{
-load_df(url)
+load_dt(url)
 }
 \arguments{
 \item{url}{character scalar. Link to public s3 object.}
