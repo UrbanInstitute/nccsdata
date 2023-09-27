@@ -67,7 +67,7 @@ objs_exist <- function(...) {
 #'
 #' @returns vector of valid s3 bucket keys for core data sets
 #'
-#' @usage obj_validate(dsname, filenames)
+#' @usage obj_validate(dsname, filenames, bucket.str, base.url, return.key)
 #'
 #' @importFrom RCurl url.exists
 
@@ -100,7 +100,7 @@ obj_validate <- function(dsname,
 #'
 #' @returns data.table
 #'
-#' @usage load_df(url)
+#' @usage load_dt(url)
 #'
 #' @importFrom readr read_csv
 #' @importFrom readr cols
