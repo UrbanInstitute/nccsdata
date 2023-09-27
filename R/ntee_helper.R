@@ -230,15 +230,19 @@ validate_inp <- function(ntee.group,
 
 sort_ntee <- function(ntee.user, ntee.group, ntee.code, ntee.orgtype){
 
-  group <- ntee.user[grepl("^[a-zA-Z][a-zA-Z][a-zA-Z]$", ntee.user)]
+
+  # Case convert
+
+
+  group <- ntee.user[grepl("^[A-Z][A-Z][A-Z]$", ntee.user)]
   group <- unique(c(group, ntee.group))
   ntee.user <- setdiff(ntee.user, group)
 
-  orgtype <- ntee.user[grepl("^[a-zA-Z][a-zA-Z]$", ntee.user)]
+  orgtype <- ntee.user[grepl("^[A-Z][A-Z]$", ntee.user)]
   orgtype <- unique(c(orgtype, ntee.orgtype))
   ntee.user <- setdiff(ntee.user, orgtype)
 
-  code <- ntee.user[grepl("^[A-Z][0-9xX]*[A-Z0-9xX]*", ntee.user)]
+  code <- ntee.user[grepl("^[A-Z][0-9X]*[A-Z0-9X]*", ntee.user)]
   code <- unique(c(code, ntee.code))
 
   ntee_sort_ls <- list(group  = group,
@@ -275,10 +279,10 @@ query_ntee <- function(ntee.user,
 
   ntee2_matches <- c()
 
-  ntee2_query_ls <- sort_ntee(ntee.user = ntee.user,
-                              ntee.group = ntee.group,
-                              ntee.code = ntee.code,
-                              ntee.orgtype = ntee.orgtype)
+  ntee2_query_ls <- sort_ntee(ntee.user = toupper(ntee.user),
+                              ntee.group = toupper(ntee.group),
+                              ntee.code = toupper(ntee.code),
+                              ntee.orgtype = toupper(ntee.orgtype))
 
   if (all(lengths(ntee2_query_ls) == 0)){
 
