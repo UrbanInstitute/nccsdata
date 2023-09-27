@@ -62,7 +62,7 @@ dat_filter <- function(dat,
 #'
 #' @return character vector. county fips codes for filtering core datasets.
 #'
-#' @usage fips_map(geo.state, geo.city, geo.county)
+#' @usage fips_map(geo.county)
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
