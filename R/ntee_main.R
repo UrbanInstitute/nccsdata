@@ -39,11 +39,6 @@ ntee_preview <- function(ntee.user,
                          ntee.code = NULL,
                          ntee.orgtype = NULL){
 
-  reorder_vec <- function(vec){
-    vec <- vec[order(c(1, 3, 2))]
-    return(vec)
-  }
-
   ntee2_codes <- query_ntee(ntee.user = ntee.user,
                             ntee.group = ntee.group,
                             ntee.code = ntee.code,
@@ -67,6 +62,11 @@ ntee_preview <- function(ntee.user,
 
   ntee2_ls <- (lapply(ntee2_ls, reorder_vec))
 
+  reorder_vec <- function(vec){
+    vec <- vec[order(c(1, 3, 2))]
+    return(vec)
+  }
+
   ntee2_ls <- sort(unlist(lapply(ntee2_ls,
                                  paste,
                                  collapse = "-")))
@@ -74,6 +74,8 @@ ntee_preview <- function(ntee.user,
   ntee2_ls <- strsplit(ntee2_ls, "-")
 
   full_desc <- ""
+  current_group <- ""
+  current_org <- ""
 
   for (ntee_full in ntee2_ls){
 
@@ -81,20 +83,23 @@ ntee_preview <- function(ntee.user,
     orgtype <- ntee_full[2]
     code <- ntee_full[3]
 
-    if (! grepl(group, full_desc)){
+    if (group != current_group){
+
+      current_group <- group
       group_statement <- sprintf("%s: %s", group, group_dic[group])
       full_desc <- paste(full_desc, group_statement, sep = "\n\n")
+
     }
 
-    if (! grepl(orgtype, full_desc)){
+    if  (orgtype != current_org){
+      current_org <- orgtype
       org_statement <- sprintf("    %s: %s", orgtype, org_dic[orgtype])
       full_desc <- paste(full_desc, org_statement, sep = "\n\n")
+
     }
 
-    if (! grepl(code, full_desc)){
-      code_statement <- sprintf("        %s: %s", code, code_dic[code])
-      full_desc <- paste(full_desc, code_statement, sep = "\n\n")
-    }
+    code_statement <- sprintf("        %s:%s", code, code_dic[code])
+    full_desc <- paste(full_desc, code_statement, sep = "\n\n")
 
   }
 
