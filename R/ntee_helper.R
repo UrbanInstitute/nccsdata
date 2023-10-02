@@ -234,11 +234,11 @@ sort_ntee <- function(ntee.user, ntee.group, ntee.code, ntee.orgtype){
   # Case convert
 
 
-  group <- ntee.user[grepl("^[A-Z][A-Z][A-Z]$", ntee.user)]
+  group <- ntee.user[ntee.user %in% ntee_df$broad.category]
   group <- unique(c(group, ntee.group))
   ntee.user <- setdiff(ntee.user, group)
 
-  orgtype <- ntee.user[grepl("^[A-Z][A-Z]$", ntee.user)]
+  orgtype <- ntee.user[ntee.user %in% ntee_df$type.org]
   orgtype <- unique(c(orgtype, ntee.orgtype))
   ntee.user <- setdiff(ntee.user, orgtype)
 

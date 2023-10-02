@@ -116,3 +116,33 @@ load_dt <- function(url){
     data.table::as.data.table()
   return(dt)
 }
+
+#' @title Function that creates a dictionary from 2 data.frame columns
+#'
+#' @description This function takes one data.frame column as a key column
+#' and another as a value.column. It returns a dictionary mapping unique
+#' keys to values.
+#'
+#' @param df data.frame. Data.frame to construct dictionary from
+#' @param keycol character scalar. Name of column containing dictionary keys.
+#' @param valcol character scalar. Name of column containing dictionary values.
+#'
+#' @returns a dictionary with unique key-value pairs.
+#'
+#' @importFrom dplyr select
+#' @importFrom dplyr distinct
+#' @importFrom stats setNames
+
+
+dic_from_df <- function(df, keycol, valcol){
+
+  dic <- df %>%
+    dplyr::select(all_of(keycol), all_of(valcol)) %>%
+    dplyr::distinct()
+
+  dic <- stats::setNames(as.list(dic[[valcol]]),
+                         dic[[keycol]])
+
+  return(dic)
+
+}
