@@ -28,10 +28,6 @@
 #' @examples
 #' ntee_preview(ntee.user = c("ART", "A2X"))
 #'
-#' @import dplyr
-#' @importFrom dplyr %>%
-#' @importFrom rlang .data
-#'
 #' @export
 
 ntee_preview <- function(ntee.user,
