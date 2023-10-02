@@ -2,79 +2,105 @@
 #' filter NTEE dataset with codes
 #'
 
-#' Function to interactively explore NTEE codes
+#' @title Function to document NTEE Codes
 #'
 #' @description This function takes user inputs across levels 1- 5 of the
-#' NTEE2 code structure and returns selected columns from the NTEE database.
-#' The use can choose to return a dataframe or reactable object.
+#' NTEE2 code structure and returns text metadata describing each NTEE Code
+#' level
 #'
+#' @param ntee character vector. Vector of user inputs. The user inputs are
+#' progressively filtered until group, code and orgtypes are sorted into
+#' separate vectors.
 #' @param ntee.group character vector. Vector of desired Industry Group codes
 #'  to filter. Use "all" to include all possible codes.
-#'
 #' @param ntee.code character vector. Sequence of desired Industry, Division and
 #' Subdivision codes (old code structure) to use in filtering. Use "all" to
 #' include all possible codes. Can also provide only partial codes. For example
 #' "A" or "Axx" will query NTEE2 codes based on Industry group "A" and all
 #' division and subdivisions.
-#'
 #' @param ntee.orgtype character vector. Vector of Organization Types.
 #' Use "all" to include all possible codes.
 #'
-#' @param cols character vector. A vector containing list of columns to select.
-#' Default value is "all" for all columns.
+#' @usage ntee_preview(ntee.user, ntee.group, ntee.code, ntee.orgtype)
 #'
-#' @param visualize boolean. A boolean value indicating whether to return a
-#' reactable object or data frame.
-#'
-#' @usage ntee_preview(ntee.group, ntee.code, ntee.orgtype, cols, visualize)
-#'
-#' @returns a dataframe or reactable object with rows that match user arguments.
+#' @returns text strings that describe NTEE2 codes at each level
 #'
 #' @examples
-#' ntee_preview("all", "A1x", "all", "all",TRUE)
-#' ntee_preview("ART", "Axx", "all", "all",TRUE)
-#' ntee_preview("all", "Axx", "all", c("type.org", "univ"), FALSE)
+#' ntee_preview(ntee.user = c("ART", "A2X"))
 #'
 #' @import dplyr
-#' @import reactable
 #' @importFrom dplyr %>%
 #' @importFrom rlang .data
 #'
 #' @export
 
-ntee_preview <- function(ntee.group = "all",
-                         ntee.code = "all",
-                         ntee.orgtype = "all",
-                         cols = "all",
-                         visualize = FALSE){
+ntee_preview <- function(ntee.user,
+                         ntee.group = NULL,
+                         ntee.code = NULL,
+                         ntee.orgtype = NULL){
 
-  ntee2_codes <- parse_ntee(ntee.group = ntee.group,
+  reorder_vec <- function(vec){
+    vec <- vec[order(c(1, 3, 2))]
+    return(vec)
+  }
+
+  ntee2_codes <- query_ntee(ntee.user = ntee.user,
+                            ntee.group = ntee.group,
                             ntee.code = ntee.code,
                             ntee.orgtype = ntee.orgtype)
 
-  # Specify columns to select
+  group_dic <- dic_from_df(df = ntee_df,
+                           keycol = "broad.category",
+                           valcol = "broad.category.description")
 
-  if (any(cols == "all")){
-    col_names = colnames(ntee_df)
-  } else {
-    col_names = cols
+  org_dic <- dic_from_df(df = ntee_df,
+                         keycol = "type.org",
+                         valcol = "division.subdivision.description")
+
+  code_dic <- dic_from_df(df = ntee_df,
+                          keycol = "ntee2.code",
+                          valcol = "further.category.desciption")
+
+  names(code_dic) <- sapply(strsplit(names(code_dic), "-"), "[", 2)
+
+  ntee2_ls <- strsplit(ntee2_codes, "-")
+
+  ntee2_ls <- (lapply(ntee2_ls, reorder_vec))
+
+  ntee2_ls <- sort(unlist(lapply(ntee2_ls,
+                                 paste,
+                                 collapse = "-")))
+
+  ntee2_ls <- strsplit(ntee2_ls, "-")
+
+  full_desc <- ""
+
+  for (ntee_full in ntee2_ls){
+
+    group <- ntee_full[1]
+    orgtype <- ntee_full[2]
+    code <- ntee_full[3]
+
+    if (! grepl(group, full_desc)){
+      group_statement <- sprintf("%s: %s", group, group_dic[group])
+      full_desc <- paste(full_desc, group_statement, sep = "\n\n")
+    }
+
+    if (! grepl(orgtype, full_desc)){
+      org_statement <- sprintf("    %s: %s", orgtype, org_dic[orgtype])
+      full_desc <- paste(full_desc, org_statement, sep = "\n\n")
+    }
+
+    if (! grepl(code, full_desc)){
+      code_statement <- sprintf("        %s: %s", code, code_dic[code])
+      full_desc <- paste(full_desc, code_statement, sep = "\n\n")
+    }
+
   }
 
-  # Filter ntee_df
+  return(cat(full_desc))
 
-  filtered_df <- ntee_df %>%
-    dplyr::filter(.data$ntee2.code %in% ntee2_codes) %>%
-    dplyr::select(dplyr::any_of(col_names))
-
-  # Decide on output format
-  if (visualize == FALSE){
-    return(filtered_df)
-  } else {
-    return(reactable(filtered_df))
   }
-
-}
-
 
 #' A complete function takes any user input values from the arguments:
 
