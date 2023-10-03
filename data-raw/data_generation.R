@@ -135,3 +135,13 @@ ntee_preproc <- function(path_to_csv = "data-raw/ntee-disaggregated.csv"){
               ntee2_level_2_4,
               ntee2_level5))
 }
+
+# Function to generate size dictionary
+
+s3_metadata <- read.csv("data-raw/AWS-NCCSDATA.csv")
+s3_metadata$url <- paste0("https://nccsdata.s3.amazonaws.com/",
+                          s3_metadata$Key)
+
+s3_size_dic <- dic_from_df(df = s3_metadata,
+                           keycol = "url",
+                           valcol = "Size")
