@@ -119,6 +119,8 @@ get_data <- function(dsname = NULL,
 #' @usage get_core(dsname,time, scope.orgtype, scope.formtype,filters, aws)
 #'
 #' @importFrom data.table rbindlist
+#' @importFrom data.table setDT
+#' @importFrom utils askYesNo
 
 get_core <- function(dsname,
                      time,
@@ -140,15 +142,32 @@ get_core <- function(dsname,
     # Download datasets to disk
     urls <- obj_validate(dsname = dsname,
                          filenames = filenames)
-    dt_ls <- lapply(urls, load_dt)
-    dt_full <- data.table::rbindlist(dt_ls,
-                                     fill = TRUE)
 
-    # Filter datasets
-    dt_filtered <- filter_data(dt = dt_full,
-                               filters = filters)
+    size_mb <- Reduce("+", s3_size_dic[urls]) / 1000000
 
-    remove(dt_ls)
+    prompt <- sprintf("Requested files have a total size of %s MB. Proceed
+                      with download? Enter Y/N",
+                      round(size_mb, 1))
+
+    response <- utils::askYesNo(msg = prompt,
+                                default = FALSE)
+    if (response == TRUE){
+      dt_ls <- lapply(urls, load_dt)
+      dt_full <- data.table::rbindlist(dt_ls,
+                                       fill = TRUE)
+
+      # Filter datasets
+      dt_filtered <- filter_data(dt = dt_full,
+                                 filters = filters)
+
+      remove(dt_ls)
+    } else {
+
+      return(message("Download aborted."))
+
+    }
+
+
 
   } else {
 
