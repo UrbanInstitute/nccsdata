@@ -89,7 +89,7 @@ fips_map <- function(geo.county, geo.region){
 
   if (! is.null(geo.region)){
 
-    county_fips <- county_fips %>%
+      county_fips <- county_fips %>%
       dplyr::filter(.data$region.census.main %in% geo.region)
 
   }
