@@ -232,7 +232,7 @@ sort_ntee <- function(ntee.user, ntee.group, ntee.code, ntee.orgtype){
 
 
   # Case convert
-
+  ntee2 <- ntee.user[ntee.user %in% ntee_df$ntee2.code]
 
   group <- ntee.user[ntee.user %in% ntee_df$broad.category]
   group <- unique(c(group, ntee.group))
@@ -247,7 +247,8 @@ sort_ntee <- function(ntee.user, ntee.group, ntee.code, ntee.orgtype){
 
   ntee_sort_ls <- list(group  = group,
                        code = code,
-                       orgtype = orgtype)
+                       orgtype = orgtype,
+                       ntee2 = ntee2)
 
   return(ntee_sort_ls)
 }
@@ -315,6 +316,13 @@ query_ntee <- function(ntee.user,
                                     ntee.orgtype = ntee2_query_ls$orgtype)
       ntee2_matches <- c(ntee2_matches, orgtype_matches)
     }
+
+    if (length(ntee2_query_ls$ntee2) != 0){
+
+      ntee2_matches <- c(ntee2_matches, ntee2_query_ls$ntee2)
+
+    }
+
   }
 
   return(unique(ntee2_matches))
