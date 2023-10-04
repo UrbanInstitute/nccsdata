@@ -146,3 +146,19 @@ dic_from_df <- function(df, keycol, valcol){
   return(dic)
 
 }
+
+
+#' @description This function capitalizes the first character of each string.
+#'
+#' @param string character scalar. String to process and capitalize the
+#' first letter.
+#'
+#' @returns string with first letter capitalized
+
+firstupper <- function(string){
+
+  string <-   paste0(toupper(substr(string, 1, 1)),
+                     substr(string, 2, nchar(string)))
+
+  return(string)
+}
