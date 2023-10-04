@@ -5,7 +5,7 @@
 #' data and additional census, cbsa and ntee metadata
 #'
 #' @param dsname character scalar. Name of data series to query from S3.
-#' Valid inputs are "core" and "bmf", not both.
+#' Valid inputs are either "core" or "bmf", not both.
 #' @param time character vector. Dates of core/bmf files to query. Valid
 #' inputs range from 1989-2022.
 #' @param scope.orgtype character scalar. Organization type to query from
@@ -22,6 +22,8 @@
 #' "montgomery". Case insensitive
 #' @param geo.county character vector. County names for filtering e.g.
 #' "cullman", "dale". Case insensitive.
+#' @param geo.region character vector. Regions for filtering e.g. "South",
+#' "Midwest" based on census region classifications.
 #' @param ntee character vector. Vector of user inputs. The user inputs are
 #' progressively filtered until group, code and orgtypes are sorted into
 #' separate vectors.
@@ -31,11 +33,8 @@
 #' Division, Subdivision) submitted by user.
 #' @param ntee.orgtype character vector. Specific level 5 codes (Organization
 #' Type) submitted by user.
-#' @param aws boolean. Whether to use aws.s3::s3_select() in executing queries.
-#' Default == FALSE, select TRUE to use s3_select. Must have aws account to use.
 #'
 #' @return data.table with queried data
-#'
 #'
 #' @export
 
@@ -50,8 +49,7 @@ get_data <- function(dsname = NULL,
                      ntee = NULL,
                      ntee.group = NULL,
                      ntee.code = NULL,
-                     ntee.orgtype = NULL,
-                     aws = FALSE){
+                     ntee.orgtype = NULL){
 
   # Validate inputs
   message(validate_get_data(dsname = dsname,
