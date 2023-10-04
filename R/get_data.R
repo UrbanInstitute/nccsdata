@@ -33,6 +33,8 @@
 #' Division, Subdivision) submitted by user.
 #' @param ntee.orgtype character vector. Specific level 5 codes (Organization
 #' Type) submitted by user.
+#' @param append.bmf boolean. Option to merge queried core data with bmf data.
+#' Involves downloading the bmf dataset and will take longer. Default == FALSE.
 #'
 #' @return data.table with queried data
 #'
@@ -49,9 +51,10 @@ get_data <- function(dsname = NULL,
                      ntee = NULL,
                      ntee.group = NULL,
                      ntee.code = NULL,
-                     ntee.orgtype = NULL){
+                     ntee.orgtype = NULL,
+                     append.bmf = FALSE){
 
-  # Validate inputs
+  # Validate critical inputs with set acceptable entries
   message(validate_get_data(dsname = dsname,
                             time = time,
                             scope.orgtype = scope.orgtype,
@@ -71,18 +74,41 @@ get_data <- function(dsname = NULL,
 
   if (dsname == "core"){
 
+    message("Downloading core data")
+
     core_dt <- get_core(dsname = dsname,
                         time = time,
                         scope.orgtype = scope.orgtype,
                         scope.formtype = scope.formtype,
                         filters = filter_ls)
 
+    message("Core data downloaded")
+
+    if (append.bmf == TRUE){
+
+      message("Downloading bmf data")
+
+      bmf <- get_bmf(url = "https://nccsdata.s3.us-east-1.amazonaws.com/current/bmf/bmf-master.rds",
+                     filters = filter_ls)
+
+      message("bmf data downloaded. Appending bmf")
+
+      core_dt <- bmf[core_dt, on = "EIN"]
+
+      remove(bmf)
+
+    }
+
     return(core_dt)
 
-  } else if (dsname == "bmf"){
+  } if (dsname == "bmf"){
+
+    message("Downloading bmf data")
 
     bmf <- get_bmf(url = "https://nccsdata.s3.us-east-1.amazonaws.com/current/bmf/bmf-master.rds",
                    filters = filter_ls)
+
+    message("bmf data downloaded")
 
     return(bmf)
 
