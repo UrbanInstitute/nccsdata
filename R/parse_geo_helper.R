@@ -59,6 +59,8 @@ dat_filter <- function(dat,
 #'
 #' @param geo.county character vector. County names for filtering e.g.
 #' "cullman", "dale". Case insensitive.
+#' @param geo.region character vector. Regions for filtering e.g. "South",
+#' "Midwest" based on census region classifications.
 #'
 #' @return character vector. county fips codes for filtering core datasets.
 #'
