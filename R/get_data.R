@@ -80,7 +80,8 @@ get_data <- function(dsname = NULL,
                         time = time,
                         scope.orgtype = scope.orgtype,
                         scope.formtype = scope.formtype,
-                        filters = filter_ls)
+                        filters = filter_ls,
+                        append.bmf = append.bmf)
 
     message("Core data downloaded")
 
@@ -101,7 +102,10 @@ get_data <- function(dsname = NULL,
 
     return(core_dt)
 
-  } if (dsname == "bmf"){
+  } else if (dsname == "bmf"){
+
+    response <- download_size(dsname = dsname,
+                              append.bmf = append.bmf)
 
     message("Downloading bmf data")
 
@@ -138,6 +142,8 @@ get_data <- function(dsname = NULL,
 #' 'EZ'(nonprofits that file 990EZs only), '
 #' PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).
 #' @param filters list. List of column filters to apply
+#' @param append.bmf boolean. Option to merge queried core data with bmf data.
+#' Involves downloading the bmf dataset and will take longer. Default == FALSE.
 #'
 #' @return a fully merged core data.table for the end user
 #'
@@ -151,52 +157,36 @@ get_core <- function(dsname,
                      time,
                      scope.orgtype,
                      scope.formtype,
-                     filters){
-
-  filenames <- core_file_constructor(time = time,
-                                     scope.orgtype = scope.orgtype,
-                                     scope.formtype = scope.formtype)
+                     filters,
+                     append.bmf){
 
   ntee_dat <- ntee_df %>%
     rename("NTEECC" = .data$old.code) %>%
     data.table::setDT()
 
-    # Download datasets to disk
+  filenames <- core_file_constructor(time = time,
+                                     scope.orgtype = scope.orgtype,
+                                     scope.formtype = scope.formtype)
+
   urls <- obj_validate(dsname = dsname,
                        filenames = filenames)
 
-  size_mb <- Reduce("+", s3_size_dic[urls]) / 1000000
+  # Ask User for permission to perform downloads
+  response <- download_size(dsname = dsname,
+                            append.bmf = append.bmf,
+                            urls = urls)
 
-  prompt <- sprintf("Requested files have a total size of %s MB. Proceed
-                      with download? Enter Y/N",
-                    round(size_mb, 1))
 
-  response <- utils::askYesNo(msg = prompt,
-                              default = FALSE)
+  dt <- lapply(urls, load_dt)
+  dt <- data.table::rbindlist(dt, fill = TRUE)
 
-    if (response == TRUE){
-
-      dt_ls <- lapply(urls, load_dt)
-      dt_full <- data.table::rbindlist(dt_ls,
-                                       fill = TRUE)
-
-      # Filter datasets
-      dt_filtered <- filter_data(dt = dt_full,
-                                 filters = filters)
-
-      remove(dt_ls)
-    } else {
-
-      return(message("Download aborted."))
-
-    }
+  # Filter datasets
+  dt <- filter_data(dt = dt, filters = filters)
 
   # Merge data
-  dt_merged <- ntee_dat[dt_filtered, on = "NTEECC"]
-  remove(dt_filtered)
+  dt <- ntee_dat[dt, on = "NTEECC"]
 
-
-  return(dt_merged)
+  return(dt)
 
 }
 
@@ -233,11 +223,8 @@ get_bmf <- function(url,
   data.table::setDT(bmf)
   bmf <- bmf[, FIPS := as.numeric(FIPS)]
 
-  bmf_filtered <- filter_data(dt = bmf,
-                              filters = filters)
+  bmf <- filter_data(dt = bmf, filters = filters)
 
-  remove(bmf)
-
-  return(bmf_filtered)
+  return(bmf)
 
 }

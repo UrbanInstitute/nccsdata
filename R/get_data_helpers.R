@@ -174,3 +174,54 @@ filter_data <- function(dt,
   return(dt)
 
 }
+
+
+#' @title Data size calculator.
+#'
+#' @description This function calculates the size of required downloads
+#' for a user's query.
+#'
+#' @param dsname character scalar. Name of data series to query from S3.
+#' Valid inputs are either "core" or "bmf", not both.
+#' @param append.bmf boolean. Option to merge queried core data with bmf data.
+#' Involves downloading the bmf dataset and will take longer.
+#' @param urls character vector. Vector of urls to s3 buckets for download.
+#'
+#' @returns a response by the user indicating whether they want to proceed with
+#' the download
+#'
+#' @importFrom utils askYesNo
+
+download_size <- function(dsname,
+                          append.bmf,
+                          urls = NULL){
+
+
+  if (dsname == "core"){
+
+    size_mb <- Reduce("+", s3_size_dic[urls]) / 1000000
+
+    if (append.bmf == TRUE){
+
+      size_mb <- size_mb + 190.0
+
+    }
+
+  } else if (dsname == "bmf"){
+
+    size_mb <- 190.0
+
+  }
+
+  prompt <- sprintf("Requested files have a total size of %s MB. Proceed
+                      with download? Enter Y/N",
+                    round(size_mb, 1))
+
+  response <- utils::askYesNo(msg = prompt,
+                              default = FALSE)
+
+  stopifnot("Download Aborted" = response == TRUE)
+
+  return(response)
+
+}
