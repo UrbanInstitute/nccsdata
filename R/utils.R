@@ -105,15 +105,15 @@ obj_validate <- function(dsname,
 #' @importFrom readr read_csv
 #' @importFrom readr cols
 #' @importFrom data.table as.data.table
+#' @importFrom data.table setnames
 #' @importFrom dplyr %>%
 
 load_dt <- function(url){
-  dt <- readr::read_csv(
-    url,
-    col_types = readr::cols(default = "?",
-                            FIPS = "i")
-  ) %>%
-    data.table::as.data.table()
+  dt <- readr::read_csv(url,
+                        col_types = readr::cols(default = "?",
+                                                FIPS = "i")) %>%
+    data.table::as.data.table() %>%
+    data.table::setnames(toupper(names(dt)))
   return(dt)
 }
 
