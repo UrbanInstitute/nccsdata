@@ -73,8 +73,7 @@ get_data <- function(dsname = NULL,
                         time = time,
                         scope.orgtype = scope.orgtype,
                         scope.formtype = scope.formtype,
-                        filters = filter_ls,
-                        aws = aws)
+                        filters = filter_ls)
 
     return(core_dt)
 
@@ -111,8 +110,6 @@ get_data <- function(dsname = NULL,
 #' 'EZ'(nonprofits that file 990EZs only), '
 #' PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).
 #' @param filters list. List of column filters to apply
-#' @param aws boolean. Whether to use aws.s3::s3_select() in executing queries.
-#' Default == FALSE, select TRUE to use s3_select. Must have aws account to use.
 #'
 #' @return a fully merged core data.table for the end user
 #'
@@ -126,8 +123,7 @@ get_core <- function(dsname,
                      time,
                      scope.orgtype,
                      scope.formtype,
-                     filters,
-                     aws){
+                     filters){
 
   filenames <- core_file_constructor(time = time,
                                      scope.orgtype = scope.orgtype,
@@ -137,21 +133,21 @@ get_core <- function(dsname,
     rename("NTEECC" = .data$old.code) %>%
     data.table::setDT()
 
-  if (aws == FALSE){
-
     # Download datasets to disk
-    urls <- obj_validate(dsname = dsname,
-                         filenames = filenames)
+  urls <- obj_validate(dsname = dsname,
+                       filenames = filenames)
 
-    size_mb <- Reduce("+", s3_size_dic[urls]) / 1000000
+  size_mb <- Reduce("+", s3_size_dic[urls]) / 1000000
 
-    prompt <- sprintf("Requested files have a total size of %s MB. Proceed
+  prompt <- sprintf("Requested files have a total size of %s MB. Proceed
                       with download? Enter Y/N",
-                      round(size_mb, 1))
+                    round(size_mb, 1))
 
-    response <- utils::askYesNo(msg = prompt,
-                                default = FALSE)
+  response <- utils::askYesNo(msg = prompt,
+                              default = FALSE)
+
     if (response == TRUE){
+
       dt_ls <- lapply(urls, load_dt)
       dt_full <- data.table::rbindlist(dt_ls,
                                        fill = TRUE)
@@ -166,30 +162,6 @@ get_core <- function(dsname,
       return(message("Download aborted."))
 
     }
-
-
-
-  } else {
-
-    # Must be character for SQL Query
-    filters$county_fips_matches <- ifelse(nchar(filters$county_fips_matches == 4),
-                                          paste0("0", filters$county_fips_matches),
-                                          filters$county_fips_matches)
-
-    keys <- obj_validate(dsname = dsname,
-                         filenames = filenames,
-                         return.key = TRUE)
-
-    dt_filtered_ls <- s3_query(bucket = "nccsdata",
-                      keys = keys,
-                      filters = filters)
-
-    dt_filtered <- data.table::rbindlist(dt_filtered_ls,
-                                         fill = TRUE)
-
-    remove(dt_filtered_ls)
-
-  }
 
   # Merge data
   dt_merged <- ntee_dat[dt_filtered, on = "NTEECC"]
