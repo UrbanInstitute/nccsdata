@@ -55,7 +55,9 @@ get_data <- function(dsname = NULL,
   message(validate_get_data(dsname = dsname,
                             time = time,
                             scope.orgtype = scope.orgtype,
-                            scope.formtype = scope.formtype))
+                            scope.formtype = scope.formtype,
+                            geo.state = geo.state,
+                            geo.region = geo.region))
 
   # Create filters
   filter_ls <- list(nteecc_matches = nteecc_map(ntee.user = ntee,

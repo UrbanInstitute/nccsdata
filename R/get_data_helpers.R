@@ -15,15 +15,21 @@
 #' bucket. Valid inputs are 'PC'(nonprofits that file the full version),
 #' 'EZ'(nonprofits that file 990EZs only), '
 #' PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).
+#' @param geo.state character vector. Filter query by state abbreviations e.g.
+#' "NY", "CA". Default == NULL includes all states.
+#' @param geo.region character vector. Regions for filtering e.g. "South",
+#' "Midwest" based on census region classifications.
 #'
 #' @return message describing the data that is being queried.
 #'
 #' @usage validate_get_data(dsname, time, scope.orgtype, scope.formtype)
 
-validate_get_data <- function(dsname = NULL,
-                              time = NULL,
-                              scope.orgtype = NULL,
-                              scope.formtype = NULL){
+validate_get_data <- function(dsname,
+                              time,
+                              scope.orgtype,
+                              scope.formtype,
+                              geo.state,
+                              geo.region){
 
   stopifnot(
 
@@ -42,7 +48,9 @@ validate_get_data <- function(dsname = NULL,
     "Invalid datatype. scope.orgtype must be a string." =
       is_scalar_character(scope.orgtype) == TRUE,
 
-    "Invalid organisation type. Select 'CHARITIES' for charities (501C3-PC), 'PRIVFOUND' for private foundations (501C3-PF) and 'NONPROFIT' for all nonprofits (501CE)" =
+    "Invalid organisation type. Select 'CHARITIES' for charities (501C3-PC),
+    'PRIVFOUND' for private foundations (501C3-PF) and
+    'NONPROFIT' for all nonprofits (501CE)" =
       (scope.orgtype == "CHARITIES" |
        scope.orgtype == "PRIVFOUND" |
        scope.orgtype == "NONPROFIT"),
@@ -50,11 +58,23 @@ validate_get_data <- function(dsname = NULL,
     "Invalid datatype. scope.formtype must be a string." =
       is_scalar_character(scope.formtype) == TRUE,
 
-    "Invalid formtype. Select 'PC'(nonprofits that file the full version), 'EZ'(nonprofits that file 990EZs only), 'PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations)" =
+    "Invalid formtype. Select 'PC'(nonprofits that file the full version),
+    'EZ'(nonprofits that file 990EZs only),
+    'PZ'(nonprofits that file both PC and EZ),
+    or 'PF'(private foundations)" =
       (scope.formtype == "PC" |
        scope.formtype == "EZ" |
        scope.formtype == "PZ" |
-       scope.formtype == "PF")
+       scope.formtype == "PF"),
+
+    "Invalid geo.state. Use State Abbreviations instead. e.g. 'NY' for New York,
+    'CA' for California etc." =
+      geo.state %in% cbsa_df$state.census.abbr,
+
+    "Invalid geo.region. Only the following regions are accepted:
+    'South', 'West', 'Midwest', 'Northeast'" =
+      geo.region %in% tract_dat$region.census.main
+
     )
 
   return("Valid inputs detected. Retrieving data.")
