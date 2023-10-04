@@ -62,16 +62,15 @@ dat_filter <- function(dat,
 #'
 #' @return character vector. county fips codes for filtering core datasets.
 #'
-#' @usage fips_map(geo.county)
+#' @usage fips_map(geo.county, geo.region)
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
 #' @importFrom dplyr pull
 
-fips_map <- function(geo.county){
+fips_map <- function(geo.county, geo.region){
 
-
-  cbsa_fips_all <- c()
+  county_fips <- tract_dat
 
   if (! is.null(geo.county)){
 
@@ -82,12 +81,20 @@ fips_map <- function(geo.county){
       dplyr::filter(grepl(county_str_filter, .data$census.county.name)) %>%
       dplyr::pull("metro.census.cbsa.geoid")
 
-    cbsa_fips_all <- c(cbsa_fips_all, cbsa_fips)
+    county_fips <- county_fips %>%
+      dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_fipss)
+
 
   }
 
-  county_fips <- tract_dat %>%
-    dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_fips_all) %>%
+  if (! is.null(geo.region)){
+
+    county_fips <- county_fips %>%
+      dplyr::filter(.data$region.census.main %in% geo.region)
+
+  }
+
+  county_fips <- county_fips %>%
     dplyr::pull("county.census.geoid")
 
   return(unique(county_fips))
