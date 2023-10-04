@@ -82,7 +82,7 @@ fips_map <- function(geo.county, geo.region){
       dplyr::pull("metro.census.cbsa.geoid")
 
     county_fips <- county_fips %>%
-      dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_fipss)
+      dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_fips)
 
 
   }
