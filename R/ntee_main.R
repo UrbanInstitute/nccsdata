@@ -56,12 +56,12 @@ ntee_preview <- function(ntee.user,
 
   ntee2_ls <- strsplit(ntee2_codes, "-")
 
-  ntee2_ls <- (lapply(ntee2_ls, reorder_vec))
-
   reorder_vec <- function(vec){
     vec <- vec[order(c(1, 3, 2))]
     return(vec)
   }
+
+  ntee2_ls <- (lapply(ntee2_ls, reorder_vec))
 
   ntee2_ls <- sort(unlist(lapply(ntee2_ls,
                                  paste,
