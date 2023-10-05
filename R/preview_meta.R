@@ -31,8 +31,6 @@
 #' @import dplyr
 #' @import reactable
 #' @importFrom utils head
-#'
-#' @export
 
 preview_meta <-  function(dataset,
                           visual = FALSE,
