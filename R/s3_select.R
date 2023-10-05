@@ -117,7 +117,6 @@ query_construct <- function(filters){
 #'
 #' @usage paws_s3_select(bucket, key, query, file.header, csv.header)
 #'
-#' @importFrom paws s3
 #' @importFrom utils read.csv
 
 paws_s3_select <- function(bucket,

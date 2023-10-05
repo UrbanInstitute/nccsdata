@@ -29,7 +29,6 @@
 #'
 #' @import purrr
 #' @import dplyr
-#' @import reactable
 #' @importFrom utils head
 
 preview_meta <-  function(dataset,
