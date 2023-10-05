@@ -148,6 +148,8 @@ dic_from_df <- function(df, keycol, valcol){
 }
 
 
+#' @title Function to process first letter of lowercase strings
+#'
 #' @description This function capitalizes the first character of each string.
 #'
 #' @param string character scalar. String to process and capitalize the
