@@ -2,27 +2,48 @@
 % Please edit documentation in R/parse_geo_main.R
 \name{parse_geo}
 \alias{parse_geo}
-\title{Script to return Block or Tract IDs from Census tables that match}
+\title{Simplified Geo Parser for Census Crosswalks}
 \usage{
-parse_geo(census.level, ...)
+parse_geo(
+  census.level,
+  geo.region = NULL,
+  geo.state = NULL,
+  geo.county = NULL,
+  geo.city = NULL
+)
 }
 \arguments{
-\item{census.level}{string. data.table to parse; "BLOCK" | "TRACT"}
+\item{census.level}{character scalar. Name of crosswalk, either 'tract' or
+'block'.}
 
-\item{...}{columns in either tract or block dataset for filtering.}
+\item{geo.region}{character vector. Name of geographic region. Acceptable
+values are 'South', 'West', 'Northeast' and 'Midwest'. Default == NULL.}
+
+\item{geo.state}{character vector. 2 letter state abbreviations. Values such
+as 'NY', 'CA', 'WY' are accepted. Default == NULL.}
+
+\item{geo.county}{character vector. Name of county. Case insensitive.
+Default == NULL.}
+
+\item{geo.city}{character vector. Name of city. State should be entered
+in geo.state. Case insensitive. Default == NULL.}
 }
 \value{
-a list of FIPS codes for either Tract IDs or Block IDs.
+a character vector of either census tract or block FIPS.
 }
 \description{
-Filters either the Block or Tract data.tables to return
-a list of FIPS codes that match conditions specified by the User
+This function takes in simplified user inputs, filters
+either the tract or block datasets based on these inputs and returns the
+relevant FIPS codes
 }
 \details{
-Function that returns FIPS codes that match dynamic User arguments
+All arguments are nested. Hence only the FIPs that are present in
+all filters are returned.
 }
 \examples{
- parse_geo(census.level = "TRACT",
-                     state.census.abbr = c("NY", "MD"))
+parse_geo(census.level = "tract",
+          geo.region = "West",
+          geo.state = "WA",
+          geo.county = "cook")
 
 }

@@ -13,12 +13,11 @@ Depends:
     R (>= 3.50)
 Imports: 
     dplyr,
-    reactable,
+    stringr,
     data.table,
     purrr,
     rlang,
     utils,
-    paws,
     RCurl,
     readr,
     jsonlite
