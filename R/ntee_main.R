@@ -30,7 +30,7 @@
 #'
 #' @export
 
-ntee_preview <- function(ntee.user,
+ntee_preview <- function(ntee.user = NULL,
                          ntee.group = NULL,
                          ntee.code = NULL,
                          ntee.orgtype = NULL){
@@ -83,23 +83,41 @@ ntee_preview <- function(ntee.user,
 
       current_group <- group
       group_statement <- sprintf("%s: %s", group, group_dic[group])
-      full_desc <- paste(full_desc, group_statement, sep = "\n\n")
+      cat("\n\n", group_statement)
 
     }
 
     if  (orgtype != current_org){
+
       current_org <- orgtype
-      org_statement <- sprintf("    %s: %s", orgtype, org_dic[orgtype])
-      full_desc <- paste(full_desc, org_statement, sep = "\n\n")
+      org_desc <- strwrap(org_dic[orgtype])
+
+      org_statement <- sprintf("    %s: %s", orgtype, org_desc[1])
+      cat("\n\n", org_statement)
+
+      if (length(org_desc) > 1){
+
+        org_statement <- sprintf("        %s", org_desc[2])
+        cat("\n", org_statement)
+
+      }
+
+
+      }
+
+    code_statement <- sprintf("        %s: \n", code)
+    cat("\n\n", code_statement)
+    for (str in strwrap(code_dic[code])){
+
+      code_statement <- sprintf("        %s", str)
+      cat("\n", code_statement)
 
     }
 
-    code_statement <- sprintf("        %s:%s", code, code_dic[code])
-    full_desc <- paste(full_desc, code_statement, sep = "\n\n")
-
   }
+  #full_output <- cat(full_desc)
 
-  return(cat(full_desc))
+  return(message("End of preview."))
 
   }
 
