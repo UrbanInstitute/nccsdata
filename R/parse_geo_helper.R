@@ -34,8 +34,8 @@ dat_filter <- function(dat,
   if (all(names(args) %in% colnames(dat))){
 
     parsed_ids <- dat %>%
-      suppressWarnings(dplyr::filter(!!! ex_args)) %>%
-      dplyr::select(dplyr::all_of(id_col))
+      dplyr::filter(!!! ex_args) %>%
+      dplyr::pull(id_col)
 
     return(parsed_ids)
 
