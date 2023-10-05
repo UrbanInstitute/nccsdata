@@ -35,7 +35,7 @@ geo_data_get <- function(
   block_dat <- aws.s3::save_object(block_s3_url) %>%
     data.table::fread()
 
-  tract_dat <- save_object(tract_s3_url) %>%
+  tract_dat <- aws.s3::save_object(tract_s3_url) %>%
     data.table::fread()
 
   # Set global variables
@@ -59,12 +59,9 @@ geo_data_get <- function(
       as.numeric(.data$block.census.geoid)
     ))
 
-  # Save data to internal storage
-  usethis::use_data(block_dat,
-                    tract_dat,
-                    internal = TRUE)
+  message("Census and Block datasets downloaded and processed.")
 
-  return("Census and Block datasets downloaded to internal storage.")
+  return(list(tract_dat, block_dat))
 
 }
 
