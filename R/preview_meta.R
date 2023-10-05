@@ -21,11 +21,13 @@
 #' rows of table visualized with reactable
 #'
 #' @examples
+#' \dontrun{
 #' preview_meta("cbsa", TRUE, state.census.name = c("Wyoming", "Montana"))
 #' preview_meta("tract", TRUE,
 #'                 metro.census.cbsa.geoid = c("10100", "10200"),
 #'                 state.census.abbr = c("NY", "CA"))
 #' preview_meta("tract", TRUE, within = c("NY", "Alabama"))
+#' }
 #'
 #' @import purrr
 #' @import dplyr
