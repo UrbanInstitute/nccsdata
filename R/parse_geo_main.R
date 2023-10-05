@@ -31,8 +31,8 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr pull
 #' @importFrom dplyr %>%
-
-
+#'
+#' @export
 
 parse_geo <- function(census.level,
                       geo.region = NULL,
