@@ -21,8 +21,6 @@
 #' "Midwest" based on census region classifications.
 #'
 #' @return message describing the data that is being queried.
-#'
-#' @usage validate_get_data(dsname, time, scope.orgtype, scope.formtype)
 
 validate_get_data <- function(dsname,
                               time,
