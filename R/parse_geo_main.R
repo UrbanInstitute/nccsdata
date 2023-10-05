@@ -15,7 +15,7 @@
 #' @param geo.city character vector. Name of city. State should be entered
 #' in geo.state. Case insensitive. Default == NULL.
 #'
-#' @example
+#' @examples
 #' parse_geo(census.level = "tract",
 #'           geo.region = "West",
 #'           geo.state = "WA",
