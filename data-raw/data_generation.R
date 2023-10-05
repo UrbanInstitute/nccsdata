@@ -142,3 +142,24 @@ s3_metadata$url <- paste0("https://nccsdata.s3.amazonaws.com/",
 s3_size_dic <- dic_from_df(df = s3_metadata,
                            keycol = "url",
                            valcol = "Size")
+
+
+# Writing required objects to internal data
+
+library(dplyr)
+
+xwalk_ls <- geo_data_get()
+tract_dat <- xwalk_ls[[1]]
+block_dat <- xwalk_ls[[2]]
+
+tract_dat %>% dplyr::rename(geo.puma = puma.census.geoid,
+                            geo.cbsa = metro.census.cbsa.geoid,
+                            )
+
+usethis::use_data(tract_dat,
+                  block_dat,
+                  cbsa_df,
+                  ntee_df,
+                  s3_size_dic,
+                  internal = TRUE,
+                  overwrite = TRUE)
