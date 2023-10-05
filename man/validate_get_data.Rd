@@ -22,6 +22,12 @@ nonprofits (501CE)}
 bucket. Valid inputs are 'PC'(nonprofits that file the full version),
 'EZ'(nonprofits that file 990EZs only), '
 PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).}
+
+\item{geo.state}{character vector. Filter query by state abbreviations e.g.
+"NY", "CA". Default == NULL includes all states.}
+
+\item{geo.region}{character vector. Regions for filtering e.g. "South",
+"Midwest" based on census region classifications.}
 }
 \value{
 message describing the data that is being queried.

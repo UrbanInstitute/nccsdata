@@ -25,8 +25,8 @@ PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).}
 
 \item{filters}{list. List of column filters to apply}
 
-\item{aws}{boolean. Whether to use aws.s3::s3_select() in executing queries.
-Default == FALSE, select TRUE to use s3_select. Must have aws account to use.}
+\item{append.bmf}{boolean. Option to merge queried core data with bmf data.
+Involves downloading the bmf dataset and will take longer. Default == FALSE.}
 }
 \value{
 a fully merged core data.table for the end user

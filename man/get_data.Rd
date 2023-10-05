@@ -13,16 +13,17 @@ get_data(
   geo.state = NULL,
   geo.city = NULL,
   geo.county = NULL,
+  geo.region = NULL,
   ntee = NULL,
   ntee.group = NULL,
   ntee.code = NULL,
   ntee.orgtype = NULL,
-  aws = FALSE
+  append.bmf = FALSE
 )
 }
 \arguments{
 \item{dsname}{character scalar. Name of data series to query from S3.
-Valid inputs are "core" and "bmf", not both.}
+Valid inputs are either "core" or "bmf", not both.}
 
 \item{time}{character vector. Dates of core/bmf files to query. Valid
 inputs range from 1989-2022.}
@@ -46,6 +47,9 @@ PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).}
 \item{geo.county}{character vector. County names for filtering e.g.
 "cullman", "dale". Case insensitive.}
 
+\item{geo.region}{character vector. Regions for filtering e.g. "South",
+"Midwest" based on census region classifications.}
+
 \item{ntee}{character vector. Vector of user inputs. The user inputs are
 progressively filtered until group, code and orgtypes are sorted into
 separate vectors.}
@@ -59,8 +63,8 @@ Division, Subdivision) submitted by user.}
 \item{ntee.orgtype}{character vector. Specific level 5 codes (Organization
 Type) submitted by user.}
 
-\item{aws}{boolean. Whether to use aws.s3::s3_select() in executing queries.
-Default == FALSE, select TRUE to use s3_select. Must have aws account to use.}
+\item{append.bmf}{boolean. Option to merge queried core data with bmf data.
+Involves downloading the bmf dataset and will take longer. Default == FALSE.}
 }
 \value{
 data.table with queried data

@@ -2,10 +2,9 @@
 % Please edit documentation in R/ntee_main.R
 \name{ntee_preview}
 \alias{ntee_preview}
-\title{Script with front end functions for users to access NTEE2 codes and
-filter NTEE dataset with codes}
+\title{Function to document NTEE Codes}
 \usage{
-ntee_preview(ntee.group, ntee.code, ntee.orgtype, cols, visualize)
+ntee_preview(ntee.user, ntee.group, ntee.code, ntee.orgtype)
 }
 \arguments{
 \item{ntee.group}{character vector. Vector of desired Industry Group codes
@@ -20,26 +19,23 @@ division and subdivisions.}
 \item{ntee.orgtype}{character vector. Vector of Organization Types.
 Use "all" to include all possible codes.}
 
-\item{cols}{character vector. A vector containing list of columns to select.
-Default value is "all" for all columns.}
-
-\item{visualize}{boolean. A boolean value indicating whether to return a
-reactable object or data frame.}
+\item{ntee}{character vector. Vector of user inputs. The user inputs are
+progressively filtered until group, code and orgtypes are sorted into
+separate vectors.}
 }
 \value{
-a dataframe or reactable object with rows that match user arguments.
+text strings that describe NTEE2 codes at each level
 }
 \description{
 This function takes user inputs across levels 1- 5 of the
-NTEE2 code structure and returns selected columns from the NTEE database.
-The use can choose to return a dataframe or reactable object.
+NTEE2 code structure and returns text metadata describing each NTEE Code
+level
 }
 \details{
-Function to interactively explore NTEE codes
+Script with front end functions for users to access NTEE2 codes and
+filter NTEE dataset with codes
 }
 \examples{
-ntee_preview("all", "A1x", "all", "all",TRUE)
-ntee_preview("ART", "Axx", "all", "all",TRUE)
-ntee_preview("all", "Axx", "all", c("type.org", "univ"), FALSE)
+ntee_preview(ntee.user = c("ART", "A2X"))
 
 }

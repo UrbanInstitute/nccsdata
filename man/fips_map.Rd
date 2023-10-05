@@ -4,11 +4,14 @@
 \alias{fips_map}
 \title{function that maps fips codes to user arguments}
 \usage{
-fips_map(geo.county)
+fips_map(geo.county, geo.region)
 }
 \arguments{
 \item{geo.county}{character vector. County names for filtering e.g.
 "cullman", "dale". Case insensitive.}
+
+\item{geo.region}{character vector. Regions for filtering e.g. "South",
+"Midwest" based on census region classifications.}
 }
 \value{
 character vector. county fips codes for filtering core datasets.
