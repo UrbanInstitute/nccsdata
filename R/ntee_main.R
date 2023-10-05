@@ -21,21 +21,21 @@
 #' @param ntee.orgtype character vector. Vector of Organization Types.
 #' Use "all" to include all possible codes.
 #'
-#' @usage ntee_preview(ntee.user, ntee.group, ntee.code, ntee.orgtype)
+#' @usage ntee_preview(ntee, ntee.group, ntee.code, ntee.orgtype)
 #'
 #' @returns text strings that describe NTEE2 codes at each level
 #'
 #' @examples
-#' ntee_preview(ntee.user = c("ART", "A2X"))
+#' ntee_preview(ntee = c("ART", "A2X"))
 #'
 #' @export
 
-ntee_preview <- function(ntee.user = NULL,
+ntee_preview <- function(ntee = NULL,
                          ntee.group = NULL,
                          ntee.code = NULL,
                          ntee.orgtype = NULL){
 
-  ntee2_codes <- query_ntee(ntee.user = ntee.user,
+  ntee2_codes <- query_ntee(ntee.user = ntee,
                             ntee.group = ntee.group,
                             ntee.code = ntee.code,
                             ntee.orgtype = ntee.orgtype)
