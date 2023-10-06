@@ -21,6 +21,9 @@
 #' "Midwest" based on census region classifications.
 #'
 #' @return message describing the data that is being queried.
+#'
+#' @importFrom rlang is_scalar_character
+#' @importFrom rlang is_character
 
 validate_get_data <- function(dsname,
                               time,
@@ -32,19 +35,19 @@ validate_get_data <- function(dsname,
   stopifnot(
 
     "Invalid datatype. dsname must be a string." =
-      is_scalar_character(dsname) == TRUE,
+      rlang::is_scalar_character(dsname) == TRUE,
 
     "Invalid dataseries. Select either 'core' or 'bmf'." =
       (dsname == "core" | dsname == "bmf"),
 
     "Invalid datatype. time must be a character vector." =
-      is_character(time) == TRUE,
+      rlang::is_character(time) == TRUE,
 
     "Invalid date range specified. Choose years from 1989-2022." =
       all(as.numeric(time) %in% c(seq(1989, 2022), "current")),
 
     "Invalid datatype. scope.orgtype must be a string." =
-      is_scalar_character(scope.orgtype) == TRUE,
+      rlang::is_scalar_character(scope.orgtype) == TRUE,
 
     "Invalid organisation type. Select 'CHARITIES' for charities (501C3-PC),
     'PRIVFOUND' for private foundations (501C3-PF) and
@@ -54,7 +57,7 @@ validate_get_data <- function(dsname,
        scope.orgtype == "NONPROFIT"),
 
     "Invalid datatype. scope.formtype must be a string." =
-      is_scalar_character(scope.formtype) == TRUE,
+      rlang::is_scalar_character(scope.formtype) == TRUE,
 
     "Invalid formtype. Select 'PC'(nonprofits that file the full version),
     'EZ'(nonprofits that file 990EZs only),
