@@ -6,7 +6,7 @@
 #' @param data data.frame or data.table. In-memory dataset to summarize
 #' @param group_by character vector. Vector of columns for dplyr::group_by()
 #' @param var character scalar. Column to calculate summary statistics with
-#' @param stats. character vector. Vector of summary statistics to compute with
+#' @param stats character vector. Vector of summary statistics to compute with
 #' dplyr::summarise(). Available options are count, min, max, median and mean
 #' @param geo.state character vector. Filter query by state abbreviations e.g.
 #' "NY", "CA". Default == NULL includes all states.

@@ -7,7 +7,7 @@
 #' preview_sample(). Used to ensure that query columns are present in data
 #' @param group_by character vector. Vector of columns for dplyr::group_by()
 #' @param var character scalar. Column to calculate summary statistics with
-#' @param stats. character vector. Vector of summary statistics to compute with
+#' @param stats character vector. Vector of summary statistics to compute with
 #' dplyr::summarise(). Available options are count, min, max, median and mean
 #'
 #' @returns Informative error messages for the user to edit function arguments
