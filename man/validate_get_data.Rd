@@ -4,7 +4,14 @@
 \alias{validate_get_data}
 \title{Function to validate inputs to get_data()}
 \usage{
-validate_get_data(dsname, time, scope.orgtype, scope.formtype)
+validate_get_data(
+  dsname,
+  time,
+  scope.orgtype,
+  scope.formtype,
+  geo.state,
+  geo.region
+)
 }
 \arguments{
 \item{dsname}{character scalar. Name of data series to query from S3.

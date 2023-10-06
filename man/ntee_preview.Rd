@@ -4,9 +4,13 @@
 \alias{ntee_preview}
 \title{Function to document NTEE Codes}
 \usage{
-ntee_preview(ntee.user, ntee.group, ntee.code, ntee.orgtype)
+ntee_preview(ntee, ntee.group, ntee.code, ntee.orgtype)
 }
 \arguments{
+\item{ntee}{character vector. Vector of user inputs. The user inputs are
+progressively filtered until group, code and orgtypes are sorted into
+separate vectors.}
+
 \item{ntee.group}{character vector. Vector of desired Industry Group codes
 to filter. Use "all" to include all possible codes.}
 
@@ -18,10 +22,6 @@ division and subdivisions.}
 
 \item{ntee.orgtype}{character vector. Vector of Organization Types.
 Use "all" to include all possible codes.}
-
-\item{ntee}{character vector. Vector of user inputs. The user inputs are
-progressively filtered until group, code and orgtypes are sorted into
-separate vectors.}
 }
 \value{
 text strings that describe NTEE2 codes at each level
@@ -36,6 +36,6 @@ Script with front end functions for users to access NTEE2 codes and
 filter NTEE dataset with codes
 }
 \examples{
-ntee_preview(ntee.user = c("ART", "A2X"))
+ntee_preview(ntee = c("ART", "A2X"))
 
 }
