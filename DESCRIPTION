@@ -21,7 +21,7 @@ Imports:
     RCurl,
     readr,
     jsonlite,
-    stats
+    stats,
     paws
 RoxygenNote: 7.2.3
 URL: https://github.com/Thiyaghessan/nccsdata, https://thiyaghessan.github.io/nccsdata/, https://urbaninstitute.github.io/nccsdata/
