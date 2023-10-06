@@ -26,6 +26,9 @@ preview_sample(
 
 \item{var}{character scalar. Column to calculate summary statistics with}
 
+\item{stats}{character vector. Vector of summary statistics to compute with
+dplyr::summarise(). Available options are count, min, max, median and mean}
+
 \item{ntee}{character vector. Vector of user inputs. The user inputs are
 progressively filtered until group, code and orgtypes are sorted into
 separate vectors.}
@@ -50,9 +53,6 @@ Type) submitted by user.}
 
 \item{geo.county}{character vector. County names for filtering e.g.
 "cullman", "dale". Case insensitive.}
-
-\item{stats.}{character vector. Vector of summary statistics to compute with
-dplyr::summarise(). Available options are count, min, max, median and mean}
 }
 \value{
 dataframe with summary statistics computed for each group

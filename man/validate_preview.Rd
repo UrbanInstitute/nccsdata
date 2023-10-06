@@ -14,7 +14,7 @@ preview_sample(). Used to ensure that query columns are present in data}
 
 \item{var}{character scalar. Column to calculate summary statistics with}
 
-\item{stats.}{character vector. Vector of summary statistics to compute with
+\item{stats}{character vector. Vector of summary statistics to compute with
 dplyr::summarise(). Available options are count, min, max, median and mean}
 }
 \value{
