@@ -11,6 +11,8 @@
 #' dplyr::summarise(). Available options are count, min, max, median and mean
 #'
 #' @returns Informative error messages for the user to edit function arguments
+#'
+#' @importFrom rlang is_scalar_character
 
 validate_preview <- function(df_cols,
                              group_by,
@@ -24,7 +26,7 @@ validate_preview <- function(df_cols,
                             setdiff(summary_cols, df_cols))
 
   stopifnot("Can only summarise information for a single variable.
-            'Var' must include only one column." = is_scalar_character(var),
+            'Var' must include only one column." = rlang::is_scalar_character(var),
 
             "Invalid summary statistics.
             Valid options are 'count', 'min', 'median', 'mean' and 'max'" =
