@@ -1,77 +1,92 @@
-#' This function filters the cbsa dataframe.
+#' @title Function to summarize NCCS data.
 #'
-#' @description This function takes in a cbsa dataset and a dynamic list
-#' of user selected columns. It returns a filtered dataframes based on user
-#' conditions
+#' @description This function computes summary statistics for data pulled with
+#' get_data()
 #'
-#' @param dataset string. Name of dataset to load, "cbsa", "block", "tract".
-#' @param visual boolean. Option to return reactable visualization or filtered
-#' dataframe
-#' @param within character vector. Vector of column variables to filter by
-#' without explicit argument definition, filters all rows with columns
-#' containing any of the within arguments. For example within = c("NY",
-#' "Alabama") will return all rows containing either NY or Alabama
-#' @param ... expression. User inputs of selected columns and values to filter
-#' by. E.g. (state.census.abbr = c("NY", "AL")). Leaving blank returns all
-#' columns
+#' @param data data.frame or data.table. In-memory dataset to summarize
+#' @param group_by character vector. Vector of columns for dplyr::group_by()
+#' @param var character scalar. Column to calculate summary statistics with
+#' @param stats. character vector. Vector of summary statistics to compute with
+#' dplyr::summarise(). Available options are count, min, max, median and mean
+#' @param geo.state character vector. Filter query by state abbreviations e.g.
+#' "NY", "CA". Default == NULL includes all states.
+#' @param geo.city character vector. City names for filtering e.g. "Chicago",
+#' "montgomery". Case insensitive
+#' @param geo.county character vector. County names for filtering e.g.
+#' "cullman", "dale". Case insensitive.
+#' @param geo.region character vector. Regions for filtering e.g. "South",
+#' "Midwest" based on census region classifications.
+#' @param ntee character vector. Vector of user inputs. The user inputs are
+#' progressively filtered until group, code and orgtypes are sorted into
+#' separate vectors.
+#' @param ntee.group character vector. Specific Industry Group codes submitted
+#' by user
+#' @param ntee.code character vector. Specific level 2-4 codes (Industry,
+#' Division, Subdivision) submitted by user.
+#' @param ntee.orgtype character vector. Specific level 5 codes (Organization
+#' Type) submitted by user.
 #'
-#' @usage preview_meta(dataset, visual, within, ...)
-#'
-#' @returns filtered dataframe or list with filtered dataframe and first 20
-#' rows of table visualized with reactable
+#' @returns dataframe with summary statistics computed for each group
 #'
 #' @examples
 #' \dontrun{
-#' preview_meta("cbsa", TRUE, state.census.name = c("Wyoming", "Montana"))
-#' preview_meta("tract", TRUE,
-#'                 metro.census.cbsa.geoid = c("10100", "10200"),
-#'                 state.census.abbr = c("NY", "CA"))
-#' preview_meta("tract", TRUE, within = c("NY", "Alabama"))
+#' core <- get_data(dsname = "core",
+#'                  time = "2005")
+#' preview_sample(data = core,
+#'                group_by = c("NTEECC", "STATE"),
+#'                var = c("TOTREV"),
+#'                stats = c("count", "mean", "max"))
 #' }
 #'
-#' @import purrr
-#' @import dplyr
-#' @importFrom utils head
+#' @importFrom dplyr group_by
+#' @importFrom dplyr summarise
+#' @importFrom dplyr all_of
+#' @importFrom dplyr across
+#' @importFrom dplyr select
+#'
+#' @export
 
-preview_meta <-  function(dataset,
-                          visual = FALSE,
-                          within = NULL,
-                          ...){
+preview_sample <- function(data,
+                           group_by,
+                           var,
+                           stats,
+                           ntee = NULL,
+                           ntee.group = NULL,
+                           ntee.code = NULL,
+                           ntee.orgtype = NULL,
+                           geo.state = NULL,
+                           geo.city = NULL,
+                           geo.region = NULL,
+                           geo.county = NULL){
 
-  # Read in data
-  if (dataset == "cbsa"){
-    data <- cbsa_df
-  } else if (dataset == "tract"){
-    data <- tract_dat
-  } else if (dataset == "block"){
-    data <- block_dat
-  } else {
-    stop("Invalid dataset. Valid inputs include: 'cbsa', 'tract', 'block'")
-  }
+  # Validate entries
+  validate_preview(df_cols = colnames(data),
+                   group_by = group_by,
+                   var = var,
+                   stats = stats)
 
-  # Create filter conditions
+  # Create filters
+  filter_ls <- list(nteecc_matches = nteecc_map(ntee.user = ntee,
+                                                ntee.group = ntee.group,
+                                                ntee.code = ntee.code,
+                                                ntee.orgtype = ntee.orgtype),
+                    state_matches = toupper(geo.state),
+                    city_matches = toupper(geo.city),
+                    county_fips_matches = fips_map(geo.region = firstupper(geo.region),
+                                                   geo.county = geo.county))
 
-  filter_conditions <- enquos(...)
-  filter_conditions_exp <- unname(purrr::imap(
-    filter_conditions,
-    function(expr, name) quo( !! sym(name) == !! expr)
-  )
-  )
+  data <- filter_data(dt = as.data.table(data),
+                      filters = filter_ls)
 
-  # Filter DF
-  if (is.null(within)){
-    filtered_df <- suppressWarnings(dplyr::filter(data,
-                                                  !!! filter_conditions_exp))
-  } else {
-    filtered_df <- cbsa_df %>%
-      dplyr::filter(if_any(.cols = dplyr::everything(),
-                           .fns = function(x) x %in% within))
-  }
+  preview <- data %>%
+    dplyr::group_by(dplyr::across(dplyr::all_of(group_by))) %>%
+    dplyr::summarise(count = n(),
+                     min = min(!!sym(var)),
+                     mean = mean(!!sym(var)),
+                     median = median(!!sym(var)),
+                     max = max(!!sym(var))) %>%
+    dplyr::select(dplyr::all_of(c(group_by, stats)))
 
-  if (visual == TRUE){
-    return(list(reactable(utils::head(filtered_df, 20)),
-                invisible(filtered_df)))
-  } else {
-    invisible(filtered_df)
-  }
+  return(preview)
+
 }
