@@ -43,6 +43,7 @@
 #' @importFrom dplyr all_of
 #' @importFrom dplyr across
 #' @importFrom dplyr select
+#' @importFrom stats median
 #'
 #' @export
 
@@ -83,7 +84,7 @@ preview_sample <- function(data,
     dplyr::summarise(count = n(),
                      min = min(!!sym(var)),
                      mean = mean(!!sym(var)),
-                     median = median(!!sym(var)),
+                     median = stats::median(!!sym(var)),
                      max = max(!!sym(var))) %>%
     dplyr::select(dplyr::all_of(c(group_by, stats)))
 
