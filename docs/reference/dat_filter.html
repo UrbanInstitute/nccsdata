@@ -66,7 +66,11 @@ the subset specified</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">dat_filter</span><span class="op">(</span><span class="va">dat</span>, args <span class="op">=</span> <span class="va">args</span>, ex_args <span class="op">=</span> <span class="va">ex_args</span>, <span class="va">id_col</span>, <span class="va">census.level</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">dat_filter</span><span class="op">(</span><span class="va">dat</span>,</span>
+<span>                  <span class="va">args</span>,</span>
+<span>                  <span class="va">ex_args</span>,</span>
+<span>                  <span class="va">id_col</span>,</span>
+<span>                  <span class="va">census.level</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -79,16 +83,16 @@ the subset specified</p>
 <dd><p>string expression. User arguments specified in parse_geo()</p></dd>
 
 
-<dt>id_col</dt>
-<dd><p>string. Name of column with Tract or Block IDs</p></dd>
-
-
-<dt>exp_args</dt>
+<dt>ex_args</dt>
 <dd><p>string expression. Processed user arguments specified in
 parse_geo()</p></dd>
 
 
-<dt>geo.level</dt>
+<dt>id_col</dt>
+<dd><p>string. Name of column with Tract or Block IDs</p></dd>
+
+
+<dt>census.level</dt>
 <dd><p>name of data.table (Block/Census) for error messages.</p></dd>
 
 </dl></div>
