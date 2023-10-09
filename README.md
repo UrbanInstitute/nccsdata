@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of nccsdata is to ...
+nccsdata provides tools to read, filter and append metadata to publicly available NCCS Core and BMF data sets.
 
 ## Installation
 
@@ -17,10 +17,23 @@ devtools::install_github("UrbanInstitute/nccsdata")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This example demonstrates the basic workflow for downloading and filtering 
+Nonprofit core data and appending BMF and NTEE data to it:
 
-``` r
+```{r example, echo=FALSE, message=FALSE, results='hide'}
 library(nccsdata)
-## basic example code
+
+core_2005 <- nccsdata::get_data(dsname = "core",
+                                time = "2005")
+
+core_summary <- preview_sample(data = core_2005,
+                               group_by = c("NTEECC", "STATE"),
+                               var = "TOTREV",
+                               stats = c("count", "mean"))
+
+core_summary
+
 ```
+
+
 
