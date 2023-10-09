@@ -2,6 +2,7 @@
 # nccsdata
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 nccsdata provides tools to read, filter and append metadata to publicly available NCCS Core and BMF data sets.
@@ -20,7 +21,7 @@ devtools::install_github("UrbanInstitute/nccsdata")
 This example demonstrates the basic workflow for downloading and filtering 
 Nonprofit core data and appending BMF and NTEE data to it:
 
-```{r example, echo=FALSE, message=FALSE, results='hide'}
+```r
 library(nccsdata)
 
 core_2005 <- nccsdata::get_data(dsname = "core",
