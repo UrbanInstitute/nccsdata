@@ -34,9 +34,6 @@
     <loc>https://urbaninstitute.github.io/nccsdata/reference/generate_ntee_regex.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/geo_data_get.html</loc>
-  </url>
-  <url>
     <loc>https://urbaninstitute.github.io/nccsdata/reference/get_bmf.html</loc>
   </url>
   <url>
@@ -55,16 +52,10 @@
     <loc>https://urbaninstitute.github.io/nccsdata/reference/jsonify_f.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/lm.html</loc>
-  </url>
-  <url>
     <loc>https://urbaninstitute.github.io/nccsdata/reference/load_dt.html</loc>
   </url>
   <url>
     <loc>https://urbaninstitute.github.io/nccsdata/reference/nteecc_map.html</loc>
-  </url>
-  <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/ntee_preproc.html</loc>
   </url>
   <url>
     <loc>https://urbaninstitute.github.io/nccsdata/reference/ntee_preview.html</loc>
@@ -86,9 +77,6 @@
   </url>
   <url>
     <loc>https://urbaninstitute.github.io/nccsdata/reference/parse_ntee_regex.html</loc>
-  </url>
-  <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/preview_meta.html</loc>
   </url>
   <url>
     <loc>https://urbaninstitute.github.io/nccsdata/reference/preview_sample.html</loc>
