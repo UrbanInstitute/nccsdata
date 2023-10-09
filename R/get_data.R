@@ -4,114 +4,226 @@
 #' @description This function uses user inputs to query, filter and merge nccs
 #' data and additional census, cbsa and ntee metadata
 #'
-#' @param ntee.level1 string or vector. Nonprofit Industry Group. Default ==
-#' "all" includes all Industry Groups.
-#' @param ntee.level2 string or vector. Level 2-4 of NTEE code (Industry,
-#' Division and Subdivision). Default == "all" includes all codes.
-#' @param geo.state string or vector. Filter query by state abbreviations e.g.
+#' @param dsname character scalar. Name of data series to query from S3.
+#' Valid inputs are either "core" or "bmf", not both.
+#' @param time character vector. Dates of core/bmf files to query. Valid
+#' inputs range from 1989-2022.
+#' @param scope.orgtype character scalar. Organization type to query from
+#' core/bmf s3 bucket. Valid inputs are 'CHARITIES' for charities (501C3-PC),
+#' 'PRIVFOUND' for private foundations (501C3-PF) and 'NONPROFIT' for all
+#' nonprofits (501CE)
+#' @param scope.formtype character scalar. Form type to query from core/bmf s3
+#' bucket. Valid inputs are 'PC'(nonprofits that file the full version),
+#' 'EZ'(nonprofits that file 990EZs only), '
+#' PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).
+#' @param geo.state character vector. Filter query by state abbreviations e.g.
 #' "NY", "CA". Default == NULL includes all states.
-#' @param geo.metro string or vector. Filter query by cbsa code. Default = NULL
-#' includes all metro cbsa codes.
-#' @param geo.level string. Census dataset to merge with. Default == "tract"
-#' which merges filtered bmf data with census tract data.
+#' @param geo.city character vector. City names for filtering e.g. "Chicago",
+#' "montgomery". Case insensitive
+#' @param geo.county character vector. County names for filtering e.g.
+#' "cullman", "dale". Case insensitive.
+#' @param geo.region character vector. Regions for filtering e.g. "South",
+#' "Midwest" based on census region classifications.
+#' @param ntee character vector. Vector of user inputs. The user inputs are
+#' progressively filtered until group, code and orgtypes are sorted into
+#' separate vectors.
+#' @param ntee.group character vector. Specific Industry Group codes submitted
+#' by user
+#' @param ntee.code character vector. Specific level 2-4 codes (Industry,
+#' Division, Subdivision) submitted by user.
+#' @param ntee.orgtype character vector. Specific level 5 codes (Organization
+#' Type) submitted by user.
+#' @param append.bmf boolean. Option to merge queried core data with bmf data.
+#' Involves downloading the bmf dataset and will take longer. Default == FALSE.
 #'
 #' @return data.table with queried data
 #'
-#' @usage get_data(ntee.level1,
-#'                 ntee.level2,
-#'                 geo.state,
-#'                 geo.metro,
-#'                 geo.level)
-#'
 #' @export
+
+get_data <- function(dsname = NULL,
+                     time = "2015",
+                     scope.orgtype = "NONPROFIT",
+                     scope.formtype = "PZ",
+                     geo.state = NULL,
+                     geo.city = NULL,
+                     geo.county = NULL,
+                     geo.region = NULL,
+                     ntee = NULL,
+                     ntee.group = NULL,
+                     ntee.code = NULL,
+                     ntee.orgtype = NULL,
+                     append.bmf = FALSE){
+
+  # Validate critical inputs with set acceptable entries
+  message(validate_get_data(dsname = dsname,
+                            time = time,
+                            scope.orgtype = scope.orgtype,
+                            scope.formtype = scope.formtype,
+                            geo.state = geo.state,
+                            geo.region = geo.region))
+
+  # Create filters
+  filter_ls <- list(nteecc_matches = nteecc_map(ntee.user = ntee,
+                                                ntee.group = ntee.group,
+                                                ntee.code = ntee.code,
+                                                ntee.orgtype = ntee.orgtype),
+                    state_matches = toupper(geo.state),
+                    city_matches = toupper(geo.city),
+                    county_fips_matches = fips_map(geo.region = firstupper(geo.region),
+                                                   geo.county = geo.county))
+
+  if (dsname == "core"){
+
+    message("Downloading core data")
+
+    core_dt <- get_core(dsname = dsname,
+                        time = time,
+                        scope.orgtype = scope.orgtype,
+                        scope.formtype = scope.formtype,
+                        filters = filter_ls,
+                        append.bmf = append.bmf)
+
+    message("Core data downloaded")
+
+    if (append.bmf == TRUE){
+
+      message("Downloading bmf data")
+
+      bmf <- get_bmf(url = "https://nccsdata.s3.us-east-1.amazonaws.com/current/bmf/bmf-master.rds",
+                     filters = filter_ls)
+
+      message("bmf data downloaded. Appending bmf")
+
+      core_dt <- bmf[core_dt, on = "EIN"]
+
+      remove(bmf)
+
+    }
+
+    return(core_dt)
+
+  } else if (dsname == "bmf"){
+
+    response <- download_size(dsname = dsname,
+                              append.bmf = append.bmf)
+
+    message("Downloading bmf data")
+
+    bmf <- get_bmf(url = "https://nccsdata.s3.us-east-1.amazonaws.com/current/bmf/bmf-master.rds",
+                   filters = filter_ls)
+
+    message("bmf data downloaded")
+
+    return(bmf)
+
+  }
+
+  return(message("No data selected"))
+
+}
+
+
+#' @title Function to get core dataset.
+#'
+#' @description This function executes either the s3_select query or data
+#' download and local merge on a specified subset of the core dataset. It then
+#' merges the dataset with the ntee dataframe.
+#'
+#' @param dsname character scalar. Name of data series to query from S3.
+#' Valid inputs are "core" and "bmf", not both.
+#' @param time character vector. Dates of core/bmf files to query. Valid
+#' inputs range from 1989-2022. Default value is "current" for 2022.
+#' @param scope.orgtype character scalar. Organization type to query from
+#' core/bmf s3 bucket. Valid inputs are 'CHARITIES' for charities (501C3-PC),
+#' 'PRIVFOUND' for private foundations (501C3-PF) and 'NONPROFIT' for all
+#' nonprofits (501CE)
+#' @param scope.formtype character scalar. Form type to query from core/bmf s3
+#' bucket. Valid inputs are 'PC'(nonprofits that file the full version),
+#' 'EZ'(nonprofits that file 990EZs only), '
+#' PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).
+#' @param filters list. List of column filters to apply
+#' @param append.bmf boolean. Option to merge queried core data with bmf data.
+#' Involves downloading the bmf dataset and will take longer. Default == FALSE.
+#'
+#' @return a fully merged core data.table for the end user
+#'
+#'
+#' @importFrom data.table rbindlist
+#' @importFrom data.table setDT
+#' @importFrom utils askYesNo
+
+get_core <- function(dsname,
+                     time,
+                     scope.orgtype,
+                     scope.formtype,
+                     filters,
+                     append.bmf){
+
+  ntee_dat <- ntee_df %>%
+    rename("NTEECC" = .data$old.code) %>%
+    data.table::setDT()
+
+  filenames <- core_file_constructor(time = time,
+                                     scope.orgtype = scope.orgtype,
+                                     scope.formtype = scope.formtype)
+
+  urls <- obj_validate(dsname = dsname,
+                       filenames = filenames)
+
+  # Ask User for permission to perform downloads
+  response <- download_size(dsname = dsname,
+                            append.bmf = append.bmf,
+                            urls = urls)
+
+
+  dt <- lapply(urls, load_dt)
+  dt <- data.table::rbindlist(dt, fill = TRUE)
+
+  # Filter datasets
+  dt <- filter_data(dt = dt, filters = filters)
+
+  # Merge data
+  dt <- ntee_dat[dt, on = "NTEECC"]
+
+  return(dt)
+
+}
+
+
+#' @title Function to download master bmf file and filter it based on ntee
+#' and FIPS codes
+#'
+#' @description This function downloads an .rds file from a public s3 bucket,
+#' reads it into memory, and deletes the file. It then converts the data.frame
+#' into a data.table and filters it based on user-specified FIPS codes and
+#' ntee codes.
+#'
+#' @param url character scalar. Link to object in s3 bucket.
+#' @param dest_path character scalar. Path to download bmf file to.
+#' @param filters list. List of column filters to apply
+#'
+#' @return data.table. Data.table with filtered master bmf file.
 #'
 #' @importFrom data.table setDT
-#' @importFrom stringr str_replace
-#' @importFrom rlang .data
-#' @import dtplyr
-#' @import dplyr
+#' @importFrom data.table setkey
+#' @importFrom utils download.file
+#' @importFrom data.table :=
 
-get_data <- function(ntee.level1 = "all",
-                     ntee.level2 = "all",
-                     geo.state = NULL,
-                     geo.metro = NULL,
-                     geo.level = "tract"){
+get_bmf <- function(url,
+                    dest_path = "bmf.rds",
+                    filters){
 
-  # load in datasets as data.table
-  tinybmf_dat <- data.table::setDT(tinybmf)
-  tract_dat <- data.table::setDT(tract_dat)
-  block_dat <- data.table::setDT(block_dat)
-  ntee_dat <- data.table::setDT(ntee_df)
-  cbsa_dat <- data.table::setDT(cbsa_df)
+  FIPS <- NULL # for global variable binding
 
-  # Data wrangling
+  utils::download.file(url, destfile=dest_path)
+  bmf <- readRDS(dest_path)
+  file.remove(dest_path)
 
-  # bmf data
+  data.table::setDT(bmf)
+  bmf <- bmf[, FIPS := as.numeric(FIPS)]
 
-  tinybmf_dat <- tinybmf_dat %>%
-    dplyr::rename("tract.census.geoid" = .data$TRACT.GEOID.10,
-                  "block.census.geoid" = .data$BLOCK.GEOID.10,
-                  "state.census.abbr" = .data$STATE,
-                  "ntee2.code" = .data$NTEE2) %>%
-    dplyr::mutate(across(c("tract.census.geoid", "block.census.geoid"),
-                         stringr::str_replace,
-                         "GEO-",
-                         ""))
-  # cbsa data
+  bmf <- filter_data(dt = bmf, filters = filters)
 
-  cbsa_ex_cols <- setdiff(colnames(cbsa_df), colnames(tract_dat))
-  cbsa_dat <- cbsa_dat %>%
-    dplyr::select(append(.data$metro.census.cbsa.geoid, cbsa_ex_cols)) %>%
-    group_by(.data$metro.census.cbsa.geoid)
-
-  # Apply NTEE filters
-  if (any(! ntee.level1 == "all" | ! ntee.level2 == "all")){
-  ntee2_codes <- parse_ntee(ntee.group = ntee.level1,
-                            ntee.code = ntee.level2,
-                            ntee.orgtype = "all")
-  tinybmf_subset <- tinybmf_dat %>%
-    dplyr::filter(.data$ntee2.code %in% ntee2_codes) %>%
-    dplyr::left_join(ntee_dat, by = "ntee2.code")
-  } else {
-    tinybmf_subset <- tinybmf_dat %>%
-      dplyr::left_join(ntee_dat, by = "ntee2.code")
-  }
-
-  # Apply geographic filters
-
-
-  # State filter
-  if (! is.null(geo.state)) {
-    tinybmf_subset <- tinybmf_subset %>%
-      dplyr::filter(.data$state.census.abbr %in% geo.state)
-  }
-
-  # Census level
-  if (geo.level == "tract"){
-    tinybmf_subset <- tinybmf_subset %>%
-      dplyr::left_join(tract_dat, by = "tract.census.geoid")
-  } else if (geo.level == "block") {
-    tinybmf_subset <- tinybmf_subset %>%
-      dplyr::left_join(block_dat, by = "block.census.geoid")
-  } else if (geo.level == "both") {
-    tinybmf_subset <- tinybmf_subset %>%
-      dplyr::left_join(tract_dat, by = "tract.census.geoid") %>%
-      dplyr::left_join(block_dat, by = "block.census.geoid")
-  } else {
-    stop("Invalid geo.level, select either 'block', 'tract' or 'both'")
-  }
-
-  # CBSA filter
-  if (! is.null(geo.metro)){
-    tinybmf_subset <- tinybmf_subset %>%
-      dplyr::left_join(tract_dat, by = "tract.census.geoid") %>%
-      dplyr::select(.data$metro.census.cbsa.geoid %in% geo.metro) %>%
-      dplyr::group_by("metro.census.cbsa.geoid") %>%
-      dplyr::left_join(cbsa_dat, by = "metro.census.cbsa.geoid") %>%
-      dplyr::ungroup()
-  }
-
-
-  return(tinybmf_subset)
+  return(bmf)
 
 }

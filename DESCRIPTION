@@ -13,15 +13,18 @@ Depends:
     R (>= 3.50)
 Imports: 
     dplyr,
-    reactable,
-    data.table,
-    dtplyr,
-    purrr,
-    jsonlite,
     stringr,
-    usdata,
+    data.table,
+    purrr,
     rlang,
-    utils
+    utils,
+    RCurl,
+    readr,
+    jsonlite,
+    stats
 RoxygenNote: 7.2.3
 URL: https://github.com/Thiyaghessan/nccsdata, https://thiyaghessan.github.io/nccsdata/, https://urbaninstitute.github.io/nccsdata/
 BugReports: https://github.com/Thiyaghessan/nccsdata/issues
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

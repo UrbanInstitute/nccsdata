@@ -34,8 +34,8 @@ dat_filter <- function(dat,
   if (all(names(args) %in% colnames(dat))){
 
     parsed_ids <- dat %>%
-      suppressWarnings(dplyr::filter(!!! ex_args)) %>%
-      dplyr::select(dplyr::all_of(id_col))
+      dplyr::filter(!!! ex_args) %>%
+      dplyr::pull(id_col)
 
     return(parsed_ids)
 
@@ -48,4 +48,56 @@ dat_filter <- function(dat,
                "dataset:",
                setdiff(names(args), colnames(dat))))
   }
+}
+
+
+#' @title function that maps fips codes to user arguments
+#'
+#' @description This function takes in the geographic arguments from get_data()
+#' and maps them to fips codes found in the core datasets. These codes can
+#' then be used to filter the core datasets.
+#'
+#' @param geo.county character vector. County names for filtering e.g.
+#' "cullman", "dale". Case insensitive.
+#' @param geo.region character vector. Regions for filtering e.g. "South",
+#' "Midwest" based on census region classifications.
+#'
+#' @return character vector. county fips codes for filtering core datasets.
+#'
+#' @usage fips_map(geo.county, geo.region)
+#'
+#' @importFrom dplyr mutate
+#' @importFrom dplyr filter
+#' @importFrom dplyr pull
+
+fips_map <- function(geo.county, geo.region){
+
+  county_fips <- tract_dat
+
+  if (! is.null(geo.county)){
+
+    county_str_filter <- paste(tolower(geo.county),
+                               collapse = "|")
+    cbsa_fips <- cbsa_df %>%
+      dplyr::mutate("census.county.name" = tolower(.data$census.county.name)) %>%
+      dplyr::filter(grepl(county_str_filter, .data$census.county.name)) %>%
+      dplyr::pull("metro.census.cbsa.geoid")
+
+    county_fips <- county_fips %>%
+      dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_fips)
+
+
+  }
+
+  if (! is.null(geo.region)){
+
+      county_fips <- county_fips %>%
+      dplyr::filter(.data$region.census.main %in% geo.region)
+
+  }
+
+  county_fips <- county_fips %>%
+    dplyr::pull("county.census.geoid")
+
+  return(unique(county_fips))
 }

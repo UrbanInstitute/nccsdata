@@ -5,27 +5,66 @@
 \title{Function to query bmf data and integrate it with census, cbsa and ntee
 metadata}
 \usage{
-get_data(ntee.level1,
-                ntee.level2,
-                geo.state,
-                geo.metro,
-                geo.level)
+get_data(
+  dsname = NULL,
+  time = "2015",
+  scope.orgtype = "NONPROFIT",
+  scope.formtype = "PZ",
+  geo.state = NULL,
+  geo.city = NULL,
+  geo.county = NULL,
+  geo.region = NULL,
+  ntee = NULL,
+  ntee.group = NULL,
+  ntee.code = NULL,
+  ntee.orgtype = NULL,
+  append.bmf = FALSE
+)
 }
 \arguments{
-\item{ntee.level1}{string or vector. Nonprofit Industry Group. Default ==
-"all" includes all Industry Groups.}
+\item{dsname}{character scalar. Name of data series to query from S3.
+Valid inputs are either "core" or "bmf", not both.}
 
-\item{ntee.level2}{string or vector. Level 2-4 of NTEE code (Industry,
-Division and Subdivision). Default == "all" includes all codes.}
+\item{time}{character vector. Dates of core/bmf files to query. Valid
+inputs range from 1989-2022.}
 
-\item{geo.state}{string or vector. Filter query by state abbreviations e.g.
+\item{scope.orgtype}{character scalar. Organization type to query from
+core/bmf s3 bucket. Valid inputs are 'CHARITIES' for charities (501C3-PC),
+'PRIVFOUND' for private foundations (501C3-PF) and 'NONPROFIT' for all
+nonprofits (501CE)}
+
+\item{scope.formtype}{character scalar. Form type to query from core/bmf s3
+bucket. Valid inputs are 'PC'(nonprofits that file the full version),
+'EZ'(nonprofits that file 990EZs only), '
+PZ'(nonprofits that file both PC and EZ), or 'PF'(private foundations).}
+
+\item{geo.state}{character vector. Filter query by state abbreviations e.g.
 "NY", "CA". Default == NULL includes all states.}
 
-\item{geo.metro}{string or vector. Filter query by cbsa code. Default = NULL
-includes all metro cbsa codes.}
+\item{geo.city}{character vector. City names for filtering e.g. "Chicago",
+"montgomery". Case insensitive}
 
-\item{geo.level}{string. Census dataset to merge with. Default == "tract"
-which merges filtered bmf data with census tract data.}
+\item{geo.county}{character vector. County names for filtering e.g.
+"cullman", "dale". Case insensitive.}
+
+\item{geo.region}{character vector. Regions for filtering e.g. "South",
+"Midwest" based on census region classifications.}
+
+\item{ntee}{character vector. Vector of user inputs. The user inputs are
+progressively filtered until group, code and orgtypes are sorted into
+separate vectors.}
+
+\item{ntee.group}{character vector. Specific Industry Group codes submitted
+by user}
+
+\item{ntee.code}{character vector. Specific level 2-4 codes (Industry,
+Division, Subdivision) submitted by user.}
+
+\item{ntee.orgtype}{character vector. Specific level 5 codes (Organization
+Type) submitted by user.}
+
+\item{append.bmf}{boolean. Option to merge queried core data with bmf data.
+Involves downloading the bmf dataset and will take longer. Default == FALSE.}
 }
 \value{
 data.table with queried data

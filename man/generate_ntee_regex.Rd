@@ -31,8 +31,9 @@ to filter NTEE2 codes based on user inputs.
 This function returns a regex query to parse NTEE2 Codes
 }
 \examples{
+\dontrun{
 generate_ntee_regex("ART", "A23", "RG")
 generate_ntee_regex("all", "Axx", "RG")
 generate_ntee_regex("EDU", "B", "all")
-
+}
 }
