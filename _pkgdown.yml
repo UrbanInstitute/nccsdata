@@ -2,3 +2,58 @@ url: https://urbaninstitute.github.io/nccsdata/
 template:
   bootstrap: 5
 
+reference:
+- title: "NCCS Data Processing Functions"
+  desc: >
+    Functions for downloading, filtering and merging NCCS data sets based on
+    year, form types, NTEE codes and geographic arguments.
+  contents:
+  - get_data
+  - validate_get_data
+  - get_core
+  - get_bmf
+  - core_file_constructor
+  - download_size
+  - fips_map
+  - nteecc_map
+  - obj_validate
+- title: "Generate Summary Tables"
+  desc: >
+    Functions for calculating summary statistics for processed data, grouped by
+    user-defined columns.
+  contents:
+  - preview_sample
+  - validate_preview
+- title: "Explore NTEE Codes"
+  desc: >
+    Functions to process, preview and parse NTEE2 codes with user-inputs.
+  contents:
+  - ntee_preview
+  - parse_ntee
+  - generate_ntee_regex
+  - get_ntee_level_3_4
+  - parse_ntee_regex
+  - query_ntee
+  - sort_ntee
+  - validate_inp
+- title: "Explore Census FIPS Codes"
+  desc: >
+    Functions to preview and parse FIPS codes from census crosswalks using
+    user-inputs.
+  contents:
+  - parse_geo
+  - parse_fips
+- title: "Utility Functions"
+  contents:
+  - dat_filter
+  - dic_from_df
+  - filter_data
+  - firstupper
+  - jsonify_f
+  - load_dt
+  - objs_exist
+- title: "Data Sets"
+  contents:
+  - tinybmf
+
+
