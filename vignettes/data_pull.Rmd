@@ -39,7 +39,7 @@ available using the `dsname` and `time` arguments.
 
 ```{r}
 core <- get_data(dsname = "core",
-                 time = '2015)
+                 time = "2015")
 ```
 
 The function downloads NCCS core data for the year 2015.
