@@ -28,7 +28,6 @@ In this vignette, we provide several examples of how this function can be used
 to retrieve NCCS data.
 
 ```{r load-data, message = FALSE, warning = FALSE}
-
 library(nccsdata)
 ```
 
