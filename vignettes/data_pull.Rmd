@@ -60,4 +60,18 @@ that file both full 990s and 990EZs. Other possible argument values are:
 The data is available from the years 1989 to 2019.
 
 
-## 
+## Filtering data using NTEE codes
+
+We can also pull only a subset of the data based on NTEE classifications using
+the various `ntee` associated arguments in `get_data`.
+
+```{r}
+core_art <- get_data(dsname = "core",
+                     time = "2015",
+                     scope.orgtype = "NONPROFIT",
+                     scope.formtype = "PZ",
+                     ntee = c("ART"))
+```
+
+In the above code snippet, we pull the same dataset but only select rows 
+belonging to nonprofits involved in Art.
