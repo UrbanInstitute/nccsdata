@@ -1,0 +1,45 @@
+---
+title: "Data Downloads with nccsdata"
+date: '`r format(Sys.Date(), "%B %d %Y")`'
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    vignette: >
+      %\VignetteIndexEntry{valr-interval-statistics}
+      %\VignetteEngine{knitr::rmarkdown}
+      %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center"
+)
+```
+
+## Overview
+
+`nccsdata` includes a core get_data() function that downloads data from NCCS'
+publicly accessible S3 buckets and processes them for the user.
+
+In this vignette, we provide several examples of how this function can be used
+to retrieve NCCS data.
+
+```{r load-data, message = FALSE, warning = FALSE}
+
+library(nccsdata)
+```
+
+## Downloading Core Data
+
+First, we can define the type of data and the years for which that data is
+available using the `dsname` and `time` arguments.
+
+```{r}
+core <- get_data(dsname = "core",
+                 time = '2015)
+```
+
+The function downloads NCCS core data for the year 2015.
