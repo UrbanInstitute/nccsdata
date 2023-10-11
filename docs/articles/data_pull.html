@@ -70,7 +70,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Legacy Data Downloads With nccsdata</h1>
             
-            <h4 data-toc-skip class="date">October 10 2023</h4>
+            <h4 data-toc-skip class="date">October 11 2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Thiyaghessan/nccsdata/blob/HEAD/vignettes/data_pull.Rmd" class="external-link"><code>vignettes/data_pull.Rmd</code></a></small>
       <div class="d-none name"><code>data_pull.Rmd</code></div>
@@ -141,7 +141,9 @@ values are:</p>
 </ul>
 </li>
 </ul>
-<p>The data is available from the years 1989 to 2019.</p>
+<p>The data is available from the years 1989 to 2019.
+<code>get_data</code> also provides prompts with the size of the
+requested data downloads. These can be muted by [xxx].</p>
 </div>
 <div class="section level2">
 <h2 id="filtering-data-using-ntee-codes">Filtering data using NTEE codes<a class="anchor" aria-label="anchor" href="#filtering-data-using-ntee-codes"></a>
@@ -169,7 +171,84 @@ in <code>get_data</code>.</p>
 <span><span class="co">#&gt;   problems(dat)</span></span>
 <span><span class="co">#&gt; Core data downloaded</span></span></code></pre></div>
 <p>In the above code snippet, we pull the same dataset but only select
-rows belonging to nonprofits involved in Art.</p>
+rows belonging to nonprofits involved in the Arts, Culture and
+Humanities. A full description of NTEE codes is available <a href="https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md" class="external-link">here</a>.
+These descriptions can also be accessed using
+<code>preview_ntee</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="filtering-data-by-geography">Filtering Data By Geography<a class="anchor" aria-label="anchor" href="#filtering-data-by-geography"></a>
+</h2>
+<p>We can subset the data by geographic units with the <code>geo</code>
+arguments from <code>get_data</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">core_NYC</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span>dsname <span class="op">=</span> <span class="st">"core"</span>,</span>
+<span>                     time <span class="op">=</span> <span class="st">"2015"</span>,</span>
+<span>                     scope.orgtype <span class="op">=</span> <span class="st">"NONPROFIT"</span>,</span>
+<span>                     scope.formtype <span class="op">=</span> <span class="st">"PZ"</span>,</span>
+<span>                     geo.state <span class="op">=</span> <span class="st">"NY"</span>,</span>
+<span>                     geo.city <span class="op">=</span> <span class="st">"New York City"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Valid inputs detected. Retrieving data.</span></span>
+<span><span class="co">#&gt; Downloading core data</span></span>
+<span><span class="co">#&gt; Requested files have a total size of 115 MB. Proceed</span></span>
+<span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
+<span><span class="co">#&gt; Warning: The following named parsers don't match the column names: default</span></span>
+<span><span class="co">#&gt; Warning: One or more parsing issues, call `problems()` on your data frame for details,</span></span>
+<span><span class="co">#&gt; e.g.:</span></span>
+<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
+<span><span class="co">#&gt;   problems(dat)</span></span>
+<span><span class="co">#&gt; Core data downloaded</span></span></code></pre></div>
+<p>The code above returns rows belonging to Nonprofits from New York
+City, NY. Additional arguments <code>geo</code> arguments can be used to
+subset the data by county (<code>geo.county</code>) and region
+(<code>geo.region</code>).</p>
+</div>
+<div class="section level2">
+<h2 id="appending-bmf-data-to-core-data">Appending BMF Data to Core Data<a class="anchor" aria-label="anchor" href="#appending-bmf-data-to-core-data"></a>
+</h2>
+<p><code>get_data</code> automatically appends NTEE metadata to the
+requested data set. Appending metadata from the IRS Business Master File
+(BMF) requires the downloading of an additional download of 185 MB and
+can be toggled on/off with <code>append_bmf</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">corebmf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span>dsname <span class="op">=</span> <span class="st">"core"</span>,</span>
+<span>                    time <span class="op">=</span> <span class="st">"2015"</span>,</span>
+<span>                    scope.orgtype <span class="op">=</span> <span class="st">"NONPROFIT"</span>,</span>
+<span>                    scope.formtype <span class="op">=</span> <span class="st">"PZ"</span>,</span>
+<span>                    append.bmf <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Valid inputs detected. Retrieving data.</span></span>
+<span><span class="co">#&gt; Downloading core data</span></span>
+<span><span class="co">#&gt; Requested files have a total size of 305 MB. Proceed</span></span>
+<span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
+<span><span class="co">#&gt; Warning: The following named parsers don't match the column names: default</span></span>
+<span><span class="co">#&gt; Warning: One or more parsing issues, call `problems()` on your data frame for details,</span></span>
+<span><span class="co">#&gt; e.g.:</span></span>
+<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
+<span><span class="co">#&gt;   problems(dat)</span></span>
+<span><span class="co">#&gt; Core data downloaded</span></span>
+<span><span class="co">#&gt; Downloading bmf data</span></span>
+<span><span class="co">#&gt; Warning in eval(jsub, SDenv, parent.frame()): NAs introduced by coercion</span></span>
+<span><span class="co">#&gt; bmf data downloaded. Appending bmf</span></span></code></pre></div>
+<p>BMF metadata is now appended to the downloaded Core data set.</p>
+</div>
+<div class="section level2">
+<h2 id="downloading-bmf-data">Downloading BMF Data<a class="anchor" aria-label="anchor" href="#downloading-bmf-data"></a>
+</h2>
+<p>The <code>geo</code> and <code>ntee</code> arguments mentioned above
+can also be used to download and filter BMF data.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bmf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span>dsname <span class="op">=</span> <span class="st">"bmf"</span>,</span>
+<span>                ntee <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ART"</span><span class="op">)</span>,</span>
+<span>                geo.state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CA"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Valid inputs detected. Retrieving data.</span></span>
+<span><span class="co">#&gt; Collecting Matching Industry Groups</span></span>
+<span><span class="co">#&gt; Collecting Matching Industry Division and Subdivisions</span></span>
+<span><span class="co">#&gt; Collecting Matching Organization Types</span></span>
+<span><span class="co">#&gt; Requested files have a total size of 190 MB. Proceed</span></span>
+<span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
+<span><span class="co">#&gt; Downloading bmf data</span></span>
+<span><span class="co">#&gt; Warning in eval(jsub, SDenv, parent.frame()): NAs introduced by coercion</span></span>
+<span><span class="co">#&gt; bmf data downloaded</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

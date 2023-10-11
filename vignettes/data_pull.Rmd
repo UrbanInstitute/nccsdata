@@ -57,7 +57,9 @@ that file both full 990s and 990EZs. Other possible argument values are:
   + `PZ`: Nonprofits that file both full Form 990s and 990EZs
   + `PF`: Private foundation filings
   
-The data is available from the years 1989 to 2019.
+The data is available from the years 1989 to 2019. `get_data` also provides
+prompts with the size of the requested data downloads. These can be muted by
+[xxx].
 
 
 ## Filtering data using NTEE codes
@@ -74,4 +76,53 @@ core_art <- get_data(dsname = "core",
 ```
 
 In the above code snippet, we pull the same dataset but only select rows 
-belonging to nonprofits involved in Art.
+belonging to nonprofits involved in the Arts, Culture and Humanities. A full 
+description of NTEE codes is available [here](https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md). These descriptions can also be accessed using
+`preview_ntee`.
+
+## Filtering Data By Geography
+
+We can subset the data by geographic units with the `geo` arguments from 
+`get_data`.
+
+```{r}
+core_NYC <- get_data(dsname = "core",
+                     time = "2015",
+                     scope.orgtype = "NONPROFIT",
+                     scope.formtype = "PZ",
+                     geo.state = "NY",
+                     geo.city = "New York City")
+```
+
+The code above returns rows belonging to Nonprofits from New York City, NY.
+Additional arguments `geo` arguments can be used to subset the data by
+county (`geo.county`) and region (`geo.region`).
+
+## Appending BMF Data to Core Data
+
+`get_data` automatically appends NTEE metadata to the requested data set. 
+Appending metadata from the IRS Business Master File (BMF) requires the 
+downloading of an additional download of 185 MB and can be toggled on/off
+with `append_bmf`.
+
+```{r}
+corebmf <- get_data(dsname = "core",
+                    time = "2015",
+                    scope.orgtype = "NONPROFIT",
+                    scope.formtype = "PZ",
+                    append.bmf = TRUE)
+```
+
+BMF metadata is now appended to the downloaded Core data set.
+
+## Downloading BMF Data
+
+The `geo` and `ntee` arguments mentioned above can also be used to download
+and filter BMF data.
+
+```{r}
+bmf <- get_data(dsname = "bmf",
+                ntee = c("ART"),
+                geo.state = c("CA"))
+```
+
