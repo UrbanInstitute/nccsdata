@@ -21,8 +21,9 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-The`get_data()` function from `nccsdata` downloads NCCS legacy data sets hosted
-on publicly accessible S3 buckets and processes them for the user.
+The`get_data()` function from [`nccsdata`](https://urbaninstitute.github.io/nccsdata/) downloads NCCS legacy 
+data sets hosted on publicly accessible S3 buckets and processes them for the 
+user.
 
 In this vignette, we provide several examples of how this function can be used
 to retrieve this legacy data.
@@ -57,7 +58,7 @@ that file both full 990s and 990EZs. Other possible argument values are:
   + `PZ`: Nonprofits that file both full Form 990s and 990EZs
   + `PF`: Private foundation filings
   
-The data is available from the years 1989 to 2019. `get_data` also provides
+The data is available from the years 1989 to 2019. `get_data()` also provides
 prompts with the size of the requested data downloads. These can be muted by
 [xxx].
 
@@ -65,7 +66,7 @@ prompts with the size of the requested data downloads. These can be muted by
 ## Filtering data using NTEE codes
 
 We can also pull only a subset of the data based on NTEE classifications using
-the various `ntee` associated arguments in `get_data`.
+the various `ntee` associated arguments in `get_data()`.
 
 ```{r}
 core_art <- get_data(dsname = "core",
@@ -78,12 +79,12 @@ core_art <- get_data(dsname = "core",
 In the above code snippet, we pull the same dataset but only select rows 
 belonging to nonprofits involved in the Arts, Culture and Humanities. A full 
 description of NTEE codes is available [here](https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md). These descriptions can also be accessed using
-`preview_ntee`.
+`preview_ntee()`.
 
 ## Filtering Data By Geography
 
 We can subset the data by geographic units with the `geo` arguments from 
-`get_data`.
+`get_data()`.
 
 ```{r}
 core_NYC <- get_data(dsname = "core",
@@ -100,7 +101,7 @@ county (`geo.county`) and region (`geo.region`).
 
 ## Appending BMF Data to Core Data
 
-`get_data` automatically appends NTEE metadata to the requested data set. 
+`get_data()` automatically appends NTEE metadata to the requested data set. 
 Appending metadata from the IRS Business Master File (BMF) requires the 
 downloading of an additional download of 185 MB and can be toggled on/off
 with `append_bmf`.
