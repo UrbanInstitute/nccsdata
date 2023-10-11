@@ -38,7 +38,7 @@ We can define the type of data, range of data (in years), organization type,
 and form type using the arguments `dsname`, `time`, `scope.formtype`, and 
 `scope.orgtpye` respectively.
 
-```{r}
+```{r message = TRUE, warning = FALSE}
 core <- get_data(dsname = "core",
                  time = "2015",
                  scope.orgtype = "NONPROFIT",
@@ -68,7 +68,7 @@ prompts with the size of the requested data downloads. These can be muted by
 We can also pull only a subset of the data based on NTEE classifications using
 the various `ntee` associated arguments in `get_data()`.
 
-```{r}
+```{r message = TRUE, warning = FALSE}
 core_art <- get_data(dsname = "core",
                      time = "2015",
                      scope.orgtype = "NONPROFIT",
@@ -86,7 +86,7 @@ description of NTEE codes is available [here](https://github.com/Nonprofit-Open-
 We can subset the data by geographic units with the `geo` arguments from 
 `get_data()`.
 
-```{r}
+```{r message = TRUE, warning = FALSE}
 core_NYC <- get_data(dsname = "core",
                      time = "2015",
                      scope.orgtype = "NONPROFIT",
@@ -106,7 +106,7 @@ Appending metadata from the IRS Business Master File (BMF) requires the
 downloading of an additional download of 185 MB and can be toggled on/off
 with `append_bmf`.
 
-```{r}
+```{r message = TRUE, warning = FALSE}
 corebmf <- get_data(dsname = "core",
                     time = "2015",
                     scope.orgtype = "NONPROFIT",
@@ -121,7 +121,7 @@ BMF metadata is now appended to the downloaded Core data set.
 The `geo` and `ntee` arguments mentioned above can also be used to download
 and filter BMF data.
 
-```{r}
+```{r message = TRUE, warning = FALSE}
 bmf <- get_data(dsname = "bmf",
                 ntee = c("ART"),
                 geo.state = c("CA"))
