@@ -114,7 +114,7 @@ For any combination of `ntee` arguments, `preview_ntee` returns **all** codes
 that fit **any** of the arguments. Thus, in the above example NTEE codes for both
 `UNI` and `CXX` were printed out.
 
-### Parse Complete NTEE2 Codes
+## Parse Complete NTEE2 Codes
 
 After understanding what the NTEE codes represent, with `preview_ntee()`, 
 `parse_ntee()` can be used to extract complete NTEE codes.
