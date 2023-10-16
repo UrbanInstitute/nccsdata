@@ -24,7 +24,9 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/data_pull.html">Data Downloads with nccsdata</a>
+    <a class="dropdown-item" href="../articles/data_pull.html">Legacy Data Downloads With nccsdata</a>
+    <a class="dropdown-item" href="../articles/ntee.html">Parsing NTEE Codes With nccsdata</a>
+    <a class="dropdown-item" href="../articles/summary_stats.html">Summarising nccsdata</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -47,9 +49,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="nccs-data-processing-functions">NCCS Data Processing Functions<a class="anchor" aria-label="anchor" href="#nccs-data-processing-functions"></a></h2>
+      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
       
-      <p class="section-desc"></p><p>Functions for downloading, filtering and merging NCCS data sets based on year, form types, NTEE codes and geographic arguments.</p>
+      
 
       
     </div><div id="" class="section level2">
@@ -58,166 +60,11 @@
       
 
       <dl><dt>
-          
-          <code><a href="get_data.html">get_data()</a></code> 
-        </dt>
-        <dd>Function to query bmf data and integrate it with census, cbsa and ntee
-metadata</dd>
-      </dl><dl><dt>
-          
-          <code><a href="validate_get_data.html">validate_get_data()</a></code> 
-        </dt>
-        <dd>Function to validate inputs to get_data()</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_core.html">get_core()</a></code> 
-        </dt>
-        <dd>Function to get core dataset.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_bmf.html">get_bmf()</a></code> 
-        </dt>
-        <dd>Function to download master bmf file and filter it based on ntee
-and FIPS codes</dd>
-      </dl><dl><dt>
           
           <code><a href="core_file_constructor.html">core_file_constructor()</a></code> 
         </dt>
         <dd>function to construct filenames from aws s3 core bucket</dd>
       </dl><dl><dt>
-          
-          <code><a href="download_size.html">download_size()</a></code> 
-        </dt>
-        <dd>Data size calculator.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="fips_map.html">fips_map()</a></code> 
-        </dt>
-        <dd>function that maps fips codes to user arguments</dd>
-      </dl><dl><dt>
-          
-          <code><a href="nteecc_map.html">nteecc_map()</a></code> 
-        </dt>
-        <dd>This function maps ntee2 codes to ntee.cc codes</dd>
-      </dl><dl><dt>
-          
-          <code><a href="obj_validate.html">obj_validate()</a></code> 
-        </dt>
-        <dd>Function to validate constructed file names and return s3 keys</dd>
-      </dl></div><div class="section level2">
-      <h2 id="generate-summary-tables">Generate Summary Tables<a class="anchor" aria-label="anchor" href="#generate-summary-tables"></a></h2>
-      
-      <p class="section-desc"></p><p>Functions for calculating summary statistics for processed data, grouped by user-defined columns.</p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="preview_sample.html">preview_sample()</a></code> 
-        </dt>
-        <dd>Function to summarize NCCS data.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="validate_preview.html">validate_preview()</a></code> 
-        </dt>
-        <dd>Function to validate inputs to preview_sample()</dd>
-      </dl></div><div class="section level2">
-      <h2 id="explore-ntee-codes">Explore NTEE Codes<a class="anchor" aria-label="anchor" href="#explore-ntee-codes"></a></h2>
-      
-      <p class="section-desc"></p><p>Functions to process, preview and parse NTEE2 codes with user-inputs.</p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="ntee_preview.html">ntee_preview()</a></code> 
-        </dt>
-        <dd>Function to document NTEE Codes</dd>
-      </dl><dl><dt>
-          
-          <code><a href="parse_ntee.html">parse_ntee()</a></code> 
-        </dt>
-        <dd>A complete function takes any user input values from the arguments:
-   ntee.group
-   ntee.code
-   ntee.orgtype
-And returns the correct list of NTEE codes that match the filter
-requirements.
-It will also raise an error if the user tries argument values that are
-undefined and print an informative message.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="generate_ntee_regex.html">generate_ntee_regex()</a></code> 
-        </dt>
-        <dd>Script containing helper functions for ntee_main.R</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_ntee_level_3_4.html">get_ntee_level_3_4()</a></code> 
-        </dt>
-        <dd>Function to generate level 3 and 4 of NTEE2 code</dd>
-      </dl><dl><dt>
-          
-          <code><a href="parse_ntee_regex.html">parse_ntee_regex()</a></code> 
-        </dt>
-        <dd>Function to loop through and execute a vector of regex queries
-on a vector of ntee codes</dd>
-      </dl><dl><dt>
-          
-          <code><a href="query_ntee.html">query_ntee()</a></code> 
-        </dt>
-        <dd>function to match user queries to ntee2 codes</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sort_ntee.html">sort_ntee()</a></code> 
-        </dt>
-        <dd>Function to sort user ntee inputs into group, code and organization
-tyoe</dd>
-      </dl><dl><dt>
-          
-          <code><a href="validate_inp.html">validate_inp()</a></code> 
-        </dt>
-        <dd>Function to inspect user inputs and flag errors</dd>
-      </dl></div><div class="section level2">
-      <h2 id="explore-census-fips-codes">Explore Census FIPS Codes<a class="anchor" aria-label="anchor" href="#explore-census-fips-codes"></a></h2>
-      
-      <p class="section-desc"></p><p>Functions to preview and parse FIPS codes from census crosswalks using user-inputs.</p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="parse_geo.html">parse_geo()</a></code> 
-        </dt>
-        <dd>Simplified Geo Parser for Census Crosswalks</dd>
-      </dl><dl><dt>
-          
-          <code><a href="parse_fips.html">parse_fips()</a></code> 
-        </dt>
-        <dd>Function that returns FIPS codes that match dynamic User arguments</dd>
-      </dl></div><div class="section level2">
-      <h2 id="utility-functions">Utility Functions<a class="anchor" aria-label="anchor" href="#utility-functions"></a></h2>
-      
-      
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
           
           <code><a href="dat_filter.html">dat_filter()</a></code> 
         </dt>
@@ -229,14 +76,51 @@ tyoe</dd>
         <dd>Function that creates a dictionary from 2 data.frame columns</dd>
       </dl><dl><dt>
           
+          <code><a href="download_size.html">download_size()</a></code> 
+        </dt>
+        <dd>Data size calculator.</dd>
+      </dl><dl><dt>
+          
           <code><a href="filter_data.html">filter_data()</a></code> 
         </dt>
         <dd>Function to filter a data.table with user-provided arguments</dd>
       </dl><dl><dt>
           
+          <code><a href="fips_map.html">fips_map()</a></code> 
+        </dt>
+        <dd>function that maps fips codes to user arguments</dd>
+      </dl><dl><dt>
+          
           <code><a href="firstupper.html">firstupper()</a></code> 
         </dt>
         <dd>Function to process first letter of lowercase strings</dd>
+      </dl><dl><dt>
+          
+          <code><a href="generate_ntee_regex.html">generate_ntee_regex()</a></code> 
+        </dt>
+        <dd>Script containing helper functions for ntee_main.R</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_bmf.html">get_bmf()</a></code> 
+        </dt>
+        <dd>Function to download master bmf file and filter it based on ntee
+and FIPS codes</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_core.html">get_core()</a></code> 
+        </dt>
+        <dd>Function to get core dataset.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_data.html">get_data()</a></code> 
+        </dt>
+        <dd>Function to query bmf data and integrate it with census, cbsa and ntee
+metadata</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_ntee_level_3_4.html">get_ntee_level_3_4()</a></code> 
+        </dt>
+        <dd>Function to generate level 3 and 4 of NTEE2 code</dd>
       </dl><dl><dt>
           
           <code><a href="jsonify_f.html">jsonify_f()</a></code> 
@@ -251,28 +135,90 @@ Function that prettifies json</dd>
 file as a data.table.</dd>
       </dl><dl><dt>
           
+          <code><a href="nteecc_map.html">nteecc_map()</a></code> 
+        </dt>
+        <dd>This function maps ntee2 codes to ntee.cc codes</dd>
+      </dl><dl><dt>
+          
+          <code><a href="ntee_preview.html">ntee_preview()</a></code> 
+        </dt>
+        <dd>Function to document NTEE Codes</dd>
+      </dl><dl><dt>
+          
           <code><a href="objs_exist.html">objs_exist()</a></code> 
         </dt>
         <dd>Check if ALL objects named one vector exist in memory</dd>
-      </dl></div><div class="section level2">
-      <h2 id="data-sets">Data Sets<a class="anchor" aria-label="anchor" href="#data-sets"></a></h2>
-      
-      
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
+      </dl><dl><dt>
+          
+          <code><a href="obj_validate.html">obj_validate()</a></code> 
+        </dt>
+        <dd>Function to validate constructed file names and return s3 keys</dd>
+      </dl><dl><dt>
+          
+          <code><a href="parse_fips.html">parse_fips()</a></code> 
+        </dt>
+        <dd>Function that returns FIPS codes that match dynamic User arguments</dd>
+      </dl><dl><dt>
+          
+          <code><a href="parse_geo.html">parse_geo()</a></code> 
+        </dt>
+        <dd>Simplified Geo Parser for Census Crosswalks</dd>
+      </dl><dl><dt>
+          
+          <code><a href="parse_ntee.html">parse_ntee()</a></code> 
+        </dt>
+        <dd>A complete function takes any user input values from the arguments:
+   ntee.group
+   ntee.code
+   ntee.orgtype
+And returns the correct list of NTEE codes that match the filter
+requirements.
+It will also raise an error if the user tries argument values that are
+undefined and print an informative message.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="parse_ntee_regex.html">parse_ntee_regex()</a></code> 
+        </dt>
+        <dd>Function to loop through and execute a vector of regex queries
+on a vector of ntee codes</dd>
+      </dl><dl><dt>
+          
+          <code><a href="preview_sample.html">preview_sample()</a></code> 
+        </dt>
+        <dd>Function to summarize NCCS data.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="query_ntee.html">query_ntee()</a></code> 
+        </dt>
+        <dd>function to match user queries to ntee2 codes</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sort_ntee.html">sort_ntee()</a></code> 
+        </dt>
+        <dd>Function to sort user ntee inputs into group, code and organization
+tyoe</dd>
+      </dl><dl><dt>
           
           <code><a href="tinybmf.html">tinybmf</a></code> 
         </dt>
         <dd>Development dataset for testing.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="validate_get_data.html">validate_get_data()</a></code> 
+        </dt>
+        <dd>Function to validate inputs to get_data()</dd>
+      </dl><dl><dt>
+          
+          <code><a href="validate_inp.html">validate_inp()</a></code> 
+        </dt>
+        <dd>Function to inspect user inputs and flag errors</dd>
+      </dl><dl><dt>
+          
+          <code><a href="validate_preview.html">validate_preview()</a></code> 
+        </dt>
+        <dd>Function to validate inputs to preview_sample()</dd>
       </dl></div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
-    </nav></aside></div>
+  </main></div>
 
 
     <footer><div class="pkgdown-footer-left">

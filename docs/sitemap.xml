@@ -1,111 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/404.html</loc>
+    <loc>/404.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/articles/data_pull.html</loc>
+    <loc>/articles/data_pull.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/articles/index.html</loc>
+    <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/authors.html</loc>
+    <loc>/articles/ntee.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/index.html</loc>
+    <loc>/articles/summary_stats.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/core_file_constructor.html</loc>
+    <loc>/authors.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/dat_filter.html</loc>
+    <loc>/index.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/dic_from_df.html</loc>
+    <loc>/reference/core_file_constructor.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/download_size.html</loc>
+    <loc>/reference/dat_filter.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/filter_data.html</loc>
+    <loc>/reference/dic_from_df.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/fips_map.html</loc>
+    <loc>/reference/download_size.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/firstupper.html</loc>
+    <loc>/reference/filter_data.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/generate_ntee_regex.html</loc>
+    <loc>/reference/fips_map.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/get_bmf.html</loc>
+    <loc>/reference/firstupper.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/get_core.html</loc>
+    <loc>/reference/generate_ntee_regex.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/get_data.html</loc>
+    <loc>/reference/get_bmf.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/get_ntee_level_3_4.html</loc>
+    <loc>/reference/get_core.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/index.html</loc>
+    <loc>/reference/get_data.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/jsonify_f.html</loc>
+    <loc>/reference/get_ntee_level_3_4.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/load_dt.html</loc>
+    <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/nteecc_map.html</loc>
+    <loc>/reference/jsonify_f.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/ntee_preview.html</loc>
+    <loc>/reference/load_dt.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/objs_exist.html</loc>
+    <loc>/reference/nteecc_map.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/obj_validate.html</loc>
+    <loc>/reference/ntee_preview.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/parse_fips.html</loc>
+    <loc>/reference/objs_exist.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/parse_geo.html</loc>
+    <loc>/reference/obj_validate.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/parse_ntee.html</loc>
+    <loc>/reference/parse_fips.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/parse_ntee_regex.html</loc>
+    <loc>/reference/parse_geo.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/preview_sample.html</loc>
+    <loc>/reference/parse_ntee.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/query_ntee.html</loc>
+    <loc>/reference/parse_ntee_regex.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/sort_ntee.html</loc>
+    <loc>/reference/preview_sample.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/tinybmf.html</loc>
+    <loc>/reference/query_ntee.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/validate_get_data.html</loc>
+    <loc>/reference/sort_ntee.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/validate_inp.html</loc>
+    <loc>/reference/tinybmf.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/reference/validate_preview.html</loc>
+    <loc>/reference/validate_get_data.html</loc>
   </url>
   <url>
-    <loc>https://urbaninstitute.github.io/nccsdata/testing.html</loc>
+    <loc>/reference/validate_inp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/validate_preview.html</loc>
+  </url>
+  <url>
+    <loc>/testing.html</loc>
   </url>
 </urlset>
