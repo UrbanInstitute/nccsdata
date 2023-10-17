@@ -2,8 +2,6 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -19,49 +17,72 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
+## Overview
+
 nccsdata provides tools to read, filter and append metadata to publicly available NCCS Core and BMF data sets.
 
 ## Installation
 
 You can install the development version of nccsdata from [GitHub](https://github.com/) with:
 
-``` r
-# install.packages("devtools")
+``` {r, message = FALSE, eval = FALSE}
+install.packages("devtools")
 devtools::install_github("UrbanInstitute/nccsdata")
-```
-
-## nccsdata Example
-
-This example demonstrates the basic workflow for downloading and filtering 
-Nonprofit core data and appending BMF and NTEE data to it:
-
-```{r example, echo=FALSE, message=FALSE}
 library(nccsdata)
-
-core_2005 <- nccsdata::get_data(dsname = "core",
-                                time = "2005")
-
-core_summary <- preview_sample(data = core_2005,
-                               group_by = c("NTEECC", "STATE"),
-                               var = "TOTREV",
-                               stats = c("count", "mean"))
-
-core_summary
-
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+## Usage
 
-```{r cars}
-summary(cars)
+### Data Pulls
+
+The [`nccsdata`](https://urbaninstitute.github.io/nccsdata/) package can be used to download legacy core data from 1989 to 2019 for charities, nonprofits, or private foundations that file their respective required IRS forms such as Form 990, 990EZs, or both.
+
+This data can be filtered based on [NTEE](https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md) codes and geography.
+
+```{r example, message=FALSE}
+core_2005_nonprofit_pz <- nccsdata::get_data(dsname = "core",
+                                             time = "2005",
+                                             scope.orgtype = "NONPROFIT",
+                                             scope.formtype = "PZ")
+
+
+tibble::as_tibble(core_2005_nonprofit_pz)
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
+``` {r message = FALSE, warning = FALSE}
+core_2005_artnonprofits_newyork <- nccsdata::get_data(dsname = "core",
+                                                      time = "2016",
+                                                      scope.orgtype = "NONPROFIT",
+                                                      scope.formtype = "PZ",
+                                                      ntee = "ART",
+                                                      geo.state = "NY")
+tibble::as_tibble(core_2005_artnonprofits_newyork)
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+ * Full [`get_data()`](https://urbaninstitute.github.io/nccsdata/articles/data_pull.html) vignette
+
+### Summarising Data
+
+After processing the desired data, [`nccsdata`](https://urbaninstitute.github.io/nccsdata/) can also be used to 
+generate summary tables.
+
+```{r message = FALSE, warning = FALSE}
+nccsdata::preview_sample(data = core_2005_artnonprofits_newyork,
+                         group_by = c("NTEECC", "STATE"),
+                         var = c("TOTREV"),
+                         stats = c("count", "mean", "max"))
+```
+
+ * Full [`preview_sample()`](https://urbaninstitute.github.io/nccsdata/articles/summary_stats.html) vignette.
+ 
+### NTEE Codes
+ 
+ [`nccsdata`](https://urbaninstitute.github.io/nccsdata/) also offers several
+ supplementary functions for documenting and retrieving [NTEE](https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md) codes.
+ 
+  * Full [`ntee_preview()` and `parse_ntee()`](https://urbaninstitute.github.io/nccsdata/articles/ntee.html) vignette.
+
+
+## Getting Help
+
+Raise an issue on the [issues](https://github.com/UrbanInstitute/nccsdata/issues) page or contact Thiyaghessan at `tpoongundranar@urban.org`.
