@@ -219,7 +219,7 @@ download_size <- function(dsname,
                     round(size_mb, 1))
 
   response <- utils::askYesNo(msg = prompt,
-                              default = FALSE)
+                              default = TRUE)
 
   stopifnot("Download Aborted" = response == TRUE)
 
