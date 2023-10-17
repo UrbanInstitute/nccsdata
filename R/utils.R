@@ -109,9 +109,9 @@ obj_validate <- function(dsname,
 #' @importFrom dplyr %>%
 
 load_dt <- function(url){
-  dt <- readr::read_csv(url,
-                        col_types = readr::cols(default = "?",
-                                                FIPS = "i")) %>%
+  dt <- suppressWarnings(readr::read_csv(url,
+                         col_types = readr::cols(.default = "?",
+                                                FIPS = "i"))) %>%
     dplyr::rename_with(toupper) %>%
     data.table::as.data.table()
   return(dt)
