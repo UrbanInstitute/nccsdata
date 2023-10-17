@@ -1,5 +1,4 @@
-#' @title Function to query bmf data and integrate it with census, cbsa and ntee
-#' metadata
+#' @title Download, filter and merge metadata for NCCS legacy core or bmf datasets
 #'
 #' @description This function uses user inputs to query, filter and merge nccs
 #' data and additional census, cbsa and ntee metadata
