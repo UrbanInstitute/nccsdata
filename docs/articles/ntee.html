@@ -72,7 +72,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Parsing NTEE Codes With nccsdata</h1>
             
-            <h4 data-toc-skip class="date">October 16 2023</h4>
+            <h4 data-toc-skip class="date">October 17 2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Thiyaghessan/nccsdata/blob/HEAD/vignettes/ntee.Rmd" class="external-link"><code>vignettes/ntee.Rmd</code></a></small>
       <div class="d-none name"><code>ntee.Rmd</code></div>
@@ -85,7 +85,7 @@
 </h2>
 <p>This vignette demonstrates how the <a href="https://urbaninstitute.github.io/nccsdata/"><code>nccsdata</code></a>
 package can be used to explore and query NTEE codes with the help
-<code>preview_ntee()</code> and <code><a href="../reference/parse_ntee.html">parse_ntee()</a></code>.</p>
+<code><a href="../reference/ntee_preview.html">ntee_preview()</a></code> and <code><a href="../reference/parse_ntee.html">parse_ntee()</a></code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Thiyaghessan/nccsdata" class="external-link">nccsdata</a></span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -94,9 +94,11 @@ package can be used to explore and query NTEE codes with the help
 </h2>
 <p>The NTEE2 code system is a new code system that builds on the
 original National Taxonomy of Exempt Entities (NTEE) code system used by
-the IRS and NCCS to classify nonprofit organizations.</p>
+the IRS and NCCS to classify nonprofit organizations. A comprehensive
+overview of NTEE codes is available at <a href="https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md#ntee2-format" class="external-link">this
+link</a>.</p>
 <p>This new NTEE system can be split into 5 levels.</p>
-<p>[xxx]</p>
+<p><img src="ntee2-structure.png"></p>
 <p>These are grouped into 3 components:</p>
 <ul>
 <li>Level 1: Industry Group</li>
@@ -158,7 +160,7 @@ example is shown below:</p>
 <span><span class="co">#&gt;          undergraduate education to receive advanced, postgraduate training in a</span></span>
 <span><span class="co">#&gt;          professional field leading to a masters degree or doctorate.</span></span>
 <span><span class="co">#&gt; End of preview.</span></span></code></pre></div>
-<p><code>preview_ntee()</code> then prints out the descriptions of all
+<p><code><a href="../reference/ntee_preview.html">ntee_preview()</a></code> then prints out the descriptions of all
 NTEE codes belonging to the “UNI” (University) Industry Group. The
 function outputs are nested in the following order:</p>
 <ul>
@@ -1062,7 +1064,7 @@ out.</p>
 <h2 id="parse-complete-ntee2-codes">Parse Complete NTEE2 Codes<a class="anchor" aria-label="anchor" href="#parse-complete-ntee2-codes"></a>
 </h2>
 <p>After understanding what the NTEE codes represent, with
-<code>preview_ntee()</code>, <code><a href="../reference/parse_ntee.html">parse_ntee()</a></code> can be used to
+<code><a href="../reference/ntee_preview.html">ntee_preview()</a></code>, <code><a href="../reference/parse_ntee.html">parse_ntee()</a></code> can be used to
 extract complete NTEE codes.</p>
 <p><code><a href="../reference/parse_ntee.html">parse_ntee()</a></code> only accepts the following arguments:</p>
 <ul>
@@ -1085,7 +1087,7 @@ Universities:</p>
 <span><span class="co">#&gt; Collecting Matching Industry Division and Subdivisions</span></span>
 <span><span class="co">#&gt; Collecting Matching Organization Types</span></span>
 <span><span class="co">#&gt; [1] "UNI-B40-RG" "UNI-B41-RG" "UNI-B42-RG" "UNI-B43-RG" "UNI-B50-RG"</span></span></code></pre></div>
-<p>Similar to <code>preview_ntee()</code>, <code><a href="../reference/parse_ntee.html">parse_ntee()</a></code>
+<p>Similar to <code><a href="../reference/ntee_preview.html">ntee_preview()</a></code>, <code><a href="../reference/parse_ntee.html">parse_ntee()</a></code>
 accepts placeholder arguments.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/parse_ntee.html">parse_ntee</a></span><span class="op">(</span>ntee.group <span class="op">=</span> <span class="st">"all"</span>,</span>

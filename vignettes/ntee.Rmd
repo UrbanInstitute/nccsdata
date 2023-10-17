@@ -1,6 +1,8 @@
 ---
 title: "Parsing NTEE Codes With nccsdata"
 date: '`r format(Sys.Date(), "%B %d %Y")`'
+resource_files:
+  - ntee2-structure.png
 output:
   rmarkdown::html_vignette:
     toc: true
@@ -22,7 +24,7 @@ knitr::opts_chunk$set(
 ## Overview
 
 This vignette demonstrates how the [`nccsdata`](https://urbaninstitute.github.io/nccsdata/) package can be used to
-explore and query NTEE codes with the help `preview_ntee()` and `parse_ntee()`.
+explore and query NTEE codes with the help `ntee_preview()` and `parse_ntee()`.
 
 ```{r load-data, message = FALSE, warning = FALSE}
 library(nccsdata)
@@ -32,11 +34,12 @@ library(nccsdata)
 
 The NTEE2 code system is a new code system that builds on the original National
 Taxonomy of Exempt Entities (NTEE) code system used by the IRS and NCCS to
-classify nonprofit organizations.
+classify nonprofit organizations. A comprehensive overview of NTEE codes
+is available at [this link](https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md#ntee2-format).
 
 This new NTEE system can be split into 5 levels.
 
-[xxx]
+![](ntee2-structure.png)
 
 These are grouped into 3 components:
 
@@ -54,7 +57,7 @@ included under the `ntee` argument. An example is shown below:
 ntee_preview(ntee = "UNI")
 ```
 
-`preview_ntee()` then prints out the descriptions of all NTEE codes belonging
+`ntee_preview()` then prints out the descriptions of all NTEE codes belonging
 to the "UNI" (University) Industry Group. The function outputs are nested in the following order:
 
 + Industry Group (Level 1)
@@ -116,7 +119,7 @@ that fit **any** of the arguments. Thus, in the above example NTEE codes for bot
 
 ## Parse Complete NTEE2 Codes
 
-After understanding what the NTEE codes represent, with `preview_ntee()`, 
+After understanding what the NTEE codes represent, with `ntee_preview()`, 
 `parse_ntee()` can be used to extract complete NTEE codes.
 
 `parse_ntee()` only accepts the following arguments:
@@ -134,7 +137,7 @@ parse_ntee(ntee.group = c("UNI"),
            ntee.orgtype = "all")
 ```
 
-Similar to `preview_ntee()`, `parse_ntee()` accepts placeholder arguments.
+Similar to `ntee_preview()`, `parse_ntee()` accepts placeholder arguments.
 
 ```{r warning = FALSE}
 parse_ntee(ntee.group = "all",
