@@ -72,31 +72,138 @@
 </h1></div>
 <!-- badges: start -->
 
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
 <p>nccsdata provides tools to read, filter and append metadata to publicly available NCCS Core and BMF data sets.</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the development version of nccsdata from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"UrbanInstitute/nccsdata"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"UrbanInstitute/nccsdata"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/UrbanInstitute/nccsdata" class="external-link">nccsdata</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>This example demonstrates the basic workflow for downloading and filtering Nonprofit core data and appending BMF and NTEE data to it:</p>
+<div class="section level3">
+<h3 id="data-pulls">Data Pulls<a class="anchor" aria-label="anchor" href="#data-pulls"></a>
+</h3>
+<p>The <a href="https://urbaninstitute.github.io/nccsdata/"><code>nccsdata</code></a> package can be used to download legacy core data from 1989 to 2019 for charities, nonprofits, or private foundations that file their respective required IRS forms such as Form 990, 990EZs, or both.</p>
+<p>This data can be filtered based on <a href="https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md" class="external-link">NTEE</a> codes and geography.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/UrbanInstitute/nccsdata" class="external-link">nccsdata</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">core_2005_nonprofit_pz</span> <span class="op">&lt;-</span> <span class="fu">nccsdata</span><span class="fu">::</span><span class="fu"><a href="reference/get_data.html">get_data</a></span><span class="op">(</span>dsname <span class="op">=</span> <span class="st">"core"</span>,</span>
+<span>                                             time <span class="op">=</span> <span class="st">"2005"</span>,</span>
+<span>                                             scope.orgtype <span class="op">=</span> <span class="st">"NONPROFIT"</span>,</span>
+<span>                                             scope.formtype <span class="op">=</span> <span class="st">"PZ"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Requested files have a total size of 82.6 MB. Proceed</span></span>
+<span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
+<span><span class="co">#&gt; Warning: The following named parsers don't match the column names: default</span></span>
+<span><span class="co">#&gt; Warning: One or more parsing issues, call `problems()` on your data frame for details,</span></span>
+<span><span class="co">#&gt; e.g.:</span></span>
+<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
+<span><span class="co">#&gt;   problems(dat)</span></span>
 <span></span>
-<span><span class="va">core_2005</span> <span class="op">&lt;-</span> <span class="fu">nccsdata</span><span class="fu">::</span><span class="fu"><a href="reference/get_data.html">get_data</a></span><span class="op">(</span>dsname <span class="op">=</span> <span class="st">"core"</span>,</span>
-<span>                                time <span class="op">=</span> <span class="st">"2005"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">core_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/preview_sample.html">preview_sample</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">core_2005</span>,</span>
-<span>                               group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NTEECC"</span>, <span class="st">"STATE"</span><span class="op">)</span>,</span>
-<span>                               var <span class="op">=</span> <span class="st">"TOTREV"</span>,</span>
-<span>                               stats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"count"</span>, <span class="st">"mean"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">core_summary</span></span></code></pre></div>
+<span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">core_2005_nonprofit_pz</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 157,211 × 150</span></span>
+<span><span class="co">#&gt;    NTEECC new.code   type.org broad.category major.group univ  hosp  two.digit</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;       &lt;lgl&gt; &lt;lgl&gt; &lt;chr&gt;    </span></span>
+<span><span class="co">#&gt;  1 J40    RG-HMS-J40 RG       HMS            J           FALSE FALSE 40       </span></span>
+<span><span class="co">#&gt;  2 W30    RG-PSB-W30 RG       PSB            W           FALSE FALSE 30       </span></span>
+<span><span class="co">#&gt;  3 W30    RG-PSB-W30 RG       PSB            W           FALSE FALSE 30       </span></span>
+<span><span class="co">#&gt;  4 W30    RG-PSB-W30 RG       PSB            W           FALSE FALSE 30       </span></span>
+<span><span class="co">#&gt;  5 W30    RG-PSB-W30 RG       PSB            W           FALSE FALSE 30       </span></span>
+<span><span class="co">#&gt;  6 Y42    RG-MMB-Y42 RG       MMB            Y           FALSE FALSE 42       </span></span>
+<span><span class="co">#&gt;  7 S41    RG-PSB-S41 RG       PSB            S           FALSE FALSE 41       </span></span>
+<span><span class="co">#&gt;  8 N60    RG-HMS-N60 RG       HMS            N           FALSE FALSE 60       </span></span>
+<span><span class="co">#&gt;  9 S41    RG-PSB-S41 RG       PSB            S           FALSE FALSE 41       </span></span>
+<span><span class="co">#&gt; 10 S41    RG-PSB-S41 RG       PSB            S           FALSE FALSE 41       </span></span>
+<span><span class="co">#&gt; # ℹ 157,201 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 142 more variables: further.category &lt;int&gt;, division.subdivision &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   broad.category.description &lt;chr&gt;, major.group.description &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   code.name &lt;chr&gt;, division.subdivision.description &lt;chr&gt;, keywords &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   further.category.desciption &lt;chr&gt;, ntee2.code &lt;chr&gt;, EIN &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   TAXPER &lt;dbl&gt;, STYEAR &lt;dbl&gt;, CONT &lt;dbl&gt;, DUES &lt;dbl&gt;, SECUR &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   SALESEXP &lt;dbl&gt;, INVINC &lt;dbl&gt;, SOLICIT &lt;dbl&gt;, GOODS &lt;dbl&gt;, GRPROF &lt;dbl&gt;, …</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">core_2005_artnonprofits_newyork</span> <span class="op">&lt;-</span> <span class="fu">nccsdata</span><span class="fu">::</span><span class="fu"><a href="reference/get_data.html">get_data</a></span><span class="op">(</span>dsname <span class="op">=</span> <span class="st">"core"</span>,</span>
+<span>                                                      time <span class="op">=</span> <span class="st">"2016"</span>,</span>
+<span>                                                      scope.orgtype <span class="op">=</span> <span class="st">"NONPROFIT"</span>,</span>
+<span>                                                      scope.formtype <span class="op">=</span> <span class="st">"PZ"</span>,</span>
+<span>                                                      ntee <span class="op">=</span> <span class="st">"ART"</span>,</span>
+<span>                                                      geo.state <span class="op">=</span> <span class="st">"NY"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Requested files have a total size of 113.6 MB. Proceed</span></span>
+<span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
+<span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">core_2005_artnonprofits_newyork</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 346 × 168</span></span>
+<span><span class="co">#&gt;    NTEECC new.code   type.org broad.category major.group univ  hosp  two.digit</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;       &lt;lgl&gt; &lt;lgl&gt; &lt;chr&gt;    </span></span>
+<span><span class="co">#&gt;  1 A01    AA-ART-A00 AA       ART            A           FALSE FALSE 1        </span></span>
+<span><span class="co">#&gt;  2 A01    AA-ART-A00 AA       ART            A           FALSE FALSE 1        </span></span>
+<span><span class="co">#&gt;  3 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        </span></span>
+<span><span class="co">#&gt;  4 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        </span></span>
+<span><span class="co">#&gt;  5 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        </span></span>
+<span><span class="co">#&gt;  6 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        </span></span>
+<span><span class="co">#&gt;  7 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        </span></span>
+<span><span class="co">#&gt;  8 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        </span></span>
+<span><span class="co">#&gt;  9 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        </span></span>
+<span><span class="co">#&gt; 10 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        </span></span>
+<span><span class="co">#&gt; # ℹ 336 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 160 more variables: further.category &lt;int&gt;, division.subdivision &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   broad.category.description &lt;chr&gt;, major.group.description &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   code.name &lt;chr&gt;, division.subdivision.description &lt;chr&gt;, keywords &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   further.category.desciption &lt;chr&gt;, ntee2.code &lt;chr&gt;, EIN &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   ACCPER &lt;chr&gt;, ACTIV1 &lt;chr&gt;, ACTIV2 &lt;chr&gt;, ACTIV3 &lt;chr&gt;, ADDRESS &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   AFCD &lt;dbl&gt;, ASS_BOY &lt;dbl&gt;, ASS_EOY &lt;dbl&gt;, BOND_BOY &lt;dbl&gt;, BOND_EOY &lt;dbl&gt;, …</span></span></code></pre></div>
+<ul>
+<li>Full <a href="https://urbaninstitute.github.io/nccsdata/articles/data_pull.html"><code>get_data()</code></a> vignette</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="summarising-data">Summarising Data<a class="anchor" aria-label="anchor" href="#summarising-data"></a>
+</h3>
+<p>After processing the desired data, <a href="https://urbaninstitute.github.io/nccsdata/"><code>nccsdata</code></a> can also be used to generate summary tables.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">nccsdata</span><span class="fu">::</span><span class="fu"><a href="reference/preview_sample.html">preview_sample</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">core_2005_artnonprofits_newyork</span>,</span>
+<span>                         group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NTEECC"</span>, <span class="st">"STATE"</span><span class="op">)</span>,</span>
+<span>                         var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TOTREV"</span><span class="op">)</span>,</span>
+<span>                         stats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"count"</span>, <span class="st">"mean"</span>, <span class="st">"max"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 29 × 5</span></span>
+<span><span class="co">#&gt; # Groups:   NTEECC [29]</span></span>
+<span><span class="co">#&gt;    NTEECC STATE count     mean     max</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;    &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 A01    NY        2   77734   151889</span></span>
+<span><span class="co">#&gt;  2 A03    NY       14  924422. 9222403</span></span>
+<span><span class="co">#&gt;  3 A11    NY        2  762752. 1485739</span></span>
+<span><span class="co">#&gt;  4 A19    NY        1   50300    50300</span></span>
+<span><span class="co">#&gt;  5 A20    NY        5  236864.  711793</span></span>
+<span><span class="co">#&gt;  6 A23    NY      112   64598.  758835</span></span>
+<span><span class="co">#&gt;  7 A30    NY       26  810943. 4974965</span></span>
+<span><span class="co">#&gt;  8 A31    NY        3 1389737. 2142396</span></span>
+<span><span class="co">#&gt;  9 A32    NY        7  759396. 3154923</span></span>
+<span><span class="co">#&gt; 10 A33    NY       15  329639.  828684</span></span>
+<span><span class="co">#&gt; # ℹ 19 more rows</span></span></code></pre></div>
+<ul>
+<li>Full <a href="https://urbaninstitute.github.io/nccsdata/articles/summary_stats.html"><code>preview_sample()</code></a> vignette.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="ntee-codes">NTEE Codes<a class="anchor" aria-label="anchor" href="#ntee-codes"></a>
+</h3>
+<p><a href="https://urbaninstitute.github.io/nccsdata/"><code>nccsdata</code></a> also offers several supplementary functions for documenting and retrieving <a href="https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md" class="external-link">NTEE</a> codes.</p>
+<ul>
+<li>Full <a href="https://urbaninstitute.github.io/nccsdata/articles/ntee.html"><code>ntee_preview()</code> and <code>parse_ntee()</code></a> vignette.</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="getting-help">Getting Help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
+</h2>
+<p>Raise an issue on the <a href="https://github.com/UrbanInstitute/nccsdata/issues" class="external-link">issues</a> page or contact Thiyaghessan at <code>tpoongundranar@urban.org</code>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
