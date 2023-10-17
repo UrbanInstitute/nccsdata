@@ -35,8 +35,8 @@ library(nccsdata)
 ## Downloading Core Data
 
 We can define the type of data, range of data (in years), organization type,
-and form type using the arguments `dsname`, `time`, `scope.formtype`, and 
-`scope.orgtpye` respectively.
+and form type using the arguments `dsname`, `time`, `scope.orgtype`, and 
+`scope.formtype` respectively.
 
 ```{r message = TRUE, warning = FALSE}
 core <- get_data(dsname = "core",
@@ -59,8 +59,7 @@ that file both full 990s and 990EZs. Other possible argument values are:
   + `PF`: Private foundation filings
   
 The data is available from the years 1989 to 2019. `get_data()` also provides
-prompts with the size of the requested data downloads. These can be muted by
-[xxx].
+prompts with the size of the requested data downloads.
 
 
 ## Filtering data using NTEE codes
@@ -79,7 +78,7 @@ core_art <- get_data(dsname = "core",
 In the above code snippet, we pull the same dataset but only select rows 
 belonging to nonprofits involved in the Arts, Culture and Humanities. A full 
 description of NTEE codes is available [here](https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md). These descriptions can also be accessed using
-`preview_ntee()`.
+`ntee_preview()`.
 
 ## Filtering Data By Geography
 
@@ -97,7 +96,17 @@ core_NYC <- get_data(dsname = "core",
 
 The code above returns rows belonging to Nonprofits from New York City, NY.
 Additional arguments `geo` arguments can be used to subset the data by
-county (`geo.county`) and region (`geo.region`).
+county (`geo.county`) and region (`geo.region`). 
+
+`geo` arguments must be used in conjunction with one another: 
+
+ * `geo.state` = "IN", `geo.county` = "Allen" for "Allen, IN"
+ * `geo.state` = "CA", `geo.city` = "San Francisco" for "San Francisco, CA"
+ 
+`get_data()` layers these filters to subset the data by the desired geographic unit. Using only 1 argument will return all geographic units that fall within
+it (e.g. `geo.region` = "south" returns all rows from the southern states or
+`geo.city` = "Lebanon" returns all rows belonging to cities with the name 
+'Lebanon').
 
 ## Appending BMF Data to Core Data
 

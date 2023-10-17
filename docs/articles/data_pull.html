@@ -72,7 +72,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Legacy Data Downloads With nccsdata</h1>
             
-            <h4 data-toc-skip class="date">October 16 2023</h4>
+            <h4 data-toc-skip class="date">October 17 2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Thiyaghessan/nccsdata/blob/HEAD/vignettes/data_pull.Rmd" class="external-link"><code>vignettes/data_pull.Rmd</code></a></small>
       <div class="d-none name"><code>data_pull.Rmd</code></div>
@@ -83,7 +83,7 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>The<code><a href="../reference/get_data.html">get_data()</a></code> function from <a href="https://urbaninstitute.github.io/nccsdata/" class="external-link"><code>nccsdata</code></a>
+<p>The<code><a href="../reference/get_data.html">get_data()</a></code> function from <a href="https://urbaninstitute.github.io/nccsdata/"><code>nccsdata</code></a>
 downloads NCCS legacy data sets hosted on publicly accessible S3 buckets
 and processes them for the user.</p>
 <p>In this vignette, we provide several examples of how this function
@@ -96,8 +96,8 @@ can be used to retrieve this legacy data.</p>
 </h2>
 <p>We can define the type of data, range of data (in years),
 organization type, and form type using the arguments
-<code>dsname</code>, <code>time</code>, <code>scope.formtype</code>, and
-<code>scope.orgtpye</code> respectively.</p>
+<code>dsname</code>, <code>time</code>, <code>scope.orgtype</code>, and
+<code>scope.formtype</code> respectively.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span>dsname <span class="op">=</span> <span class="st">"core"</span>,</span>
 <span>                 time <span class="op">=</span> <span class="st">"2015"</span>,</span>
@@ -140,7 +140,7 @@ values are:</p>
 </ul>
 <p>The data is available from the years 1989 to 2019.
 <code><a href="../reference/get_data.html">get_data()</a></code> also provides prompts with the size of the
-requested data downloads. These can be muted by [xxx].</p>
+requested data downloads.</p>
 </div>
 <div class="section level2">
 <h2 id="filtering-data-using-ntee-codes">Filtering data using NTEE codes<a class="anchor" aria-label="anchor" href="#filtering-data-using-ntee-codes"></a>
@@ -166,7 +166,7 @@ in <code><a href="../reference/get_data.html">get_data()</a></code>.</p>
 rows belonging to nonprofits involved in the Arts, Culture and
 Humanities. A full description of NTEE codes is available <a href="https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md" class="external-link">here</a>.
 These descriptions can also be accessed using
-<code>preview_ntee()</code>.</p>
+<code><a href="../reference/ntee_preview.html">ntee_preview()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="filtering-data-by-geography">Filtering Data By Geography<a class="anchor" aria-label="anchor" href="#filtering-data-by-geography"></a>
@@ -189,6 +189,22 @@ arguments from <code><a href="../reference/get_data.html">get_data()</a></code>.
 City, NY. Additional arguments <code>geo</code> arguments can be used to
 subset the data by county (<code>geo.county</code>) and region
 (<code>geo.region</code>).</p>
+<p><code>geo</code> arguments must be used in conjunction with one
+another:</p>
+<ul>
+<li>
+<code>geo.state</code> = “IN”, <code>geo.county</code> = “Allen” for
+“Allen, IN”</li>
+<li>
+<code>geo.state</code> = “CA”, <code>geo.city</code> = “San
+Francisco” for “San Francisco, CA”</li>
+</ul>
+<p><code><a href="../reference/get_data.html">get_data()</a></code> layers these filters to subset the data by
+the desired geographic unit. Using only 1 argument will return all
+geographic units that fall within it (e.g. <code>geo.region</code> =
+“south” returns all rows from the southern states or
+<code>geo.city</code> = “Lebanon” returns all rows belonging to cities
+with the name ‘Lebanon’).</p>
 </div>
 <div class="section level2">
 <h2 id="appending-bmf-data-to-core-data">Appending BMF Data to Core Data<a class="anchor" aria-label="anchor" href="#appending-bmf-data-to-core-data"></a>
