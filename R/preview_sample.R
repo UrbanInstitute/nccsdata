@@ -44,6 +44,7 @@
 #' @importFrom dplyr across
 #' @importFrom dplyr select
 #' @importFrom stats median
+#' @importFrom data.table as.data.table
 #'
 #' @export
 
@@ -76,7 +77,7 @@ preview_sample <- function(data,
                     county_fips_matches = fips_map(geo.region = firstupper(geo.region),
                                                    geo.county = geo.county))
 
-  data <- filter_data(dt = as.data.table(data),
+  data <- filter_data(dt = data.table::as.data.table(data),
                       filters = filter_ls)
 
   preview <- data %>%
