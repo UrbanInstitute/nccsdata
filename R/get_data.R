@@ -123,7 +123,7 @@ get_data <- function(dsname = NULL,
 }
 
 
-#' @title Function to get core dataset.
+#' @title Function to download, filter and merge NCCS Core data
 #'
 #' @description This function executes either the s3_select query or data
 #' download and local merge on a specified subset of the core dataset. It then
