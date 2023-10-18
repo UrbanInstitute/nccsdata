@@ -19,7 +19,6 @@ Imports:
     rlang,
     utils,
     RCurl,
-    readr,
     jsonlite,
     stats
 RoxygenNote: 7.2.3
