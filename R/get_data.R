@@ -174,15 +174,19 @@ get_core <- function(dsname,
                             append.bmf = append.bmf,
                             urls = urls)
 
-
-  dt <- lapply(urls, load_dt)
-  dt <- data.table::rbindlist(dt, fill = TRUE)
-
-  # Filter datasets
-  dt <- filter_data(dt = dt, filters = filters)
-
-  # Merge data
-  dt <- ntee_dat[dt, on = "NTEECC"]
+  # Download data sets
+  dt <- lapply(urls,
+               load_dt)
+  # Filter data sets
+  dt <- lapply(dt,
+               filter_data,
+               filters = filters)
+  # Merge with NTEE Data
+  dt <- lapply(dt,
+               FUN = function(dt) dt <- ntee_dat[dt, on = "NTEECC"])
+  # Stack data sets
+  dt <- data.table::rbindlist(dt,
+                              fill = TRUE)
 
   return(dt)
 
