@@ -1,7 +1,8 @@
 #' @title Download, filter and merge metadata for NCCS legacy core and bmf datasets
 #'
-#' @description This function uses user inputs to query, filter and merge nccs
-#' data and additional census, cbsa and ntee metadata
+#' @description This function downloads legacy NCCS data, filters it based on
+#' geography and NTEE codes, and merges it with NTEE metadata. BMF data can
+#' also be appended to Core data.
 #'
 #' @param dsname character scalar. Name of data series to query from S3.
 #' Valid inputs are either "core" or "bmf", not both.
@@ -53,7 +54,7 @@ get_data <- function(dsname = NULL,
                      ntee.orgtype = NULL,
                      append.bmf = FALSE){
 
-  # Validate critical inputs with set acceptable entries
+  # Validate function arguments
   message(validate_get_data(dsname = dsname,
                             time = time,
                             scope.orgtype = scope.orgtype,
