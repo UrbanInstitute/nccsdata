@@ -135,7 +135,7 @@ parse_ntee_regex <- function(regexp_vec, ntee_codes){
 
 }
 
-#' Function to inspect user inputs and flag errors
+#' @title Function to inspect user inputs and flag errors
 #'
 #' @description This function validates user inputs for Industry Group,
 #' Industry, Division, Subdivision and Organization Type, comparing them
