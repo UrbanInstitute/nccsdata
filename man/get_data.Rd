@@ -69,6 +69,7 @@ Involves downloading the bmf dataset and will take longer. Default == FALSE.}
 data.table with queried data
 }
 \description{
-This function uses user inputs to query, filter and merge nccs
-data and additional census, cbsa and ntee metadata
+This function downloads legacy NCCS data, filters it based on
+geography and NTEE codes, and merges it with NTEE metadata. BMF data can
+also be appended to Core data.
 }
