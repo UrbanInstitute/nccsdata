@@ -367,3 +367,47 @@ nteecc_map <- function(ntee.user,
 
   return(nteecc_matches)
 }
+
+
+#' @title Create metadata from NTEE data set for ntee_preview()
+#'
+#' @description Metadata generating function for ntee_preview(). Creates
+#' named lists for each ntee code level. Processes user inputs to ntee_preview()
+#' for easy look up using named lists
+#'
+#' @param ntee.user character vector. Vector of unique NTEE2 codes.
+#'
+#' @return named list. Named list contains Level 1, Level 2-4, Level 5 and
+#' processed user inputs
+
+ntee_metadata <- function(ntee.user){
+
+  # Level 1
+  group_dic <- dic_from_df(df = ntee_df,
+                           keycol = "broad.category",
+                           valcol = "broad.category.description")
+  # Level 5
+  org_dic <- dic_from_df(df = ntee_df,
+                         keycol = "type.org",
+                         valcol = "division.subdivision.description")
+  # Level 2-4
+  code_dic <- dic_from_df(df = ntee_df,
+                          keycol = "ntee2.code",
+                          valcol = "further.category.desciption")
+  names(code_dic) <- sapply(strsplit(names(code_dic), "-"), "[", 2)
+
+  # User Inputs
+  ntee2_ls <- strsplit(ntee.user, "-")
+  ntee2_ls <- lapply(ntee2_ls,
+                     FUN = function(vec) vec <- vec[order(c(1, 3, 2))])
+  ntee2_ls <- sort(unlist(lapply(ntee2_ls,
+                                 paste,
+                                 collapse = "-")))
+  ntee2_ls <- strsplit(ntee2_ls, "-")
+
+  return(list(group = group_dic,
+              code = code_dic,
+              org = org_dic,
+              ntee.user = ntee2_ls))
+
+}
