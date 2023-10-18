@@ -2,7 +2,7 @@
 % Please edit documentation in R/ntee_main.R
 \name{ntee_preview}
 \alias{ntee_preview}
-\title{Function to document NTEE Codes}
+\title{Provide documentation for NTEE2 codes}
 \usage{
 ntee_preview(ntee, ntee.group, ntee.code, ntee.orgtype)
 }
@@ -27,13 +27,8 @@ Use "all" to include all possible codes.}
 text strings that describe NTEE2 codes at each level
 }
 \description{
-This function takes user inputs across levels 1- 5 of the
-NTEE2 code structure and returns text metadata describing each NTEE Code
-level
-}
-\details{
-Script with front end functions for users to access NTEE2 codes and
-filter NTEE dataset with codes
+Take user inputs across levels 1- 5 of the NTEE2 code structure
+and returns text metadata describing each NTEE Code level
 }
 \examples{
 ntee_preview(ntee = c("ART", "A2X"))

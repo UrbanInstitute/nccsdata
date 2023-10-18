@@ -2,8 +2,8 @@
 % Please edit documentation in R/utils.R
 \name{load_dt}
 \alias{load_dt}
-\title{Function to read csv files from a public s3 bucket url. Saves the
-file as a data.table.}
+\title{Function to read legacy csv files from core/bmf
+public s3 bucket url. Saves the file as a data.table.}
 \usage{
 load_dt(url)
 }

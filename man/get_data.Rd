@@ -2,8 +2,7 @@
 % Please edit documentation in R/get_data.R
 \name{get_data}
 \alias{get_data}
-\title{Function to query bmf data and integrate it with census, cbsa and ntee
-metadata}
+\title{Download, filter and merge metadata for NCCS legacy core and bmf datasets}
 \usage{
 get_data(
   dsname = NULL,
@@ -70,6 +69,7 @@ Involves downloading the bmf dataset and will take longer. Default == FALSE.}
 data.table with queried data
 }
 \description{
-This function uses user inputs to query, filter and merge nccs
-data and additional census, cbsa and ntee metadata
+This function downloads legacy NCCS data, filters it based on
+geography and NTEE codes, and merges it with NTEE metadata. BMF data can
+also be appended to Core data.
 }

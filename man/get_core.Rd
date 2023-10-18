@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_data.R
 \name{get_core}
 \alias{get_core}
-\title{Function to get core dataset.}
+\title{Function to download, filter and merge NCCS Core data}
 \usage{
 get_core(dsname, time, scope.orgtype, scope.formtype, filters, append.bmf)
 }

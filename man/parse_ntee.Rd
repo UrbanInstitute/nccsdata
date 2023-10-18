@@ -2,14 +2,7 @@
 % Please edit documentation in R/ntee_main.R
 \name{parse_ntee}
 \alias{parse_ntee}
-\title{A complete function takes any user input values from the arguments:
-   ntee.group
-   ntee.code
-   ntee.orgtype
-And returns the correct list of NTEE codes that match the filter
-requirements.
-It will also raise an error if the user tries argument values that are
-undefined and print an informative message.}
+\title{Parse NTEE2 Codes}
 \usage{
 parse_ntee(ntee.group, ntee.code, ntee.orgtype)
 }
@@ -30,11 +23,7 @@ Use "all" to include all possible codes.}
 list of matched NTEE2 codes
 }
 \description{
-This function takes user defined Industry Group, Industry,
-Division, Subdivision and Organization Types and filters population of NTEE2
-codes to find codes that match user inputs.
-}
-\details{
-Function that generates population of NTEE2 codes and filters codes that
-match user inputs
+Take arguments for Industry Group, Industry, Division,
+Subdivision and Organization Types and filters population of NTEE2 codes to
+return matching codes
 }

@@ -1,7 +1,8 @@
 #' @title Download, filter and merge metadata for NCCS legacy core and bmf datasets
 #'
-#' @description This function uses user inputs to query, filter and merge nccs
-#' data and additional census, cbsa and ntee metadata
+#' @description This function downloads legacy NCCS data, filters it based on
+#' geography and NTEE codes, and merges it with NTEE metadata. BMF data can
+#' also be appended to Core data.
 #'
 #' @param dsname character scalar. Name of data series to query from S3.
 #' Valid inputs are either "core" or "bmf", not both.
@@ -53,7 +54,7 @@ get_data <- function(dsname = NULL,
                      ntee.orgtype = NULL,
                      append.bmf = FALSE){
 
-  # Validate critical inputs with set acceptable entries
+  # Validate function arguments
   message(validate_get_data(dsname = dsname,
                             time = time,
                             scope.orgtype = scope.orgtype,
@@ -122,7 +123,7 @@ get_data <- function(dsname = NULL,
 }
 
 
-#' @title Function to get core dataset.
+#' @title Function to download, filter and merge NCCS Core data
 #'
 #' @description This function executes either the s3_select query or data
 #' download and local merge on a specified subset of the core dataset. It then
@@ -174,15 +175,19 @@ get_core <- function(dsname,
                             append.bmf = append.bmf,
                             urls = urls)
 
-
-  dt <- lapply(urls, load_dt)
-  dt <- data.table::rbindlist(dt, fill = TRUE)
-
-  # Filter datasets
-  dt <- filter_data(dt = dt, filters = filters)
-
-  # Merge data
-  dt <- ntee_dat[dt, on = "NTEECC"]
+  # Download data sets
+  dt <- lapply(urls,
+               load_dt)
+  # Filter data sets
+  dt <- lapply(dt,
+               filter_data,
+               filters = filters)
+  # Merge with NTEE Data
+  dt <- lapply(dt,
+               FUN = function(dt) dt <- ntee_dat[dt, on = "NTEECC"])
+  # Stack data sets
+  dt <- data.table::rbindlist(dt,
+                              fill = TRUE)
 
   return(dt)
 

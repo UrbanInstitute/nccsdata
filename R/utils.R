@@ -90,8 +90,8 @@ obj_validate <- function(dsname,
 
 }
 
-#' @title Function to read csv files from a public s3 bucket url. Saves the
-#' file as a data.table.
+#' @title Function to read legacy csv files from core/bmf
+#' public s3 bucket url. Saves the file as a data.table.
 #'
 #' @description This function is used in lapply to map a list of urls to a
 #' list of data.tables.
@@ -102,18 +102,23 @@ obj_validate <- function(dsname,
 #'
 #' @usage load_dt(url)
 #'
-#' @importFrom readr read_csv
-#' @importFrom readr cols
-#' @importFrom data.table as.data.table
+#' @importFrom data.table fread
 #' @importFrom data.table setnames
-#' @importFrom dplyr %>%
 
 load_dt <- function(url){
-  dt <- suppressWarnings(readr::read_csv(url,
-                         col_types = readr::cols(.default = "?",
-                                                FIPS = "i"))) %>%
-    dplyr::rename_with(toupper) %>%
-    data.table::as.data.table()
+
+  FIPS <- NULL # set global binding
+
+  # Read in data from S3
+  dt <- data.table::fread(input = url)
+  # Convert columns to uppercase to avoid duplicate columns in rbindlist
+  cols <- colnames(dt)
+  data.table::setnames(x = dt,
+                       old = cols,
+                       new = toupper(cols))
+  # Set FIPs to numeric
+  dt[, FIPS := as.numeric(FIPS)]
+
   return(dt)
 }
 

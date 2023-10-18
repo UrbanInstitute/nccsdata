@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_data_helpers.R
 \name{download_size}
 \alias{download_size}
-\title{Data size calculator.}
+\title{Data size calculator}
 \usage{
 download_size(dsname, append.bmf, urls = NULL)
 }

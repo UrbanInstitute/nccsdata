@@ -1,12 +1,7 @@
-#' Script with front end functions for users to access NTEE2 codes and
-#' filter NTEE dataset with codes
+#' @title Provide documentation for NTEE2 codes
 #'
-
-#' @title Function to document NTEE Codes
-#'
-#' @description This function takes user inputs across levels 1- 5 of the
-#' NTEE2 code structure and returns text metadata describing each NTEE Code
-#' level
+#' @description Take user inputs across levels 1- 5 of the NTEE2 code structure
+#' and returns text metadata describing each NTEE Code level
 #'
 #' @param ntee character vector. Vector of user inputs. The user inputs are
 #' progressively filtered until group, code and orgtypes are sorted into
@@ -40,40 +35,13 @@ ntee_preview <- function(ntee = NULL,
                             ntee.code = ntee.code,
                             ntee.orgtype = ntee.orgtype)
 
-  group_dic <- dic_from_df(df = ntee_df,
-                           keycol = "broad.category",
-                           valcol = "broad.category.description")
-
-  org_dic <- dic_from_df(df = ntee_df,
-                         keycol = "type.org",
-                         valcol = "division.subdivision.description")
-
-  code_dic <- dic_from_df(df = ntee_df,
-                          keycol = "ntee2.code",
-                          valcol = "further.category.desciption")
-
-  names(code_dic) <- sapply(strsplit(names(code_dic), "-"), "[", 2)
-
-  ntee2_ls <- strsplit(ntee2_codes, "-")
-
-  reorder_vec <- function(vec){
-    vec <- vec[order(c(1, 3, 2))]
-    return(vec)
-  }
-
-  ntee2_ls <- (lapply(ntee2_ls, reorder_vec))
-
-  ntee2_ls <- sort(unlist(lapply(ntee2_ls,
-                                 paste,
-                                 collapse = "-")))
-
-  ntee2_ls <- strsplit(ntee2_ls, "-")
+  metadata <- ntee_metadata(ntee.user = ntee2_codes)
 
   full_desc <- ""
   current_group <- ""
   current_org <- ""
 
-  for (ntee_full in ntee2_ls){
+  for (ntee_full in metadata$ntee.user){
 
     group <- ntee_full[1]
     orgtype <- ntee_full[2]
@@ -82,7 +50,8 @@ ntee_preview <- function(ntee = NULL,
     if (group != current_group){
 
       current_group <- group
-      group_statement <- sprintf("%s: %s", group, group_dic[group])
+      current_org <- ""
+      group_statement <- sprintf("%s: %s", group, metadata$group[group])
       cat("\n\n", group_statement)
 
     }
@@ -90,7 +59,7 @@ ntee_preview <- function(ntee = NULL,
     if  (orgtype != current_org){
 
       current_org <- orgtype
-      org_desc <- strwrap(org_dic[orgtype])
+      org_desc <- strwrap(metadata$org[orgtype])
 
       org_statement <- sprintf("    %s: %s", orgtype, org_desc[1])
       cat("\n\n", org_statement)
@@ -107,7 +76,7 @@ ntee_preview <- function(ntee = NULL,
 
     code_statement <- sprintf("        %s: \n", code)
     cat("\n\n", code_statement)
-    for (str in strwrap(code_dic[code])){
+    for (str in strwrap(metadata$code[code])){
 
       code_statement <- sprintf("        %s", str)
       cat("\n", code_statement)
@@ -115,30 +84,17 @@ ntee_preview <- function(ntee = NULL,
     }
 
   }
-  #full_output <- cat(full_desc)
 
+  cat("\n\n")
   return(message("End of preview."))
 
   }
 
-#' A complete function takes any user input values from the arguments:
-
-#'    ntee.group
-#'    ntee.code
-#'    ntee.orgtype
-
-#' And returns the correct list of NTEE codes that match the filter
-#' requirements.
-
-#' It will also raise an error if the user tries argument values that are
-#' undefined and print an informative message.
+#' @title Parse NTEE2 Codes
 #'
-#' Function that generates population of NTEE2 codes and filters codes that
-#' match user inputs
-#'
-#' @description This function takes user defined Industry Group, Industry,
-#' Division, Subdivision and Organization Types and filters population of NTEE2
-#' codes to find codes that match user inputs.
+#' @description Take arguments for Industry Group, Industry, Division,
+#' Subdivision and Organization Types and filters population of NTEE2 codes to
+#' return matching codes
 #'
 #' @param ntee.group character vector. Vector of desired Industry Group codes
 #'  to filter. Use "all" to include all possible codes.

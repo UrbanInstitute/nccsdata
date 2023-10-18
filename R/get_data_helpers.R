@@ -177,7 +177,7 @@ filter_data <- function(dt,
 }
 
 
-#' @title Data size calculator.
+#' @title Data size calculator
 #'
 #' @description This function calculates the size of required downloads
 #' for a user's query.
