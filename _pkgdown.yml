@@ -55,3 +55,4 @@ reference:
   - fips_map
   - nteecc_map
   - obj_validate
+  - ntee_metadata
