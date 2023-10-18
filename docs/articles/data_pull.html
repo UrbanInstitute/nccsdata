@@ -72,7 +72,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Legacy Data Downloads With nccsdata</h1>
             
-            <h4 data-toc-skip class="date">October 17 2023</h4>
+            <h4 data-toc-skip class="date">October 18 2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/UrbanInstitute/nccsdata/blob/HEAD/vignettes/data_pull.Rmd" class="external-link"><code>vignettes/data_pull.Rmd</code></a></small>
       <div class="d-none name"><code>data_pull.Rmd</code></div>
@@ -83,7 +83,7 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>The<code><a href="../reference/get_data.html">get_data()</a></code> function from <a href="https://urbaninstitute.github.io/nccsdata/" class="external-link"><code>nccsdata</code></a>
+<p>The<code><a href="../reference/get_data.html">get_data()</a></code> function from <a href="https://urbaninstitute.github.io/nccsdata/"><code>nccsdata</code></a>
 downloads NCCS legacy data sets hosted on publicly accessible S3 buckets
 and processes them for the user.</p>
 <p>In this vignette, we provide several examples of how this function
@@ -102,12 +102,7 @@ organization type, and form type using the arguments
 <code class="sourceCode R"><span><span class="va">core</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span>dsname <span class="op">=</span> <span class="st">"core"</span>,</span>
 <span>                 time <span class="op">=</span> <span class="st">"2015"</span>,</span>
 <span>                 scope.orgtype <span class="op">=</span> <span class="st">"NONPROFIT"</span>,</span>
-<span>                 scope.formtype <span class="op">=</span> <span class="st">"PZ"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Valid inputs detected. Retrieving data.</span></span>
-<span><span class="co">#&gt; Downloading core data</span></span>
-<span><span class="co">#&gt; Requested files have a total size of 115 MB. Proceed</span></span>
-<span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
-<span><span class="co">#&gt; Core data downloaded</span></span></code></pre></div>
+<span>                 scope.formtype <span class="op">=</span> <span class="st">"PZ"</span><span class="op">)</span></span></code></pre></div>
 <p>The function downloads NCCS core data from the year 2015 for all
 non-profits that file both full 990s and 990EZs. Other possible argument
 values are:</p>
@@ -153,15 +148,7 @@ in <code><a href="../reference/get_data.html">get_data()</a></code>.</p>
 <span>                     time <span class="op">=</span> <span class="st">"2015"</span>,</span>
 <span>                     scope.orgtype <span class="op">=</span> <span class="st">"NONPROFIT"</span>,</span>
 <span>                     scope.formtype <span class="op">=</span> <span class="st">"PZ"</span>,</span>
-<span>                     ntee <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ART"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Valid inputs detected. Retrieving data.</span></span>
-<span><span class="co">#&gt; Collecting Matching Industry Groups</span></span>
-<span><span class="co">#&gt; Collecting Matching Industry Division and Subdivisions</span></span>
-<span><span class="co">#&gt; Collecting Matching Organization Types</span></span>
-<span><span class="co">#&gt; Downloading core data</span></span>
-<span><span class="co">#&gt; Requested files have a total size of 115 MB. Proceed</span></span>
-<span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
-<span><span class="co">#&gt; Core data downloaded</span></span></code></pre></div>
+<span>                     ntee <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ART"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>In the above code snippet, we pull the same dataset but only select
 rows belonging to nonprofits involved in the Arts, Culture and
 Humanities. A full description of NTEE codes is available <a href="https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md" class="external-link">here</a>.
@@ -179,12 +166,7 @@ arguments from <code><a href="../reference/get_data.html">get_data()</a></code>.
 <span>                     scope.orgtype <span class="op">=</span> <span class="st">"NONPROFIT"</span>,</span>
 <span>                     scope.formtype <span class="op">=</span> <span class="st">"PZ"</span>,</span>
 <span>                     geo.state <span class="op">=</span> <span class="st">"NY"</span>,</span>
-<span>                     geo.city <span class="op">=</span> <span class="st">"New York City"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Valid inputs detected. Retrieving data.</span></span>
-<span><span class="co">#&gt; Downloading core data</span></span>
-<span><span class="co">#&gt; Requested files have a total size of 115 MB. Proceed</span></span>
-<span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
-<span><span class="co">#&gt; Core data downloaded</span></span></code></pre></div>
+<span>                     geo.city <span class="op">=</span> <span class="st">"New York City"</span><span class="op">)</span></span></code></pre></div>
 <p>The code above returns rows belonging to Nonprofits from New York
 City, NY. Additional arguments <code>geo</code> arguments can be used to
 subset the data by county (<code>geo.county</code>) and region
@@ -218,14 +200,7 @@ can be toggled on/off with <code>append_bmf</code>.</p>
 <span>                    time <span class="op">=</span> <span class="st">"2015"</span>,</span>
 <span>                    scope.orgtype <span class="op">=</span> <span class="st">"NONPROFIT"</span>,</span>
 <span>                    scope.formtype <span class="op">=</span> <span class="st">"PZ"</span>,</span>
-<span>                    append.bmf <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Valid inputs detected. Retrieving data.</span></span>
-<span><span class="co">#&gt; Downloading core data</span></span>
-<span><span class="co">#&gt; Requested files have a total size of 305 MB. Proceed</span></span>
-<span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
-<span><span class="co">#&gt; Core data downloaded</span></span>
-<span><span class="co">#&gt; Downloading bmf data</span></span>
-<span><span class="co">#&gt; bmf data downloaded. Appending bmf</span></span></code></pre></div>
+<span>                    append.bmf <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>BMF metadata is now appended to the downloaded Core data set.</p>
 </div>
 <div class="section level2">
@@ -236,15 +211,7 @@ can also be used to download and filter BMF data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bmf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span>dsname <span class="op">=</span> <span class="st">"bmf"</span>,</span>
 <span>                ntee <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ART"</span><span class="op">)</span>,</span>
-<span>                geo.state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CA"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Valid inputs detected. Retrieving data.</span></span>
-<span><span class="co">#&gt; Collecting Matching Industry Groups</span></span>
-<span><span class="co">#&gt; Collecting Matching Industry Division and Subdivisions</span></span>
-<span><span class="co">#&gt; Collecting Matching Organization Types</span></span>
-<span><span class="co">#&gt; Requested files have a total size of 190 MB. Proceed</span></span>
-<span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
-<span><span class="co">#&gt; Downloading bmf data</span></span>
-<span><span class="co">#&gt; bmf data downloaded</span></span></code></pre></div>
+<span>                geo.state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CA"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
