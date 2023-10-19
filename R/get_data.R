@@ -217,7 +217,7 @@ get_bmf <- function(url,
                     dest_path = "bmf.rds",
                     filters){
 
-  FIPS <- NULL # for global variable binding
+  .SD <- NULL # for global variable binding
 
   utils::download.file(url, destfile=dest_path)
   bmf <- readRDS(dest_path)
