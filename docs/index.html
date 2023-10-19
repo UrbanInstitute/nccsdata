@@ -70,8 +70,6 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="nccsdata">nccsdata<a class="anchor" aria-label="anchor" href="#nccsdata"></a>
 </h1></div>
-<!-- badges: start -->
-
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -101,11 +99,6 @@
 <span>                                             scope.formtype <span class="op">=</span> <span class="st">"PZ"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Requested files have a total size of 82.6 MB. Proceed</span></span>
 <span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
-<span><span class="co">#&gt; Warning: The following named parsers don't match the column names: default</span></span>
-<span><span class="co">#&gt; Warning: One or more parsing issues, call `problems()` on your data frame for details,</span></span>
-<span><span class="co">#&gt; e.g.:</span></span>
-<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
-<span><span class="co">#&gt;   problems(dat)</span></span>
 <span></span>
 <span></span>
 <span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">core_2005_nonprofit_pz</span><span class="op">)</span></span>
@@ -127,8 +120,8 @@
 <span><span class="co">#&gt; #   broad.category.description &lt;chr&gt;, major.group.description &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   code.name &lt;chr&gt;, division.subdivision.description &lt;chr&gt;, keywords &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   further.category.desciption &lt;chr&gt;, ntee2.code &lt;chr&gt;, EIN &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   TAXPER &lt;dbl&gt;, STYEAR &lt;dbl&gt;, CONT &lt;dbl&gt;, DUES &lt;dbl&gt;, SECUR &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   SALESEXP &lt;dbl&gt;, INVINC &lt;dbl&gt;, SOLICIT &lt;dbl&gt;, GOODS &lt;dbl&gt;, GRPROF &lt;dbl&gt;, …</span></span></code></pre></div>
+<span><span class="co">#&gt; #   TAXPER &lt;int&gt;, STYEAR &lt;int&gt;, CONT &lt;int&gt;, DUES &lt;int&gt;, SECUR &lt;int64&gt;,</span></span>
+<span><span class="co">#&gt; #   SALESEXP &lt;int64&gt;, INVINC &lt;int&gt;, SOLICIT &lt;int&gt;, GOODS &lt;int&gt;, GRPROF &lt;int&gt;, …</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">core_2005_artnonprofits_newyork</span> <span class="op">&lt;-</span> <span class="fu">nccsdata</span><span class="fu">::</span><span class="fu"><a href="reference/get_data.html">get_data</a></span><span class="op">(</span>dsname <span class="op">=</span> <span class="st">"core"</span>,</span>
 <span>                                                      time <span class="op">=</span> <span class="st">"2016"</span>,</span>
@@ -156,8 +149,8 @@
 <span><span class="co">#&gt; # ℹ 160 more variables: further.category &lt;int&gt;, division.subdivision &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   broad.category.description &lt;chr&gt;, major.group.description &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   code.name &lt;chr&gt;, division.subdivision.description &lt;chr&gt;, keywords &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   further.category.desciption &lt;chr&gt;, ntee2.code &lt;chr&gt;, EIN &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   ACCPER &lt;chr&gt;, ACTIV1 &lt;chr&gt;, ACTIV2 &lt;chr&gt;, ACTIV3 &lt;chr&gt;, ADDRESS &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   further.category.desciption &lt;chr&gt;, ntee2.code &lt;chr&gt;, EIN &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   ACCPER &lt;int&gt;, ACTIV1 &lt;dbl&gt;, ACTIV2 &lt;dbl&gt;, ACTIV3 &lt;dbl&gt;, ADDRESS &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   AFCD &lt;dbl&gt;, ASS_BOY &lt;dbl&gt;, ASS_EOY &lt;dbl&gt;, BOND_BOY &lt;dbl&gt;, BOND_EOY &lt;dbl&gt;, …</span></span></code></pre></div>
 <ul>
 <li>Full <a href="https://urbaninstitute.github.io/nccsdata/articles/data_pull.html"><code>get_data()</code></a> vignette</li>
@@ -174,18 +167,18 @@
 <span>                         stats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"count"</span>, <span class="st">"mean"</span>, <span class="st">"max"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 29 × 5</span></span>
 <span><span class="co">#&gt; # Groups:   NTEECC [29]</span></span>
-<span><span class="co">#&gt;    NTEECC STATE count     mean     max</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;    &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 A01    NY        2   77734   151889</span></span>
-<span><span class="co">#&gt;  2 A03    NY       14  924422. 9222403</span></span>
-<span><span class="co">#&gt;  3 A11    NY        2  762752. 1485739</span></span>
-<span><span class="co">#&gt;  4 A19    NY        1   50300    50300</span></span>
-<span><span class="co">#&gt;  5 A20    NY        5  236864.  711793</span></span>
-<span><span class="co">#&gt;  6 A23    NY      112   64598.  758835</span></span>
-<span><span class="co">#&gt;  7 A30    NY       26  810943. 4974965</span></span>
-<span><span class="co">#&gt;  8 A31    NY        3 1389737. 2142396</span></span>
-<span><span class="co">#&gt;  9 A32    NY        7  759396. 3154923</span></span>
-<span><span class="co">#&gt; 10 A33    NY       15  329639.  828684</span></span>
+<span><span class="co">#&gt;    NTEECC STATE count    mean     max</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int64&gt; &lt;int64&gt;</span></span>
+<span><span class="co">#&gt;  1 A01    NY        2   77734  151889</span></span>
+<span><span class="co">#&gt;  2 A03    NY       14  924422 9222403</span></span>
+<span><span class="co">#&gt;  3 A11    NY        2  762752 1485739</span></span>
+<span><span class="co">#&gt;  4 A19    NY        1   50300   50300</span></span>
+<span><span class="co">#&gt;  5 A20    NY        5  236863  711793</span></span>
+<span><span class="co">#&gt;  6 A23    NY      112   64597  758835</span></span>
+<span><span class="co">#&gt;  7 A30    NY       26  810942 4974965</span></span>
+<span><span class="co">#&gt;  8 A31    NY        3 1389737 2142396</span></span>
+<span><span class="co">#&gt;  9 A32    NY        7  759395 3154923</span></span>
+<span><span class="co">#&gt; 10 A33    NY       15  329638  828684</span></span>
 <span><span class="co">#&gt; # ℹ 19 more rows</span></span></code></pre></div>
 <ul>
 <li>Full <a href="https://urbaninstitute.github.io/nccsdata/articles/summary_stats.html"><code>preview_sample()</code></a> vignette.</li>
@@ -237,12 +230,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>
