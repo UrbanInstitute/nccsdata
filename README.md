@@ -1,11 +1,6 @@
 
 # nccsdata
 
-<!-- badges: start -->
-
-[![R-CMD-check](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
-
 ## Overview
 
 nccsdata provides tools to read, filter and append metadata to publicly
@@ -42,11 +37,6 @@ core_2005_nonprofit_pz <- nccsdata::get_data(dsname = "core",
                                              scope.formtype = "PZ")
 #> Requested files have a total size of 82.6 MB. Proceed
 #>                       with download? Enter Y/N (Yes/no/cancel)
-#> Warning: The following named parsers don't match the column names: default
-#> Warning: One or more parsing issues, call `problems()` on your data frame for details,
-#> e.g.:
-#>   dat <- vroom(...)
-#>   problems(dat)
 
 
 tibble::as_tibble(core_2005_nonprofit_pz)
@@ -68,8 +58,8 @@ tibble::as_tibble(core_2005_nonprofit_pz)
 #> #   broad.category.description <chr>, major.group.description <chr>,
 #> #   code.name <chr>, division.subdivision.description <chr>, keywords <chr>,
 #> #   further.category.desciption <chr>, ntee2.code <chr>, EIN <chr>,
-#> #   TAXPER <dbl>, STYEAR <dbl>, CONT <dbl>, DUES <dbl>, SECUR <dbl>,
-#> #   SALESEXP <dbl>, INVINC <dbl>, SOLICIT <dbl>, GOODS <dbl>, GRPROF <dbl>, …
+#> #   TAXPER <int>, STYEAR <int>, CONT <int>, DUES <int>, SECUR <int64>,
+#> #   SALESEXP <int64>, INVINC <int>, SOLICIT <int>, GOODS <int>, GRPROF <int>, …
 ```
 
 ``` r
@@ -99,8 +89,8 @@ tibble::as_tibble(core_2005_artnonprofits_newyork)
 #> # ℹ 160 more variables: further.category <int>, division.subdivision <chr>,
 #> #   broad.category.description <chr>, major.group.description <chr>,
 #> #   code.name <chr>, division.subdivision.description <chr>, keywords <chr>,
-#> #   further.category.desciption <chr>, ntee2.code <chr>, EIN <chr>,
-#> #   ACCPER <chr>, ACTIV1 <chr>, ACTIV2 <chr>, ACTIV3 <chr>, ADDRESS <chr>,
+#> #   further.category.desciption <chr>, ntee2.code <chr>, EIN <int>,
+#> #   ACCPER <int>, ACTIV1 <dbl>, ACTIV2 <dbl>, ACTIV3 <dbl>, ADDRESS <chr>,
 #> #   AFCD <dbl>, ASS_BOY <dbl>, ASS_EOY <dbl>, BOND_BOY <dbl>, BOND_EOY <dbl>, …
 ```
 
@@ -121,18 +111,18 @@ nccsdata::preview_sample(data = core_2005_artnonprofits_newyork,
                          stats = c("count", "mean", "max"))
 #> # A tibble: 29 × 5
 #> # Groups:   NTEECC [29]
-#>    NTEECC STATE count     mean     max
-#>    <chr>  <chr> <int>    <dbl>   <dbl>
-#>  1 A01    NY        2   77734   151889
-#>  2 A03    NY       14  924422. 9222403
-#>  3 A11    NY        2  762752. 1485739
-#>  4 A19    NY        1   50300    50300
-#>  5 A20    NY        5  236864.  711793
-#>  6 A23    NY      112   64598.  758835
-#>  7 A30    NY       26  810943. 4974965
-#>  8 A31    NY        3 1389737. 2142396
-#>  9 A32    NY        7  759396. 3154923
-#> 10 A33    NY       15  329639.  828684
+#>    NTEECC STATE count    mean     max
+#>    <chr>  <chr> <int> <int64> <int64>
+#>  1 A01    NY        2   77734  151889
+#>  2 A03    NY       14  924422 9222403
+#>  3 A11    NY        2  762752 1485739
+#>  4 A19    NY        1   50300   50300
+#>  5 A20    NY        5  236863  711793
+#>  6 A23    NY      112   64597  758835
+#>  7 A30    NY       26  810942 4974965
+#>  8 A31    NY        3 1389737 2142396
+#>  9 A32    NY        7  759395 3154923
+#> 10 A33    NY       15  329638  828684
 #> # ℹ 19 more rows
 ```
 

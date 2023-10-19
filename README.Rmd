@@ -13,10 +13,6 @@ knitr::opts_chunk$set(
 
 # nccsdata
 
-<!-- badges: start -->
-[![R-CMD-check](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
-
 ## Overview
 
 nccsdata provides tools to read, filter and append metadata to publicly available NCCS Core and BMF data sets.
