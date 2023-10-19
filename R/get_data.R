@@ -76,12 +76,12 @@ get_data <- function(dsname = NULL,
 
     message("Downloading core data")
 
-    core_dt <- get_core(dsname = dsname,
-                        time = time,
-                        scope.orgtype = scope.orgtype,
-                        scope.formtype = scope.formtype,
-                        filters = filter_ls,
-                        append.bmf = append.bmf)
+    core_dt <- suppressWarnings(get_core(dsname = dsname,
+                                         time = time,
+                                         scope.orgtype = scope.orgtype,
+                                         scope.formtype = scope.formtype,
+                                         filters = filter_ls,
+                                         append.bmf = append.bmf))
 
     message("Core data downloaded")
 
@@ -89,8 +89,8 @@ get_data <- function(dsname = NULL,
 
       message("Downloading bmf data")
 
-      bmf <- get_bmf(url = "https://nccsdata.s3.us-east-1.amazonaws.com/current/bmf/bmf-master.rds",
-                     filters = filter_ls)
+      bmf <- suppressWarnings(get_bmf(url = "https://nccsdata.s3.us-east-1.amazonaws.com/current/bmf/bmf-master.rds",
+                                      filters = filter_ls))
 
       message("bmf data downloaded. Appending bmf")
 
@@ -224,7 +224,7 @@ get_bmf <- function(url,
   file.remove(dest_path)
 
   data.table::setDT(bmf)
-  bmf <- bmf[, FIPS := as.numeric(FIPS)]
+  bmf <- bmf[, lapply(.SD, as.numeric), .SDcols = c("EIN", "FIPS")]
 
   bmf <- filter_data(dt = bmf, filters = filters)
 
