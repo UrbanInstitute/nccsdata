@@ -100,6 +100,9 @@ names(x) <- nm
 
 metrofips <- x
 
+write.csv( x, "metrofips.csv", row.names=F )
+
+
 preview <- function( geo, within=NULL, type=NULL ) {
 
   if( ! is.null(within) )
