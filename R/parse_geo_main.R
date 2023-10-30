@@ -162,3 +162,79 @@ parse_fips <- function(census.level, ...){
 
   return(fips)
 }
+
+
+#' @title Preview CBSA/CSA FIPS Codes
+#'
+#' @description geo_preview() previews cbsa metadata for use in filtering of
+#' core data sets. It also saves the outputs with an invisible return.
+#'
+#' @param geo Character vector. Vector of columns to preview/return from CBSA
+#' data
+#' @param within character vector. Vector of state abbreviations to filter data
+#' with.
+#' @param type character scalar. Scalar variable indicating type of data to return.
+#' Acceptable values are "metro" and "micro".
+#'
+#' @return printout of data or data.frame of filtered cbsa data.frame
+#'
+#' @examples
+#'
+#' geo_preview( geo="cbsa", within="LA" )
+#' geo_preview( geo=c("county","cbsa"), within="GA", type="metro" )
+#' geo_preview( geo=c("cbsa","cbsafips"), within="FL", type="metro" )
+#' xx <- geo_preview( geo=c("cbsa","cbsafips"), within="FL", type="metro" )
+#'
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom dplyr distinct
+#' @importFrom dplyr arrange
+#' @importFrom dplyr mutate
+#' @importFrom knitr kable
+#'
+#' @export
+
+geo_preview <- function(geo, within = NULL, type = NULL){
+
+  type_dic = list("metro" = "Metropolitan Statistical Area",
+                  "micro" = "Micropolitan Statistical Area")
+
+  cbsa_dic = list("cbsafips" = "metro.census.cbsa.geoid",
+                  "csafips" = "metro.census.csa.geoid",
+                  "cbsa" = "metro.census.cbsa.name",
+                  "csa" = "metro.census.csa.name",
+                  "county" = "county")
+
+  stopifnot("Invalid argument for within. Enter a valid state abbreviation" =
+            all(within %in% c(cbsa_df$state.census.abbr, NULL)),
+            "Invalid argument for type. Select 'metro' or 'micro' " =
+            type %in% c(names(type_dic), NULL),
+            "Invalid geo column. Available columns are: 'cbsafips', 'csafips',
+            'cbsa', 'csa', 'county'" =
+            all(geo %in% names(cbsa_dic)))
+
+  df <- cbsa_df %>%
+    dplyr::mutate("county" = paste(.data$census.county.name,
+                                   .data$state.census.abbr,
+                                   .data$census.centrout.name,
+                                   sep = ", "))
+
+  if( ! is.null(within) ){
+    df <- dplyr::filter(df,
+                        .data$state.census.abbr %in% within)
+    }
+
+  if( ! is.null(type) ){
+    df <- dplyr::filter(df,
+                        .data$metro.micro.name == type_dic[[type]])
+  }
+
+  df <- df %>%
+    dplyr::select(unlist(cbsa_dic[geo])) %>%
+    dplyr::distinct() %>%
+    dplyr::arrange()
+
+  print( df %>% knitr::kable( align="r" ) )
+
+  invisible(df)
+}
