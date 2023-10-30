@@ -104,6 +104,7 @@ obj_validate <- function(dsname,
 #'
 #' @importFrom data.table fread
 #' @importFrom data.table setnames
+#' @import curl
 
 load_dt <- function(url){
 
