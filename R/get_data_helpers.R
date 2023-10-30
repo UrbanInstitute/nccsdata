@@ -106,9 +106,9 @@ core_file_constructor <- function(time,
                                   scope.orgtype,
                                   scope.formtype){
   # Organization Type dictionary
-  orgtype_dic <- c("CHARITIES" = "CHARITIES-SCOPE-501C3",
-                   "PRIVFOUND" = "PRIVFOUND-SCOPE-501C3",
-                   "NONPROFIT" = "NONPROFIT-SCOPE-501CE")
+  orgtype_dic <- c("CHARITIES" = "501C3-CHARITIES",
+                   "PRIVFOUND" = "501C3-PRIVFOUND",
+                   "NONPROFIT" = "501CE-NONPROFIT")
 
   # Base names
   root_file <- "CORE-"
