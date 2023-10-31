@@ -44,6 +44,6 @@ all filters are returned.
 parse_geo(census.level = "tract",
           geo.region = "West",
           geo.state = "WA",
-          geo.county = "cook")
+          geo.county = "king")
 
 }
