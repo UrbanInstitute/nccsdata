@@ -19,7 +19,7 @@
 #' parse_geo(census.level = "tract",
 #'           geo.region = "West",
 #'           geo.state = "WA",
-#'           geo.county = "cook")
+#'           geo.county = "king")
 #'
 #' @returns a character vector of either census tract or block FIPS.
 #'
@@ -101,7 +101,6 @@ parse_geo <- function(census.level,
   if (census.level == "block"){
 
     id <- block_dat %>%
-      dplyr::mutate(tract.census.geoid = as.character(.data$tract.census.geoid)) %>%
       dplyr::filter(.data$tract.census.geoid %in% id) %>%
       dplyr::pull("block.census.geoid")
 
