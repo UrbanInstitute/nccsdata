@@ -85,8 +85,8 @@ ntee_preview <- function(ntee = NULL,
 
   }
 
-  cat("\n\n")
-  return(message("End of preview."))
+  cat("\n\n", "End of Preview")
+  return(invisible(ntee2_codes))
 
   }
 

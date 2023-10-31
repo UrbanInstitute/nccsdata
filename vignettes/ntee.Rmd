@@ -109,18 +109,28 @@ arguments:
 For `ntee.code`, placeholder arguments are supported as well.
 
 ```{r warning = FALSE}
-ntee_preview(ntee.group = "UNI",
-             ntee.code = "Cxx")
+ntee2_codes <- ntee_preview(ntee.group = "UNI",
+                            ntee.code = "Cxx")
 ```
 
 For any combination of `ntee` arguments, `preview_ntee` returns **all** codes
 that fit **any** of the arguments. Thus, in the above example NTEE codes for both
 `UNI` and `CXX` were printed out.
 
-## Parse Complete NTEE2 Codes
+## Retrieve Complete NTEE2 Codes
 
-After understanding what the NTEE codes represent, with `ntee_preview()`, 
-`parse_ntee()` can be used to extract complete NTEE codes.
+`ntee_preview()` also offers an invisible return, allowing users to save the 
+full NTEE2 codes that are being previewed in a character vector. Simply assign
+the output of `ntee_preview()` to a variable name.
+
+```{r warning = FALSE}
+print(ntee2_codes)
+```
+
+## Alternative Methods to Retrieve Complete NTEE2 Codes
+
+A second function, `parse_ntee()`, can also be used to extract complete NTEE 
+codes.
 
 `parse_ntee()` only accepts the following arguments:
 
