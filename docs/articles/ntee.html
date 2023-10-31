@@ -72,7 +72,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Parsing NTEE Codes With nccsdata</h1>
             
-            <h4 data-toc-skip class="date">October 18 2023</h4>
+            <h4 data-toc-skip class="date">October 31 2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/UrbanInstitute/nccsdata/blob/HEAD/vignettes/ntee.Rmd" class="external-link"><code>vignettes/ntee.Rmd</code></a></small>
       <div class="d-none name"><code>ntee.Rmd</code></div>
@@ -209,6 +209,9 @@ codes.</p>
 <span><span class="co">#&gt;          institutions or to public entities involved in education.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  UNI: University</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;      RG: Organizations that promote, produce or provide access to a variety of</span></span>
+<span><span class="co">#&gt;          arts experiences encompassing the visual, media or performing arts.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;          B40: </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -681,8 +684,8 @@ offers the following arguments:</p>
 <p>For <code>ntee.code</code>, placeholder arguments are supported as
 well.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ntee_preview.html">ntee_preview</a></span><span class="op">(</span>ntee.group <span class="op">=</span> <span class="st">"UNI"</span>,</span>
-<span>             ntee.code <span class="op">=</span> <span class="st">"Cxx"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ntee2_codes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ntee_preview.html">ntee_preview</a></span><span class="op">(</span>ntee.group <span class="op">=</span> <span class="st">"UNI"</span>,</span>
+<span>                            ntee.code <span class="op">=</span> <span class="st">"Cxx"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Collecting Matching Industry Groups</span></span>
 <span><span class="co">#&gt; Collecting Matching Industry Division and Subdivisions</span></span>
 <span><span class="co">#&gt; Collecting Matching Organization Types</span></span>
@@ -1061,10 +1064,20 @@ codes for both <code>UNI</code> and <code>CXX</code> were printed
 out.</p>
 </div>
 <div class="section level2">
-<h2 id="parse-complete-ntee2-codes">Parse Complete NTEE2 Codes<a class="anchor" aria-label="anchor" href="#parse-complete-ntee2-codes"></a>
+<h2 id="retrieve-complete-ntee2-codes">Retrieve Complete NTEE2 Codes<a class="anchor" aria-label="anchor" href="#retrieve-complete-ntee2-codes"></a>
 </h2>
-<p>After understanding what the NTEE codes represent, with
-<code><a href="../reference/ntee_preview.html">ntee_preview()</a></code>, <code><a href="../reference/parse_ntee.html">parse_ntee()</a></code> can be used to
+<p><code><a href="../reference/ntee_preview.html">ntee_preview()</a></code> also offers an invisible return, allowing
+users to save the full NTEE2 codes that are being previewed in a
+character vector. Simply assign the output of
+<code><a href="../reference/ntee_preview.html">ntee_preview()</a></code> to a variable name.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ntee2_codes</span><span class="op">)</span></span>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="alternative-methods-to-retrieve-complete-ntee2-codes">Alternative Methods to Retrieve Complete NTEE2 Codes<a class="anchor" aria-label="anchor" href="#alternative-methods-to-retrieve-complete-ntee2-codes"></a>
+</h2>
+<p>A second function, <code><a href="../reference/parse_ntee.html">parse_ntee()</a></code>, can also be used to
 extract complete NTEE codes.</p>
 <p><code><a href="../reference/parse_ntee.html">parse_ntee()</a></code> only accepts the following arguments:</p>
 <ul>
@@ -1079,7 +1092,7 @@ extract complete NTEE codes.</p>
 <p>Use <code>all</code> to include all Levels for that specific
 argument. For example, to retrieve complete NTEE codes for
 Universities:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/parse_ntee.html">parse_ntee</a></span><span class="op">(</span>ntee.group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"UNI"</span><span class="op">)</span>,</span>
 <span>           ntee.code <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>           ntee.orgtype <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
@@ -1089,7 +1102,7 @@ Universities:</p>
 <span><span class="co">#&gt; [1] "UNI-B40-RG" "UNI-B41-RG" "UNI-B42-RG" "UNI-B43-RG" "UNI-B50-RG"</span></span></code></pre></div>
 <p>Similar to <code><a href="../reference/ntee_preview.html">ntee_preview()</a></code>, <code><a href="../reference/parse_ntee.html">parse_ntee()</a></code>
 accepts placeholder arguments.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/parse_ntee.html">parse_ntee</a></span><span class="op">(</span>ntee.group <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>           ntee.code <span class="op">=</span> <span class="st">"A2x"</span>,</span>
 <span>           ntee.orgtype <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
@@ -1101,7 +1114,7 @@ accepts placeholder arguments.</p>
 <span><span class="co">#&gt; [11] "ART-A26-RG" "ART-A27-RG"</span></span></code></pre></div>
 <p>However, <code><a href="../reference/parse_ntee.html">parse_ntee()</a></code> only returns NTEE codes that
 satisfy all arguments.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/parse_ntee.html">parse_ntee</a></span><span class="op">(</span>ntee.group <span class="op">=</span> <span class="st">"HEL"</span>,</span>
 <span>           ntee.code <span class="op">=</span> <span class="st">"A2x"</span>,</span>
 <span>           ntee.orgtype <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
@@ -1112,7 +1125,7 @@ satisfy all arguments.</p>
 <p>Since there are no NTEE codes with structure
 <code>HEL-A2X-XXX</code>, <code><a href="../reference/parse_ntee.html">parse_ntee()</a></code> does not return any
 results.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/parse_ntee.html">parse_ntee</a></span><span class="op">(</span>ntee.group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"HEL"</span>, <span class="st">"ART"</span><span class="op">)</span>,</span>
 <span>           ntee.code <span class="op">=</span> <span class="st">"A2x"</span>,</span>
 <span>           ntee.orgtype <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
