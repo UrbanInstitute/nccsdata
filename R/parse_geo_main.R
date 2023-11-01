@@ -235,5 +235,5 @@ geo_preview <- function(geo, within = NULL, type = NULL){
 
   print( df %>% knitr::kable( align="r" ) )
 
-  invisible(df)
+  return(invisible(df))
 }

@@ -1,0 +1,77 @@
+---
+title: "Geographic filtering with nccsdata"
+date: '`r format(Sys.Date(), "%B %d %Y")`'
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    vignette: >
+      %\VignetteIndexEntry{Geographic filtering with nccsdata}
+      %\VignetteEngine{knitr::rmarkdown}
+      %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center"
+)
+```
+
+## Overview
+
+This vignette walks through the process of retrieving geographic metadata used for filtering legacy NCCS files. The legacy data consists of several relevant
+geographic variables:
+
+ * `STATE`: 2 letter state abbreviation (all caps)
+ * `CITY`: Name of the city associated with the address provided in `ADDRESS` (all caps)
+ * `FIPS`: [Core-based Statistical Areas](https://en.wikipedia.org/wiki/Core-based_statistical_area) (CBSA) FIPS codes as used by the US Census (5 digit integer)
+ 
+The last variable `FIPS` can be used to match observations based on Census units.
+This preserves the external validity of geographic units by using U.S. Census definitions as the 'ground truth' for all geographic filters.
+
+```{r dependencies}
+library(nccsdata)
+```
+
+## Exploring CBSA FIPS codes
+
+The `geo_preview()` function allows users to preview and retrieve CBSA FIPS codes and/or their associated metadata from a specific state.
+
+```{r}
+geo_preview( geo=c("cbsa","cbsafips"), within="FL", type="metro" )
+```
+
+In the above code chunk, the function returns the names of all CBSAs and their
+associated FIPS codes. `within` takes the desired state as input while `geo` returns
+the specified columns. `geo` can also be used to return county metadata.
+
+```{r}
+geo_preview(geo = c("cbsa", "county", "cbsafips"), within = "FL", type = "metro")
+```
+
+
+## Metropolitan and Micropolitan Data
+
+CBSAs can either cover [metropolitan or micropolitan statistical areas](https://www.census.gov/programs-surveys/metro-micro/about.html). Select the desired type of data with the `type` argument.
+
+```{r}
+geo_preview(geo = c("cbsa","cbsafips"), within = "WY", type = "micro")
+```
+
+```{r}
+geo_preview(geo = c("cbsa","cbsafips"), within = "WY", type = "metro")
+```
+
+## Exploring CSA FIPS
+
+In addition to CBSAs, `geo_preview()` can also retrieve metadata for [Combined Statistical Areas](https://en.wikipedia.org/wiki/Combined_statistical_area) (CSAs).
+
+```{r}
+geo_preview(geo = c("cbsa", "cbsafips", "csa","csafips"), 
+            within = "VA", 
+            type = "metro")
+```
+
+Since CSAs are combination of various Micropolitan and Metropolitan areas not all CBSAs will fall under a CSA, and hence CSA FIPS are only available for existing CSAs.
