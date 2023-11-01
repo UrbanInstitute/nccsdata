@@ -92,6 +92,8 @@ get_data <- function(dsname = NULL,
       bmf <- suppressWarnings(get_bmf(url = "https://nccsdata.s3.us-east-1.amazonaws.com/current/bmf/bmf-master.rds",
                                       filters = filter_ls))
 
+      bmf <- newsuperfastdownloadfunction()
+
       message("bmf data downloaded. Appending bmf")
 
       core_dt <- bmf[core_dt, on = "EIN"]
