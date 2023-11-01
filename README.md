@@ -1,4 +1,10 @@
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/UrbanInstitute/nccsdata/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/UrbanInstitute/nccsdata/actions/workflows/test-coverage.yaml)
+<!-- badges: end -->
+
 # nccsdata
 
 ## Overview
