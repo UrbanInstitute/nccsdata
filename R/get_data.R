@@ -1,4 +1,4 @@
-#' @title Download, filter and merge metadata for NCCS legacy core and bmf datasets
+#' @title Download, filter and merge metadata for NCCS legacy core and bmf datasets.
 #'
 #' @description This function downloads legacy NCCS data, filters it based on
 #' geography and NTEE codes, and merges it with NTEE metadata. BMF data can
