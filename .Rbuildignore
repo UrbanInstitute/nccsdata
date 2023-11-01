@@ -1,0 +1,17 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
+^README.rmd
+^data-raw
+^demo.rmd
+^testing.md
+^LICENSE\.md$
+^vignettes/articles$
+^data-raw$
+^demo\.rmd$
+^nccsdata\.Rproj$
+^README\.Rmd$
+^testing\.md$
