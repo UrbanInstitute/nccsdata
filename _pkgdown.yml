@@ -28,9 +28,7 @@ reference:
   contents:
   - parse_geo
   - parse_fips
-- title: "Data Sets"
-  contents:
-  - tinybmf
+  - geo_preview
 - title: "internal"
   contents:
   - objs_exist
