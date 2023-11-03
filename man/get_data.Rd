@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_data.R
 \name{get_data}
 \alias{get_data}
-\title{Download, filter and merge metadata for NCCS legacy core and bmf datasets}
+\title{Download, filter and merge metadata for NCCS legacy core and bmf datasets.}
 \usage{
 get_data(
   dsname = NULL,
