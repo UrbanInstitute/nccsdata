@@ -1,168 +1,3 @@
-#' @title Simplified Geo Parser for Census Crosswalks
-#'
-#' @description This function takes in simplified user inputs, filters
-#' either the tract or block datasets based on these inputs and returns the
-#' relevant FIPS codes
-#'
-#' @param census.level character scalar. Name of crosswalk, either 'tract' or
-#' 'block'.
-#' @param geo.region character vector. Name of geographic region. Acceptable
-#' values are 'South', 'West', 'Northeast' and 'Midwest'. Default == NULL.
-#' @param geo.state character vector. 2 letter state abbreviations. Values such
-#' as 'NY', 'CA', 'WY' are accepted. Default == NULL.
-#' @param geo.county character vector. Name of county. Case insensitive.
-#' Default == NULL.
-#' @param geo.city character vector. Name of city. State should be entered
-#' in geo.state. Case insensitive. Default == NULL.
-#'
-#' @examples
-#' parse_geo(census.level = "tract",
-#'           geo.region = "West",
-#'           geo.state = "WA",
-#'           geo.county = "king")
-#'
-#' @returns a character vector of either census tract or block FIPS.
-#'
-#' @details All arguments are nested. Hence only the FIPs that are present in
-#' all filters are returned.
-#'
-#' @importFrom stringr str_to_title
-#' @importFrom dplyr filter
-#' @importFrom dplyr mutate
-#' @importFrom dplyr pull
-#' @importFrom dplyr %>%
-#'
-#' @export
-
-parse_geo <- function(census.level,
-                      geo.region = NULL,
-                      geo.state = NULL,
-                      geo.county = NULL,
-                      geo.city = NULL){
-
-
-  stopifnot("Invalid census level. Select either 'block' or 'tract'" =
-              (census.level == "block" | census.level == "tract"))
-
-  df_filtered <- tract_dat
-
-  if (! is.null(geo.region)){
-
-    geo.region = stringr::str_to_title(geo.region)
-    stopifnot("Invalid region. Select 'South', 'West', 'Northeast' or 'Midwest" =
-                all(geo.region %in% unique(tract_dat$region.census.main)))
-
-    df_filtered <- df_filtered %>%
-      dplyr::filter(.data$region.census.main %in% geo.region)
-
-  }
-
-  if (! is.null(geo.state)){
-
-    stopifnot("Invalid state. Use state abbreviations. E.g. 'NY' for New York" =
-                all(geo.state %in% unique(tract_dat$state.census.abbr)))
-
-    df_filtered <- df_filtered %>%
-      dplyr::filter(.data$state.census.abbr %in% geo.state)
-
-  }
-
-  if (! is.null(geo.county)){
-
-    geo.county <- stringr::str_to_title(geo.county)
-
-    cbsa_id <- cbsa_df %>%
-      dplyr::filter(grepl(paste(geo.county, collapse = "|"),
-                          .data$census.county.name)) %>%
-      dplyr::pull("metro.census.cbsa.geoid")
-
-    df_filtered <- df_filtered %>%
-      dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_id)
-
-  }
-
-  if (! is.null(geo.city)){
-
-    geo.city <- stringr::str_to_title(geo.city)
-
-    cbsa_id <- cbsa_df %>%
-      dplyr::filter(grepl(paste(geo.city, collapse = "|"),
-                          .data$metro.census.cbsa.name)) %>%
-      dplyr::pull("metro.census.cbsa.geoid")
-
-    df_filtered <- df_filtered %>%
-      dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_id)
-
-  }
-
-  id <- df_filtered %>%
-    dplyr::pull("tract.census.geoid")
-
-  if (census.level == "block"){
-
-    id <- block_dat %>%
-      dplyr::filter(.data$tract.census.geoid %in% id) %>%
-      dplyr::pull("block.census.geoid")
-
-  }
-
-  return(id)
-
-}
-
-
-#' @title Function that returns FIPS codes that match dynamic User arguments
-#'
-#' @description Filters either the Block or Tract data.tables to return
-#' a list of FIPS codes that match conditions specified by the User
-#'
-#' @param census.level string. data.table to parse; "BLOCK" | "TRACT"
-#' @param ... columns in either tract or block dataset for filtering.
-#'
-#' @usage parse_fips(census.level, ...)
-#'
-#' @examples  parse_fips(census.level = "TRACT",
-#'                      state.census.abbr = c("NY", "MD"))
-#'
-#' @return a list of FIPS codes for either Tract IDs or Block IDs.
-#'
-#' @importFrom purrr imap
-#'
-#' @export
-
-parse_fips <- function(census.level, ...){
-
-  # Extract arguments
-  args <- enquos(...)
-  ex_args <- unname(purrr::imap(
-    args,
-    function(expr, name) quo( !! sym(name) == !! expr)))
-
-  # Evaluate arguments
-  if (census.level == "TRACT"){
-    fips <- dat_filter(
-      dat = tract_dat,
-      args = args,
-      ex_args = ex_args,
-      id_col = "tract.census.geoid",
-      census.level = census.level
-    )
-  } else if (census.level == "BLOCK"){
-    fips <- dat_filter(
-      dat = block_dat,
-      args = args,
-      ex_args = ex_args,
-      id_col = "block.census.geoid",
-      census.level = census.level
-    )
-  } else {
-    stop("Invalid geo.level, select either 'BLOCK' or 'TRACT'")
-  }
-
-  return(fips)
-}
-
-
 #' @title Preview CBSA/CSA FIPS Codes
 #'
 #' @description geo_preview() previews cbsa metadata for use in filtering of
@@ -205,12 +40,12 @@ geo_preview <- function(geo, within = NULL, type = NULL){
                   "county" = "county")
 
   stopifnot("Invalid argument for within. Enter a valid state abbreviation" =
-            all(within %in% c(cbsa_df$state.census.abbr, NULL)),
+              all(within %in% c(cbsa_df$state.census.abbr, NULL)),
             "Invalid argument for type. Select 'metro' or 'micro' " =
-            type %in% c(names(type_dic), NULL),
+              type %in% c(names(type_dic), NULL),
             "Invalid geo column. Available columns are: 'cbsafips', 'csafips',
             'cbsa', 'csa', 'county'" =
-            all(geo %in% names(cbsa_dic)))
+              all(geo %in% names(cbsa_dic)))
 
   df <- cbsa_df %>%
     dplyr::mutate("county" = paste(.data$census.county.name,
@@ -221,7 +56,7 @@ geo_preview <- function(geo, within = NULL, type = NULL){
   if( ! is.null(within) ){
     df <- dplyr::filter(df,
                         .data$state.census.abbr %in% within)
-    }
+  }
 
   if( ! is.null(type) ){
     df <- dplyr::filter(df,
@@ -236,4 +71,76 @@ geo_preview <- function(geo, within = NULL, type = NULL){
   print( df %>% knitr::kable( align="r" ) )
 
   return(invisible(df))
+}
+
+#' @title function that maps county FIPS codes to user arguments
+#'
+#' @description This function takes in the geographic arguments
+#' and maps them to county FIPS codes found in legacy datasets. These codes can
+#' then be used to filter these legacy datasets.
+#'
+#' @param geo.county character vector. County names for filtering e.g.
+#' "cullman", "dale". Case insensitive.
+#' @param geo.region character vector. Regions for filtering e.g. "South",
+#' "Midwest" based on census region classifications.
+#' @param geo.cbsafips numeric vector. Census CBSA FIPS codes.
+#' @param geo.csafips numeric vector. Census CSA FIPS codes.
+#'
+#' @return character vector. county fips codes for filtering core datasets.
+#'
+#' @usage map_countyfips(geo.county, geo.region, geo.cbsafips, geo.csafips)
+#'
+#' @importFrom dplyr mutate
+#' @importFrom dplyr filter
+#' @importFrom dplyr pull
+#'
+#' @export
+
+map_countyfips <- function(geo.county = NULL,
+                           geo.region = NULL,
+                           geo.cbsafips = NULL,
+                           geo.csafips = NULL){
+
+  county_fips <- tract_dat
+
+  if (! is.null(geo.county)){
+
+    county_str_filter <- paste(tolower(geo.county),
+                               collapse = "|")
+    cbsa_fips <- cbsa_df %>%
+      dplyr::mutate("census.county.name" = tolower(.data$census.county.name)) %>%
+      dplyr::filter(grepl(county_str_filter, .data$census.county.name)) %>%
+      dplyr::pull("metro.census.cbsa.geoid")
+
+    county_fips <- county_fips %>%
+      dplyr::filter(.data$metro.census.cbsa.geoid %in% cbsa_fips)
+
+
+  }
+
+  if (! is.null(geo.region)){
+
+    county_fips <- county_fips %>%
+      dplyr::filter(.data$region.census.main %in% geo.region)
+
+  }
+
+  if (! is.null(geo.cbsafips)){
+
+    county_fips <- county_fips %>%
+      dplyr::filter(.data$metro.census.cbsa.geoid %in% geo.cbsafips)
+
+  }
+
+  if (! is.null(geo.csafips)){
+
+    county_fips <- county_fips %>%
+      dplyr::filter(.data$metro.census.csa.geoid %in% geo.csafips)
+
+  }
+
+  county_fips <- county_fips %>%
+    dplyr::pull("county.census.geoid")
+
+  return(unique(county_fips))
 }

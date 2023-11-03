@@ -26,8 +26,7 @@ reference:
     Functions to preview and parse FIPS codes from census crosswalks using
     user-inputs.
   contents:
-  - parse_geo
-  - parse_fips
+  - map_countyfips
   - geo_preview
 - title: "internal"
   contents:
@@ -54,3 +53,5 @@ reference:
   - nteecc_map
   - obj_validate
   - ntee_metadata
+  - parse_geo
+  - parse_fips

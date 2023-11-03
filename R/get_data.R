@@ -69,8 +69,8 @@ get_data <- function(dsname = NULL,
                                                 ntee.orgtype = ntee.orgtype),
                     state_matches = toupper(geo.state),
                     city_matches = toupper(geo.city),
-                    county_fips_matches = fips_map(geo.region = firstupper(geo.region),
-                                                   geo.county = geo.county))
+                    county_fips_matches = map_countyfips(geo.region = firstupper(geo.region),
+                                                         geo.county = geo.county))
 
   if (dsname == "core"){
 
