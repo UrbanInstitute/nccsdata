@@ -73,7 +73,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Geographic filtering with nccsdata</h1>
             
-            <h4 data-toc-skip class="date">November 01 2023</h4>
+            <h4 data-toc-skip class="date">November 03 2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/UrbanInstitute/nccsdata/blob/HEAD/vignettes/geo.Rmd" class="external-link"><code>vignettes/geo.Rmd</code></a></small>
       <div class="d-none name"><code>geo.Rmd</code></div>
@@ -94,14 +94,26 @@ of several relevant geographic variables:</p>
 <code>CITY</code>: Name of the city associated with the address
 provided in <code>ADDRESS</code> (all caps)</li>
 <li>
-<code>FIPS</code>: <a href="https://en.wikipedia.org/wiki/Core-based_statistical_area" class="external-link">Core-based
-Statistical Areas</a> (CBSA) FIPS codes as used by the US Census (5
-digit integer)</li>
+<code>FIPS</code>: <a href="https://transition.fcc.gov/oet/info/maps/census/fips/fips.txt" class="external-link">County
+FIPS Codes</a>. Federal Information Processing System (FIPS) codes as
+used by the US Census (5 digit integer)</li>
 </ul>
 <p>The last variable <code>FIPS</code> can be used to match observations
 based on Census units. This preserves the external validity of
-geographic units by using U.S. Census definitions as the ‘ground truth’
-for all geographic filters.</p>
+geographic units by operationalizing them according to U.S. Census
+delineations.</p>
+<p>In US Census data,<code>FIPS</code> are also tied to Core Based
+Statistical Areas (CBSAs) that consist mutually exclusive Metropolitan,
+(metros with populations above 50,000) and Micropolitan Statistical
+Areas (populations above 10,000 and below 50,000). Further details and
+examples are provided on the Census Crosswalks <a href="https://urbaninstitute.github.io/nccs/datasets/census/" class="external-link">page</a>
+of the Urban NCCS Site. Thus, geographic filtering with US Census units
+requires crosswalking units across multiple levels, such as county and
+CBSA.</p>
+<p>In this vignette, we will first explore these CBSA FIPS codes with
+the <code><a href="../reference/geo_preview.html">geo_preview()</a></code> function before demonstrating how these
+CBSA FIPS can be linked to county FIPS codes via
+<code><a href="../reference/map_countyfips.html">map_countyfips()</a></code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/UrbanInstitute/nccsdata" class="external-link">nccsdata</a></span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -110,7 +122,11 @@ for all geographic filters.</p>
 </h2>
 <p>The <code><a href="../reference/geo_preview.html">geo_preview()</a></code> function allows users to preview and
 retrieve CBSA FIPS codes and/or their associated metadata from a
-specific state.</p>
+specific state. In the following code snippet,
+<code><a href="../reference/geo_preview.html">geo_preview()</a></code> returns the names of all CBSAs and their
+associated FIPS codes. The <code>within</code> argument takes the
+desired state, in abbreviated form, as input while the <code>geo</code>
+argument returns the specified columns.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/geo_preview.html">geo_preview</a></span><span class="op">(</span> geo<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cbsa"</span>,<span class="st">"cbsafips"</span><span class="op">)</span>, within<span class="op">=</span><span class="st">"FL"</span>, type<span class="op">=</span><span class="st">"metro"</span> <span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -198,9 +214,11 @@ state as input while <code>geo</code> returns the specified columns.
 <div class="section level2">
 <h2 id="metropolitan-and-micropolitan-data">Metropolitan and Micropolitan Data<a class="anchor" aria-label="anchor" href="#metropolitan-and-micropolitan-data"></a>
 </h2>
-<p>CBSAs can either cover <a href="https://www.census.gov/programs-surveys/metro-micro/about.html" class="external-link">metropolitan
-or micropolitan statistical areas</a>. Select the desired type of data
-with the <code>type</code> argument.</p>
+<p>Since CBSAs include a combination of <a href="https://www.census.gov/programs-surveys/metro-micro/about.html" class="external-link">metropolitan
+or micropolitan statistical areas</a>, <code><a href="../reference/geo_preview.html">geo_preview()</a></code> allows
+the user to select either unit using the <code>type</code> argument.</p>
+<p>The below code snippet returns the CBSA names and FIPS codes for all
+metropolitan statistical areas in Wyoming.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/geo_preview.html">geo_preview</a></span><span class="op">(</span>geo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cbsa"</span>,<span class="st">"cbsafips"</span><span class="op">)</span>, within <span class="op">=</span> <span class="st">"WY"</span>, type <span class="op">=</span> <span class="st">"micro"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -215,6 +233,8 @@ with the <code>type</code> argument.</p>
 <span><span class="co">#&gt; | Rock Springs, WY|    40540|</span></span>
 <span><span class="co">#&gt; |   Jackson, WY-ID|    27220|</span></span>
 <span><span class="co">#&gt; |  Evanston, WY-UT|    21740|</span></span></code></pre></div>
+<p>Setting <code>type</code> to <code>micro</code> returns data for
+micropolitan statistical areas.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/geo_preview.html">geo_preview</a></span><span class="op">(</span>geo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cbsa"</span>,<span class="st">"cbsafips"</span><span class="op">)</span>, within <span class="op">=</span> <span class="st">"WY"</span>, type <span class="op">=</span> <span class="st">"metro"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -230,6 +250,11 @@ with the <code>type</code> argument.</p>
 <p>In addition to CBSAs, <code><a href="../reference/geo_preview.html">geo_preview()</a></code> can also retrieve
 metadata for <a href="https://en.wikipedia.org/wiki/Combined_statistical_area" class="external-link">Combined
 Statistical Areas</a> (CSAs).</p>
+<p>CSAs (populations that form a coherent commercial and commuting zone)
+are created by identifying adjacent micropolitant and metropolitan
+statistical areas that constitute a coherent economic region.</p>
+<p>The code snippet below returns all CSA names and FIPS codes for
+metropolitan statistical areas in Virginia.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/geo_preview.html">geo_preview</a></span><span class="op">(</span>geo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cbsa"</span>, <span class="st">"cbsafips"</span>, <span class="st">"csa"</span>,<span class="st">"csafips"</span><span class="op">)</span>, </span>
 <span>            within <span class="op">=</span> <span class="st">"VA"</span>, </span>
@@ -250,8 +275,70 @@ Statistical Areas</a> (CSAs).</p>
 <span><span class="co">#&gt; |                             Harrisonburg, VA|    25500|        Harrisonburg-Staunton-Stuarts Draft, VA|     277|</span></span>
 <span><span class="co">#&gt; |                     Kingsport-Bristol, TN-VA|    28700|          Johnson City-Kingsport-Bristol, TN-VA|     304|</span></span></code></pre></div>
 <p>Since CSAs are combination of various Micropolitan and Metropolitan
-areas not all CBSAs will fall under a CSA, and hence CSA FIPS are only
+areas, not all CBSAs will fall under a CSA, and hence CSA FIPS are only
 available for existing CSAs.</p>
+</div>
+<div class="section level2">
+<h2 id="filtering-legacy-data-with-county-fips-codes">Filtering Legacy Data with County FIPS codes<a class="anchor" aria-label="anchor" href="#filtering-legacy-data-with-county-fips-codes"></a>
+</h2>
+<p>After retrieving the desired CBSA/CSA FIPS codes,
+<code><a href="../reference/map_countyfips.html">map_countyfips()</a></code> can be used to match these with county
+FIPS codes present in the legacy data, retrieved with
+<code><a href="../reference/get_data.html">get_data()</a></code>. Downloaded data can then be filtered using
+these county FIPS codes as shown below.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Retrive CBSA FIPS from NY</span></span>
+<span><span class="va">cbsa_ny</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/geo_preview.html">geo_preview</a></span><span class="op">(</span>geo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cbsa"</span>, <span class="st">"cbsafips"</span><span class="op">)</span>, </span>
+<span>                       within <span class="op">=</span> <span class="st">"NY"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; |                                  cbsa| cbsafips|</span></span>
+<span><span class="co">#&gt; |-------------------------------------:|--------:|</span></span>
+<span><span class="co">#&gt; |           Albany-Schenectady-Troy, NY|    10580|</span></span>
+<span><span class="co">#&gt; |    New York-Newark-Jersey City, NY-NJ|    35620|</span></span>
+<span><span class="co">#&gt; |                        Binghamton, NY|    13780|</span></span>
+<span><span class="co">#&gt; |                             Olean, NY|    36460|</span></span>
+<span><span class="co">#&gt; |                            Auburn, NY|    12180|</span></span>
+<span><span class="co">#&gt; |                 Jamestown-Dunkirk, NY|    27460|</span></span>
+<span><span class="co">#&gt; |                            Elmira, NY|    21300|</span></span>
+<span><span class="co">#&gt; |                       Plattsburgh, NY|    38460|</span></span>
+<span><span class="co">#&gt; |                            Hudson, NY|    26460|</span></span>
+<span><span class="co">#&gt; |                          Cortland, NY|    18660|</span></span>
+<span><span class="co">#&gt; | Kiryas Joel-Poughkeepsie-Newburgh, NY|    28880|</span></span>
+<span><span class="co">#&gt; |               Buffalo-Cheektowaga, NY|    15380|</span></span>
+<span><span class="co">#&gt; |                      Gloversville, NY|    24100|</span></span>
+<span><span class="co">#&gt; |                           Batavia, NY|    12860|</span></span>
+<span><span class="co">#&gt; |                        Utica-Rome, NY|    46540|</span></span>
+<span><span class="co">#&gt; |               Watertown-Fort Drum, NY|    48060|</span></span>
+<span><span class="co">#&gt; |                         Rochester, NY|    40380|</span></span>
+<span><span class="co">#&gt; |                          Syracuse, NY|    45060|</span></span>
+<span><span class="co">#&gt; |                         Amsterdam, NY|    11220|</span></span>
+<span><span class="co">#&gt; |                           Oneonta, NY|    36580|</span></span>
+<span><span class="co">#&gt; |                Massena-Ogdensburg, NY|    32390|</span></span>
+<span><span class="co">#&gt; |                      Seneca Falls, NY|    42900|</span></span>
+<span><span class="co">#&gt; |                           Corning, NY|    18500|</span></span>
+<span><span class="co">#&gt; |                        Monticello, NY|    33910|</span></span>
+<span><span class="co">#&gt; |                            Ithaca, NY|    27060|</span></span>
+<span><span class="co">#&gt; |                          Kingston, NY|    28740|</span></span>
+<span><span class="co">#&gt; |                       Glens Falls, NY|    24020|</span></span>
+<span></span>
+<span><span class="co"># Map these to county FIPS codes</span></span>
+<span><span class="va">ny_countyfips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/map_countyfips.html">map_countyfips</a></span><span class="op">(</span>geo.cbsafips <span class="op">=</span> <span class="va">cbsa_ny</span><span class="op">$</span><span class="va">cbsafips</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Pull core data for the year 2015</span></span>
+<span><span class="va">core_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span>dsname <span class="op">=</span> <span class="st">"core"</span>,</span>
+<span>                      time <span class="op">=</span> <span class="st">"2015"</span>,</span>
+<span>                      scope.orgtype <span class="op">=</span> <span class="st">"NONPROFIT"</span>,</span>
+<span>                      scope.formtype <span class="op">=</span> <span class="st">"PZ"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Valid inputs detected. Retrieving data.</span></span>
+<span><span class="co">#&gt; Downloading core data</span></span>
+<span><span class="co">#&gt; Requested files have a total size of 115 MB. Proceed</span></span>
+<span><span class="co">#&gt;                       with download? Enter Y/N (Yes/no/cancel)</span></span>
+<span><span class="co">#&gt; Core data downloaded</span></span>
+<span></span>
+<span><span class="co"># Filter with NY county FIPS</span></span>
+<span><span class="va">core_2015_nyfips</span> <span class="op">&lt;-</span> <span class="va">core_2015</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">FIPS</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">ny_countyfips</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

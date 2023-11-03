@@ -51,7 +51,7 @@ relevant FIPS codes"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/a
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Simplified Geo Parser for Census Crosswalks</h1>
-      <small class="dont-index">Source: <a href="https://github.com/UrbanInstitute/nccsdata/blob/HEAD/R/parse_geo_main.R" class="external-link"><code>R/parse_geo_main.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/UrbanInstitute/nccsdata/blob/HEAD/R/parse_geo_helper.R" class="external-link"><code>R/parse_geo_helper.R</code></a></small>
       <div class="d-none name"><code>parse_geo.Rd</code></div>
     </div>
 
@@ -113,155 +113,12 @@ all filters are returned.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">parse_geo</span><span class="op">(</span>census.level <span class="op">=</span> <span class="st">"tract"</span>,</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu">parse_geo</span><span class="op">(</span>census.level <span class="op">=</span> <span class="st">"tract"</span>,</span></span>
 <span class="r-in"><span>          geo.region <span class="op">=</span> <span class="st">"West"</span>,</span></span>
 <span class="r-in"><span>          geo.state <span class="op">=</span> <span class="st">"WA"</span>,</span></span>
 <span class="r-in"><span>          geo.county <span class="op">=</span> <span class="st">"king"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] "53033000300" "53033000401" "53033000402" "53033000500" "53033000600"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [6] "53033001300" "53033001400" "53033001500" "53033001600" "53033001701"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [11] "53033001702" "53033001800" "53033002700" "53033002800" "53033002900"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [16] "53033003000" "53033003100" "53033003200" "53033003300" "53033003400"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [21] "53033003500" "53033003600" "53033004600" "53033004700" "53033004800"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [26] "53033004900" "53033005000" "53033005100" "53033005400" "53033000100"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [31] "53033000200" "53033000700" "53033000800" "53033000900" "53033001000"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [36] "53033001100" "53033001200" "53033001900" "53033002000" "53033002100"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [41] "53033002200" "53033002400" "53033002500" "53033002600" "53033003800"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [46] "53033003900" "53033004000" "53033004100" "53033004200" "53033004301"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [51] "53033004302" "53033004400" "53033004500" "53033005200" "53033005301"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [56] "53033005302" "53033005600" "53033005700" "53033005801" "53033005802"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [61] "53033005900" "53033006000" "53033006100" "53033006600" "53033006700"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [66] "53033006800" "53033006900" "53033007000" "53033007100" "53033007200"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [71] "53033007300" "53033007401" "53033007402" "53033008001" "53033008002"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [76] "53033008100" "53033008200" "53033008300" "53033008400" "53033008500"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [81] "53033009100" "53033009200" "53033006200" "53033006300" "53033006400"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [86] "53033006500" "53033007500" "53033007600" "53033007700" "53033007800"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] "53033007900" "53033008600" "53033008700" "53033008800" "53033008900"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [96] "53033009000" "53033009500" "53033010100" "53033010200" "53033010300"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [101] "53033011101" "53033011102" "53033011800" "53033011900" "53033009300"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [106] "53033009400" "53033009600" "53033009701" "53033009702" "53033009800"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [111] "53033009900" "53033010001" "53033010002" "53033010401" "53033010402"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [116] "53033010500" "53033010600" "53033010701" "53033010702" "53033010800"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [121] "53033010900" "53033011001" "53033011002" "53033011200" "53033011300"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [126] "53033011401" "53033011402" "53033011500" "53033011600" "53033011700"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [131] "53033012000" "53033012100" "53033020100" "53033020200" "53033020300"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [136] "53033020401" "53033020402" "53033020500" "53033020600" "53033020700"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [141] "53033020800" "53033020900" "53033021000" "53033021100" "53033021300"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [146] "53033021400" "53033021500" "53033021600" "53033021700" "53033021802"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [151] "53033021803" "53033021804" "53033021905" "53033022001" "53033022101"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [156] "53033022102" "53033021903" "53033021904" "53033022003" "53033022005"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [161] "53033022006" "53033022201" "53033022202" "53033022203" "53033022300"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [166] "53033022400" "53033022500" "53033022603" "53033022604" "53033022605"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [171] "53033022606" "53033022701" "53033022702" "53033022703" "53033022802"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [176] "53033022803" "53033022902" "53033032309" "53033032313" "53033032323"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [181] "53033032324" "53033032325" "53033022801" "53033022901" "53033023000"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [186] "53033023100" "53033023201" "53033023202" "53033023300" "53033023401"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [191] "53033023403" "53033023500" "53033023601" "53033023603" "53033023604"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [196] "53033023700" "53033023801" "53033023803" "53033023804" "53033023900"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [201] "53033024000" "53033024100" "53033024200" "53033024701" "53033024800"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [206] "53033024901" "53033024902" "53033024903" "53033025003" "53033023404"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [211] "53033024300" "53033024400" "53033024500" "53033024601" "53033024602"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [216] "53033024702" "53033025001" "53033025005" "53033025006" "53033032103"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [221] "53033032104" "53033032203" "53033032207" "53033032208" "53033032210"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [226] "53033032211" "53033032212" "53033032213" "53033032214" "53033032215"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [231] "53033032316" "53033032317" "53033032318" "53033025101" "53033025102"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [236] "53033025200" "53033025301" "53033025302" "53033025400" "53033025500"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [241] "53033025601" "53033025602" "53033025701" "53033025702" "53033025803"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [246] "53033025804" "53033025805" "53033025806" "53033026001" "53033026002"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [251] "53033026100" "53033029303" "53033029304" "53033031907" "53033031908"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [256] "53033031909" "53033026200" "53033026300" "53033026400" "53033026500"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [261] "53033026600" "53033026700" "53033026801" "53033026802" "53033027000"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [266] "53033027100" "53033027200" "53033027300" "53033027400" "53033027500"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [271] "53033027600" "53033027800" "53033027900" "53033028000" "53033028100"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [276] "53033028200" "53033028300" "53033028402" "53033028403" "53033028500"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [281] "53033028600" "53033028700" "53033028801" "53033028802" "53033027701"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [286] "53033027702" "53033028901" "53033028902" "53033029001" "53033029003"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [291] "53033030003" "53033030004" "53033030005" "53033030006" "53033030100"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [296] "53033030201" "53033030202" "53033030304" "53033030305" "53033030306"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [301] "53033030308" "53033030309" "53033030310" "53033030311" "53033030312"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [306] "53033030313" "53033030314" "53033990100" "53033029004" "53033029101"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [311] "53033029102" "53033029203" "53033029204" "53033029205" "53033029206"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [316] "53033029305" "53033029306" "53033029307" "53033029403" "53033029405"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [321] "53033029406" "53033029407" "53033029408" "53033029502" "53033029503"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [326] "53033029504" "53033029601" "53033029700" "53033029801" "53033031703"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [331] "53033031704" "53033029602" "53033029802" "53033029901" "53033029902"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [336] "53033030401" "53033030403" "53033030404" "53033030501" "53033030503"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [341] "53033030504" "53033030600" "53033030700" "53033030801" "53033030802"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [346] "53033030901" "53033030902" "53033031000" "53033031100" "53033031202"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [351] "53033031205" "53033031206" "53033031204" "53033031301" "53033031302"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [356] "53033031400" "53033031501" "53033031502" "53033031601" "53033031603"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [361] "53033031604" "53033031605" "53033031705" "53033031706" "53033031800"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [366] "53033031903" "53033031904" "53033031906" "53033032002" "53033032003"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [371] "53033032005" "53033032006" "53033032007" "53033032008" "53033032010"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [376] "53033032011" "53033032102" "53033021906" "53033032307" "53033032311"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [381] "53033032315" "53033032319" "53033032320" "53033032321" "53033032322"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [386] "53033032326" "53033032327" "53033032328" "53033032329" "53033032401"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [391] "53033032402" "53033032500" "53033032601" "53033032602" "53033032702"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [396] "53033032703" "53033032704" "53033032800" "53053060400" "53053060500"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [401] "53053060600" "53053060700" "53053060800" "53053060904" "53053060906"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [406] "53053061100" "53053061200" "53053061300" "53053061400" "53053061500"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [411] "53053061601" "53053061602" "53053061700" "53053061800" "53053061900"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [416] "53053062000" "53053062300" "53053062400" "53053062500" "53053062600"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [421] "53053062801" "53053062802" "53053062900" "53053063000" "53053940006"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [426] "53053940007" "53053060300" "53053060903" "53053060905" "53053061001"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [431] "53053061002" "53053072305" "53053072307" "53053072309" "53053072310"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [436] "53053072311" "53053072405" "53053072406" "53053072407" "53053072408"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [441] "53053072409" "53053072410" "53053072503" "53053072504" "53053072505"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [446] "53053072506" "53053072507" "53053072601" "53053072602" "53053072603"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [451] "53053071803" "53053071805" "53053071806" "53053071807" "53053071808"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [456] "53053071901" "53053071902" "53053072000" "53053072105" "53053072106"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [461] "53053072107" "53053072108" "53053072109" "53053072111" "53053072112"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [466] "53053072308" "53053072312" "53053072313" "53053072800" "53053072901"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [471] "53053072903" "53053072905" "53053072906" "53053072907" "53053063100"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [476] "53053063200" "53053063300" "53053063400" "53053063501" "53053063502"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [481] "53053071100" "53053071305" "53053071306" "53053071403" "53053071406"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [486] "53053071408" "53053071409" "53053071410" "53053071411" "53053071503"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [491] "53053071504" "53053071505" "53053071506" "53053071601" "53053071602"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [496] "53053071703" "53053071704" "53053071705" "53053071706" "53053071707"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [501] "53053060200" "53053070307" "53053070308" "53053070309" "53053070312"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [506] "53053070313" "53053070314" "53053070315" "53053070316" "53053070401"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [511] "53053070703" "53053073301" "53053073302" "53053073500" "53053940001"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [516] "53053940002" "53053940003" "53053940004" "53053940005" "53053940008"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [521] "53053940009" "53053940010" "53053940011" "53053071205" "53053071206"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [526] "53053071207" "53053071208" "53053071209" "53053071210" "53053071304"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [531] "53053071307" "53053071309" "53053071310" "53053073108" "53053073110"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [536] "53053073111" "53053073120" "53053073121" "53053073122" "53053073123"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [541] "53053073125" "53053073126" "53053073404" "53053073405" "53053073406"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [546] "53053073407" "53053073408" "53053070100" "53053070203" "53053070204"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [551] "53053070205" "53053070206" "53053070207" "53053070310" "53053070311"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [556] "53053070403" "53053070404" "53053071407" "53053073001" "53053073005"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [561] "53053073006" "53053073113" "53053073114" "53053073115" "53053073116"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [566] "53053073117" "53053073118" "53053073119" "53053073124" "53053073200"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [571] "53061050200" "53061050300" "53061050401" "53061050402" "53061050500"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [576] "53061050600" "53061050700" "53061050800" "53061050900" "53061051000"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [581] "53061051100" "53061051200" "53061051300" "53061051400" "53061051500"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [586] "53061051601" "53061051602" "53061051701" "53061051702" "53061051905"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [591] "53061051913" "53061051914" "53061041301" "53061041304" "53061041703"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [596] "53061041704" "53061041809" "53061041810" "53061041811" "53061041812"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [601] "53061041901" "53061041903" "53061041905" "53061042001" "53061042003"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [606] "53061042004" "53061042005" "53061042006" "53061050101" "53061050102"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [611] "53061051802" "53061051803" "53061051804" "53061051927" "53061051928"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [616] "53061040100" "53061040200" "53061040300" "53061040400" "53061040500"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [621] "53061040700" "53061040800" "53061040900" "53061041000" "53061041100"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [626] "53061041201" "53061041202" "53061041303" "53061041400" "53061041500"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [631] "53061041601" "53061041605" "53061041606" "53061041607" "53061041608"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [636] "53061041701" "53061041805" "53061041806" "53061041808" "53061041904"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [641] "53061051912" "53061051915" "53061051916" "53061051917" "53061051918"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [646] "53061051921" "53061051922" "53061051923" "53061051924" "53061051925"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [651] "53061051926" "53061052003" "53061052004" "53061052005" "53061052006"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [656] "53061052007" "53061052107" "53061052108" "53061052112" "53061052113"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [661] "53061052114" "53061052115" "53061052118" "53061052104" "53061052105"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [666] "53061052203" "53061052204" "53061052206" "53061052207" "53061052208"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [671] "53061052209" "53061052301" "53061052302" "53061052401" "53061052402"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [676] "53061052502" "53061052503" "53061052504" "53061052603" "53061052604"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [681] "53061052605" "53061052606" "53061052607" "53061052706" "53061052707"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [686] "53061053602" "53061053603" "53061053604" "53061053801" "53061053802"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [691] "53061053803" "53061052701" "53061052705" "53061052708" "53061052709"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [696] "53061052803" "53061052804" "53061052805" "53061052806" "53061052903"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [701] "53061052904" "53061052905" "53061052906" "53061053101" "53061053102"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [706] "53061053201" "53061053202" "53061053301" "53061053302" "53061053400"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [711] "53061053504" "53061053505" "53061053506" "53061053507" "53061053508"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [716] "53061053509" "53061053700" "53061940001" "53061940002" "53061990002"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [721] "53061990100"</span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

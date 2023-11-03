@@ -1,7 +1,6 @@
 url: https://urbaninstitute.github.io/nccsdata/
 template:
   bootstrap: 5
-
 reference:
 - title: "NCCS Data Processing Functions"
   desc: >
@@ -49,7 +48,6 @@ reference:
   - get_bmf
   - core_file_constructor
   - download_size
-  - fips_map
   - nteecc_map
   - obj_validate
   - ntee_metadata
