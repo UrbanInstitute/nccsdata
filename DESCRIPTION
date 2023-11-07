@@ -12,6 +12,7 @@ LazyData: true
 Depends: 
     R (>= 3.50)
 Imports: 
+    bit64,
     dplyr,
     stringr,
     data.table,
