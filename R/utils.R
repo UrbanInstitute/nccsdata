@@ -105,20 +105,21 @@ obj_validate <- function(dsname,
 #' @importFrom data.table fread
 #' @importFrom data.table setnames
 #' @import curl
+#' @import bit64
 
 load_dt <- function(url){
 
   FIPS <- NULL # set global binding
 
   # Read in data from S3
-  dt <- data.table::fread(input = url)
+  dt <- data.table::fread(input = url, encoding = "UTF-8")
   # Convert columns to uppercase to avoid duplicate columns in rbindlist
   cols <- colnames(dt)
   data.table::setnames(x = dt,
                        old = cols,
                        new = toupper(cols))
   # Set FIPs to numeric
-  dt[, FIPS := as.numeric(FIPS)]
+  suppressWarnings(dt[, FIPS := as.numeric(FIPS)])
 
   return(dt)
 }
@@ -169,4 +170,33 @@ firstupper <- function(string){
                      substr(string, 2, nchar(string)))
 
   return(string)
+}
+
+
+#' @title Create a random core data set for testing
+#'
+#' @description Download core data for a randomly selected series of years,
+#' organization type and IRS form type. This data is then used by tests in testthat
+#' or for independent ad-hoc testing.
+#'
+#' @returns data.table object. Downloaded core data.
+#'
+#' @importFrom data.table rbindlist
+
+create_test <- function(){
+
+  # Select a random core file to download
+  core_expr <- "https://nccsdata.s3.amazonaws.com/legacy/core/CORE.*csv"
+  core_urls <- names(s3_size_dic[grepl(core_expr, names(s3_size_dic))])
+  core_dl <- list(sample(core_urls, 1))
+
+  # Download data sets
+  dt <- lapply(core_dl,
+               load_dt)
+
+  # Stack data sets
+  dt <- data.table::rbindlist(dt,
+                              fill = TRUE)
+
+  return(dt)
 }
