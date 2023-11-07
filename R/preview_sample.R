@@ -86,9 +86,9 @@ preview_sample <- function(data,
                      min = min(!!sym(var)),
                      mean = mean(!!sym(var)),
                      median = stats::median(!!sym(var)),
-                     max = max(!!sym(var))) %>%
+                     max = max(!!sym(var)),
+                     na.rm = TRUE) %>%
     dplyr::select(dplyr::all_of(c(group_by, stats)))
 
   return(preview)
-
 }
