@@ -44,6 +44,7 @@
 #' @importFrom dplyr across
 #' @importFrom dplyr select
 #' @importFrom stats median
+#' @importFrom stats na.omit
 #' @importFrom data.table as.data.table
 #'
 #' @export
@@ -81,6 +82,8 @@ preview_sample <- function(data,
                       filters = filter_ls)
 
   preview <- data %>%
+    dplyr::select(all_of(c(group_by, var))) %>%
+    stats::na.omit() %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(group_by))) %>%
     dplyr::summarise(count = n(),
                      min = min(!!sym(var)),
@@ -90,5 +93,4 @@ preview_sample <- function(data,
     dplyr::select(dplyr::all_of(c(group_by, stats)))
 
   return(preview)
-
 }
