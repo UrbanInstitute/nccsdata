@@ -16,10 +16,10 @@ for (i in 1:3){
     var_rdm = sample(num_cols, 1)
 
     test_that("Summary Table Works", {
-      expect_error(preview_sample(data = test_data,
-                                  group_by = group_rdm,
-                                  var = var_rdm,
-                                  stats = c("min", "max", "median", "mean")),
+      expect_error(suppressWarnings(preview_sample(data = test_data,
+                                    group_by = group_rdm,
+                                    var = var_rdm,
+                                    stats = c("min", "max", "median", "mean"))),
                    NA)
     })
   }
