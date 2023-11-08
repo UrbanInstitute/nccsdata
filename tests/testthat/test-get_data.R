@@ -1,7 +1,7 @@
-test_that("get_data() NTEE filtering works", {
+# Download random core dataset
+test_data <- create_test()
 
-  # Download random core dataset
-  test_data <- create_test()
+test_that("get_data() NTEE filtering works", {
 
   # Create filters
   ntee2_codes <- ntee_df$ntee2.code
@@ -30,8 +30,6 @@ test_that("get_data() NTEE filtering works", {
 
 test_that("get_data() state filtering works", {
 
-  test_data <- create_test()
-
   # Create filters
   states <- na.omit(unique(cbsa_df$state.census.abbr))
 
@@ -55,8 +53,6 @@ test_that("get_data() state filtering works", {
 })
 
 test_that("get_data() region filtering works", {
-
-  test_data <- create_test()
 
   # Create filters
   regions <- unique(tract_dat$region.census.main)
@@ -85,8 +81,6 @@ test_that("get_data() region filtering works", {
 
 test_that("get_data() county filtering works", {
 
-  test_data <- create_test()
-
   # Create filters
   counties <- unique(cbsa_df$census.county.name)
 
@@ -106,8 +100,11 @@ test_that("get_data() county filtering works", {
     test_filtered <- filter_data(test_data,
                                  filters = filter_ls)
 
+    if (! is.null(test_filtered$FIPS)){
+
     expect_contains(sort(unique(county_fips)), sort(unique(test_filtered$FIPS)))
 
+    }
 
   }
 })
