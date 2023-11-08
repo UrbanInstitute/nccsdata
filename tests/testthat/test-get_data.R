@@ -99,10 +99,11 @@ test_that("get_data() county filtering works", {
     # Filter data if specified
     test_filtered <- filter_data(test_data,
                                  filters = filter_ls)
+    countyfips_results <- sort(unique(test_filtered$FIPS))
 
-    if (! is.null(test_filtered$FIPS)){
+    if (length(countyfips_results > 0)){
 
-    expect_contains(sort(unique(county_fips)), sort(unique(test_filtered$FIPS)))
+      expect_contains(sort(unique(county_fips)), countyfips_results)
 
     }
 
