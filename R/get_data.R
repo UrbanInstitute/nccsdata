@@ -217,14 +217,17 @@ get_bmf <- function(url,
                     dest_path = "bmf.rds",
                     filters){
 
-  .SD <- NULL # for global variable binding
+  FIPS <- NULL
+  EIN <- NULL # for global variable binding
 
   utils::download.file(url, destfile=dest_path)
   bmf <- readRDS(dest_path)
   file.remove(dest_path)
 
   data.table::setDT(bmf)
-  bmf <- bmf[, lapply(.SD, as.numeric), .SDcols = c("EIN", "FIPS")]
+
+  bmf <- bmf[, FIPS := as.numeric(FIPS)]
+  bmf[, EIN := ifelse(nchar(EIN) < 9, paste0(strrep("0", 9 - nchar(EIN)), EIN), EIN)]
 
   bmf <- filter_data(dt = bmf, filters = filters)
 
