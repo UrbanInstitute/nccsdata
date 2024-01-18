@@ -394,6 +394,21 @@ ntee_metadata <- function(ntee.user){
   code_dic <- dic_from_df(df = ntee_df,
                           keycol = "ntee2.code",
                           valcol = "further.category.desciption")
+  # Seconday descriptions if no description present in further category column
+  code_dic_2 <- dic_from_df(df = ntee_df,
+                            keycol = "ntee2.code",
+                            valcol = "division.subdivision.description")
+
+  for (name in names(code_dic)){
+
+    if (code_dic[[name]] == " "){
+
+      code_dic[[name]] = code_dic_2[[name]]
+
+    }
+
+  }
+
   names(code_dic) <- sapply(strsplit(names(code_dic), "-"), "[", 2)
 
   # User Inputs
