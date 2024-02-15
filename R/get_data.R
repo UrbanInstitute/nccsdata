@@ -189,6 +189,8 @@ get_core <- function(dsname,
   dt <- data.table::rbindlist(dt,
                               fill = TRUE)
 
+  dt[, EIN := ifelse(nchar(EIN) < 9, paste0(strrep("0", 9 - nchar(EIN)), EIN), EIN)]
+
   return(dt)
 
 }
