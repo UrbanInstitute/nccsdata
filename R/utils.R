@@ -112,9 +112,14 @@ load_dt <- function(url){
   FIPS <- NULL # set global binding
 
   # Read in data from S3
-  dt <- data.table::fread(input = url, encoding = "UTF-8")
+  dt <- data.table::fread( input = url,
+                           colClasses = list( character = c( "EIN" ) ),
+                           encoding = "UTF-8" )
   # Convert columns to uppercase to avoid duplicate columns in rbindlist
   cols <- colnames(dt)
+  message(
+    "Due to naming inconsistencies, all columns are being converted to uppercase"
+    )
   data.table::setnames(x = dt,
                        old = cols,
                        new = toupper(cols))
@@ -189,6 +194,8 @@ create_test <- function(){
   core_expr <- "https://nccsdata.s3.amazonaws.com/legacy/core/CORE.*csv"
   core_urls <- names(s3_size_dic[grepl(core_expr, names(s3_size_dic))])
   core_dl <- list(sample(core_urls, 1))
+
+  message( sprintf( "Downloading data from: %s", core_dl ) )
 
   # Download data sets
   dt <- lapply(core_dl,
