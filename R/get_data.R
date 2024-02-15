@@ -159,6 +159,8 @@ get_core <- function(dsname,
                      filters,
                      append.bmf){
 
+  EIN <- NULL # for global variable binding
+
   ntee_dat <- ntee_df %>%
     rename("NTEECC" = .data$old.code) %>%
     data.table::setDT()
