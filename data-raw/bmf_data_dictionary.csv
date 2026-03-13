@@ -1,0 +1,98 @@
+column_name,description,type,null_count,null_pct,unique_count
+accounting_period,Month when organizations accounting period ends (01-12),integer,0,0,13
+activity_code,Three 3-digit activity codes concatenated (9 characters total),integer,0,0,29062
+activity_code_categories,Semicolon-separated activity categories,character,6692,0.35,4748
+activity_code_definitions,Semicolon-separated descriptions of activity codes,character,6692,0.35,28769
+affiliation_code,Code indicating relationship to parent organization (1-9),integer,0,0,8
+affiliation_code_definition,Description of affiliation relationship,character,0,0,8
+all_classifications_string,Semicolon-separated list of all classification descriptions that apply to the classification_code field,character,352,0.02,336
+asset_amount,Total assets in dollars (most recent return),numeric,453245,23.42,498161
+asset_code,Asset amount range code (0-9),integer,0,0,10
+asset_code_definition,Description of asset range (e.g. $100000 to $499999),character,0,0,10
+classification_code,IRS classification code indicating organization type within subsection,integer,0,0,253
+dba_name,Cleaned Doing Business As name,character,0,0,373685
+dba_name_raw,Original secondary/DBA name from source file,character,0,0,373686
+deductibility_code,Code indicating deductibility status of contributions (1-4),integer,0,0,4
+deductibility_code_definition,Description of contribution deductibility,character,0,0,4
+ein,Employer Identification Number formatted as XX-XXXXXXX,character,0,0,1935635
+ein_raw,Original 9-digit EIN value from source file without formatting,integer,0,0,1935635
+exempt_organization_type,Human-readable exempt organization type based on subsection,character,0,0,33
+filing_requirement_code,Code indicating required annual return form (0-6),integer,0,0,9
+filing_requirement_code_definition,Description of filing requirement (990 990-EZ 990-N etc.),character,0,0,9
+foundation_code,Foundation status code (00-99) per IRS determination,integer,0,0,21
+foundation_code_definition,Description of foundation/public charity status,character,0,0,19
+geo_addr_type,Geocoder match precision level (PointAddress StreetAddress Postal etc.),character,4,0,13
+geo_city,City name from geocoder,character,4,0,17414
+geo_country,Country code from geocoder (e.g. USA) for identifying foreign addresses,character,4,0,7
+geo_county,County name from geocoder,character,4,0,2300
+geo_distance,Distance in meters between input address and matched location (0 = exact),numeric,4,0,1
+geo_is_geocoded,TRUE if latitude and longitude are non-NA,logical,0,0,2
+geo_lat,WGS 84 latitude (EPSG 4326) from geocoder,numeric,4,0,1159783
+geo_lon,WGS 84 longitude (EPSG 4326) from geocoder,numeric,4,0,1183119
+geo_match_addr,Address the geocoder actually matched to,character,4,0,1521832
+geo_match_type,Geocoder match type (A=address match) distinguishing rooftop from interpolated,character,4,0,1
+geo_metro_area,Metropolitan area name from geocoder (may be blank),character,4,0,557
+geo_neighborhood,ESRI-defined neighborhood from geocoder,character,4,0,7083
+geo_postal,ZIP code resolved by geocoder for cross-referencing with org_addr_zip5,integer,1025,0.05,36582
+geo_postal_ext,ZIP+4 extension resolved by geocoder,character,4,0,10060
+geo_precision,Geocoding precision tier derived from geo_addr_type (high/medium/low),character,840,0.04,3
+geo_score,Geocoder match confidence score (1-100),numeric,4,0,1663
+geo_state,State name from geocoder,character,4,0,57
+geo_state_abbr,State abbreviation from geocoder,character,4,0,57
+geo_status,Geocoder match status (M=Match T=Tied U=Unmatched),character,4,0,3
+group_exemption_is_member,Boolean indicating if organization is a member of a group filing,logical,0,0,2
+group_exemption_number,Cleaned group exemption number (GEN),integer,0,0,4000
+group_exemption_number_raw,Original group exemption number from source file,integer,0,0,4000
+in_care_of_name_clean,Cleaned ICO name with standardized formatting,character,0,0,1010919
+in_care_of_name_provided,Boolean indicating whether an ICO name was provided,logical,0,0,2
+in_care_of_name_raw,Original In Care Of field from source file,character,0,0,1011000
+income_amount,Total income in dollars (can be negative),numeric,453245,23.42,470518
+income_code,Income amount range code (0-9),integer,0,0,10
+income_code_definition,Description of income range,character,0,0,10
+naics_code,North American Industry Classification System code derived from NTEE,character,0,0,96
+ntee_code_clean,Standardized 3-character NTEE code,character,0,0,639
+ntee_code_definition,Full description of NTEE classification,character,0,0,476
+ntee_code_major_group,NTEE major group letter (A-Z) indicating broad category,character,0,0,27
+ntee_code_raw,Original NTEE code from source file (1-4 characters),character,0,0,5326
+ntee_common_code,Common code suffix for 4-character NTEE codes (e.g. 01-99),character,0,0,8
+ntee_common_code_definition,Description of common code suffix,character,0,0,8
+nteev2,Full NTEEv2 code in SUBSECTOR-CODE-TYPE format,character,0,0,1179
+nteev2_code,NTEEv2 code portion (3 characters),character,0,0,350
+nteev2_org_type,NTEEv2 organization type (RG=Regular AA=Alliance etc.),character,0,0,8
+nteev2_subsector,NTEEv2 subsector code (e.g. UNI HOS ART ENV),character,0,0,12
+org_addr_city,Cleaned city name,character,0,0,24090
+org_addr_city_raw,Original city name from source file,character,0,0,24273
+org_addr_full,Complete formatted address string,character,0,0,1616689
+org_addr_has_special_chars,TRUE if address contains unusual special characters,logical,0,0,2
+org_addr_is_missing,TRUE if street address is missing or empty,logical,0,0,2
+org_addr_is_po_box,TRUE if address is a P.O. Box,logical,0,0,2
+org_addr_is_rural_route,TRUE if address is a rural route,logical,0,0,2
+org_addr_missing_number,TRUE if street address lacks a street number,logical,0,0,2
+org_addr_state,Two-letter state abbreviation,character,0,0,63
+org_addr_state_invalid,TRUE if state code is not a valid US state/territory,logical,0,0,1
+org_addr_state_raw,Original state code from source file,character,0,0,63
+org_addr_street,Standardized street address with USPS abbreviations,character,0,0,1307070
+org_addr_street_raw,Original street address from source file,character,0,0,1316856
+org_addr_zip,Full ZIP code (5 or 9 digits),character,0,0,1451733
+org_addr_zip4,4-digit ZIP code extension (if available),integer,0,0,9980
+org_addr_zip5,5-digit ZIP code,integer,0,0,37018
+org_addr_zip_raw,Original ZIP code from source file,character,0,0,1451733
+org_legal_suffix,Legal entity suffix extracted from name (Inc Corp LLC Foundation etc.),character,0,0,12
+org_name_display,Title-cased organization name suitable for display purposes,character,0,0,1552067
+org_name_join,Standardized name for matching and joining (uppercase punctuation removed),character,0,0,1552440
+org_name_raw,Original organization name exactly as it appears in the source file,character,0,0,1580180
+org_parent_name,Parent organization name if this is a subordinate/chapter organization. This is based on Group Exemption Numbers and the presence of acronyms indicating a parent organization in org_name_raw,character,0,0,77
+organization_code,Code for type of organization (corporation trust etc.),integer,0,0,7
+organization_code_definition,Description of organization type,character,0,0,7
+pf_filing_requirement_code,Private foundation filing requirement code,integer,0,0,4
+pf_filing_requirement_code_definition,Description of private foundation filing requirement,character,0,0,2
+revenue_amount,Total revenue in dollars (can be negative),numeric,579131,29.92,402373
+ruling_date,Date of IRS ruling granting exempt status. If missing assigned 1900-01-01,IDate,0,0,1360
+ruling_date_is_missing,TRUE if ruling date is missing or invalid,logical,0,0,2
+ruling_date_ym_str,Ruling date as YYYYMM string,integer,0,0,1362
+status_code,IRS determination status code (01-99),integer,0,0,4
+status_code_definition,Description of exempt status,character,0,0,4
+subsection_code,IRS subsection code (e.g. 03 for 501(c)(3) 04 for 501(c)(4)),integer,0,0,34
+tax_period_is_missing,TRUE if tax period is missing,logical,0,0,2
+tax_period_ym_str,Tax period end date as YYYYMM string.,integer,433405,22.39,350
+tax_period_ymd,Tax period end date in YYYY-MM-DD format. If missing assigned 1900-01-01,IDate,0,0,351
