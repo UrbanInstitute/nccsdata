@@ -1,3 +1,21 @@
 url: https://urbaninstitute.github.io/nccsdata/
 template:
   bootstrap: 5
+
+reference:
+  - title: "Read Data"
+    contents:
+      - nccs_read
+  - title: "Summarize"
+    contents:
+      - nccs_summary
+  - title: "Reference"
+    contents:
+      - nccs_catalog
+      - nccs_dictionary
+      - bmf_dictionary
+
+articles:
+  - title: "Getting Started"
+    contents:
+      - getting-started

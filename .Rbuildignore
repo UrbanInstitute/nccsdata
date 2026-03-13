@@ -16,3 +16,7 @@
 ^README\.Rmd$
 ^testing\.md$
 ^hex$
+^\.claude$
+^test\.R$
+^CLAUDE\.md$
+^\.Rproj\.user

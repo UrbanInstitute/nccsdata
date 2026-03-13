@@ -1,34 +1,32 @@
 Package: nccsdata
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Title: Access and Analyze NCCS Nonprofit Data
+Version: 2.0.0
+Author: Jesse Lecy [aut],
+    Thiyaghessan Poongundranar [aut, cre],
+    Urban Institute [cph, fnd]
+Maintainer: Thiyaghessan Poongundranar <tpoongundranar@urban.org>
+Description: Download, filter, and analyze nonprofit organization data from
+    the National Center for Charitable Statistics (NCCS). Reads IRS Business
+    Master File (BMF) data stored as parquet files in a public S3 bucket,
+    with support for predicate-pushdown filtering by state, county, NTEE
+    subsector, and exempt organization type.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: 
-    R (>= 3.50)
-Imports: 
-    bit64,
+Depends:
+    R (>= 4.0)
+Imports:
+    arrow,
     dplyr,
-    stringr,
-    data.table,
-    purrr,
-    rlang,
-    utils,
-    RCurl,
-    jsonlite,
-    stats,
+    utils
+Suggests:
+    curl,
     knitr,
-    curl
-RoxygenNote: 7.2.3
-URL: https://github.com/UrbanInstitute/nccsdata, https://urbaninstitute.github.io/nccsdata/
-BugReports: https://github.com/UrbanInstitute/nccsdata/issues
-Suggests: 
     rmarkdown,
     testthat (>= 3.0.0)
+RoxygenNote: 7.3.3
+URL: https://github.com/UrbanInstitute/nccsdata, https://urbaninstitute.github.io/nccsdata/
+BugReports: https://github.com/UrbanInstitute/nccsdata/issues
 Config/testthat/edition: 3
 VignetteBuilder: knitr
