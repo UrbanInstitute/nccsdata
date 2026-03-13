@@ -1,154 +1,136 @@
 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# nccsdata <img src="hex/nccs.svg" align="right" height="139" alt="nccsdata hex logo" />
+
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml)
 [![test-coverage](https://github.com/UrbanInstitute/nccsdata/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/UrbanInstitute/nccsdata/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
-# nccsdata
+nccsdata provides tools to download, filter, and analyze nonprofit
+organization data from the [National Center for Charitable
+Statistics](https://nccs.urban.org/) (NCCS). It reads IRS Business
+Master File (BMF) data stored as parquet files in a public S3 bucket,
+with support for predicate-pushdown filtering by state, county, NTEE
+subsector, and exempt organization type.
 
-## Overview
-
-nccsdata provides tools to read, filter and append metadata to publicly
-available NCCS Core and BMF data sets.
+> **Note:** This is version 2.0.0, a ground-up rewrite of the package.
+> The v1 API (`get_data()`, `preview_sample()`, `parse_ntee()`) has been
+> replaced. See the [migration section](#migrating-from-v1) below.
 
 ## Installation
 
-You can install the development version of nccsdata from
-[GitHub](https://github.com/) with:
+Install the development version from GitHub:
 
 ``` r
-install.packages("devtools")
+# install.packages("devtools")
 devtools::install_github("UrbanInstitute/nccsdata")
-library(nccsdata)
 ```
 
 ## Usage
 
-### Data Pulls
+### Reading BMF data
 
-The [`nccsdata`](https://urbaninstitute.github.io/nccsdata/) package can
-be used to download legacy core data from 1989 to 2019 for charities,
-nonprofits, or private foundations that file their respective required
-IRS forms such as Form 990, 990EZs, or both.
-
-This data can be filtered based on
-[NTEE](https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md)
-codes and geography.
+`nccs_read()` downloads BMF data from S3 with optional filters.
+Filtering happens at the Arrow level via predicate pushdown, so only
+matching rows are read into memory.
 
 ``` r
-core_2005_nonprofit_pz <- nccsdata::get_data(dsname = "core",
-                                             time = "2005",
-                                             scope.orgtype = "NONPROFIT",
-                                             scope.formtype = "PZ")
-#> Requested files have a total size of 82.6 MB. Proceed
-#>                       with download? Enter Y/N (Yes/no/cancel)
+library(nccsdata)
 
+# All Pennsylvania nonprofits (default columns)
+pa <- nccs_read(state = "PA")
 
-tibble::as_tibble(core_2005_nonprofit_pz)
-#> # A tibble: 157,211 × 150
-#>    NTEECC new.code   type.org broad.category major.group univ  hosp  two.digit
-#>    <chr>  <chr>      <chr>    <chr>          <chr>       <lgl> <lgl> <chr>    
-#>  1 J40    RG-HMS-J40 RG       HMS            J           FALSE FALSE 40       
-#>  2 W30    RG-PSB-W30 RG       PSB            W           FALSE FALSE 30       
-#>  3 W30    RG-PSB-W30 RG       PSB            W           FALSE FALSE 30       
-#>  4 W30    RG-PSB-W30 RG       PSB            W           FALSE FALSE 30       
-#>  5 W30    RG-PSB-W30 RG       PSB            W           FALSE FALSE 30       
-#>  6 Y42    RG-MMB-Y42 RG       MMB            Y           FALSE FALSE 42       
-#>  7 S41    RG-PSB-S41 RG       PSB            S           FALSE FALSE 41       
-#>  8 N60    RG-HMS-N60 RG       HMS            N           FALSE FALSE 60       
-#>  9 S41    RG-PSB-S41 RG       PSB            S           FALSE FALSE 41       
-#> 10 S41    RG-PSB-S41 RG       PSB            S           FALSE FALSE 41       
-#> # ℹ 157,201 more rows
-#> # ℹ 142 more variables: further.category <int>, division.subdivision <chr>,
-#> #   broad.category.description <chr>, major.group.description <chr>,
-#> #   code.name <chr>, division.subdivision.description <chr>, keywords <chr>,
-#> #   further.category.desciption <chr>, ntee2.code <chr>, EIN <chr>,
-#> #   TAXPER <int>, STYEAR <int>, CONT <int>, DUES <int>, SECUR <int64>,
-#> #   SALESEXP <int64>, INVINC <int>, SOLICIT <int>, GOODS <int>, GRPROF <int>, …
+# Arts nonprofits in New York
+ny_arts <- nccs_read(state = "NY", ntee_subsector = "ART")
+
+# Select specific columns
+pa_slim <- nccs_read(
+  state = "PA",
+  columns = c("ein", "org_name_display", "geo_county", "income_amount")
+)
+
+# Lazy query for custom dplyr pipelines
+query <- nccs_read(state = "PA", collect = FALSE)
+result <- query |>
+  dplyr::filter(geo_county == "Lackawanna County") |>
+  dplyr::collect()
 ```
+
+### Summarizing data
+
+`nccs_summary()` produces grouped count summaries from a collected data
+frame.
 
 ``` r
-core_2005_artnonprofits_newyork <- nccsdata::get_data(dsname = "core",
-                                                      time = "2016",
-                                                      scope.orgtype = "NONPROFIT",
-                                                      scope.formtype = "PZ",
-                                                      ntee = "ART",
-                                                      geo.state = "NY")
-#> Requested files have a total size of 113.6 MB. Proceed
-#>                       with download? Enter Y/N (Yes/no/cancel)
-tibble::as_tibble(core_2005_artnonprofits_newyork)
-#> # A tibble: 346 × 168
-#>    NTEECC new.code   type.org broad.category major.group univ  hosp  two.digit
-#>    <chr>  <chr>      <chr>    <chr>          <chr>       <lgl> <lgl> <chr>    
-#>  1 A01    AA-ART-A00 AA       ART            A           FALSE FALSE 1        
-#>  2 A01    AA-ART-A00 AA       ART            A           FALSE FALSE 1        
-#>  3 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        
-#>  4 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        
-#>  5 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        
-#>  6 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        
-#>  7 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        
-#>  8 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        
-#>  9 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        
-#> 10 A03    PA-ART-A00 PA       ART            A           FALSE FALSE 3        
-#> # ℹ 336 more rows
-#> # ℹ 160 more variables: further.category <int>, division.subdivision <chr>,
-#> #   broad.category.description <chr>, major.group.description <chr>,
-#> #   code.name <chr>, division.subdivision.description <chr>, keywords <chr>,
-#> #   further.category.desciption <chr>, ntee2.code <chr>, EIN <int>,
-#> #   ACCPER <int>, ACTIV1 <dbl>, ACTIV2 <dbl>, ACTIV3 <dbl>, ADDRESS <chr>,
-#> #   AFCD <dbl>, ASS_BOY <dbl>, ASS_EOY <dbl>, BOND_BOY <dbl>, BOND_EOY <dbl>, …
+pa <- nccs_read(state = "PA")
+
+# Total count
+nccs_summary(pa)
+
+# Count by county
+nccs_summary(pa, group_by = "geo_county")
+
+# Count by county and subsector, export to CSV
+nccs_summary(pa, group_by = c("geo_county", "nteev2_subsector"),
+             output_csv = "pa_counts.csv")
 ```
 
-- Full
-  [`get_data()`](https://urbaninstitute.github.io/nccsdata/articles/data_pull.html)
-  vignette
+### Discovering valid filter values
 
-### Summarising Data
-
-After processing the desired data,
-[`nccsdata`](https://urbaninstitute.github.io/nccsdata/) can also be
-used to generate summary tables.
+`nccs_catalog()` lists valid values for `nccs_read()` filters without
+any network calls.
 
 ``` r
-nccsdata::preview_sample(data = core_2005_artnonprofits_newyork,
-                         group_by = c("NTEECC", "STATE"),
-                         var = c("TOTREV"),
-                         stats = c("count", "mean", "max"))
-#> # A tibble: 29 × 5
-#> # Groups:   NTEECC [29]
-#>    NTEECC STATE count    mean     max
-#>    <chr>  <chr> <int> <int64> <int64>
-#>  1 A01    NY        2   77734  151889
-#>  2 A03    NY       14  924422 9222403
-#>  3 A11    NY        2  762752 1485739
-#>  4 A19    NY        1   50300   50300
-#>  5 A20    NY        5  236863  711793
-#>  6 A23    NY      112   64597  758835
-#>  7 A30    NY       26  810942 4974965
-#>  8 A31    NY        3 1389737 2142396
-#>  9 A32    NY        7  759395 3154923
-#> 10 A33    NY       15  329638  828684
-#> # ℹ 19 more rows
+nccs_catalog("state")
+nccs_catalog("ntee_subsector")
+nccs_catalog("exempt_org_type")
 ```
 
-- Full
-  [`preview_sample()`](https://urbaninstitute.github.io/nccsdata/articles/summary_stats.html)
-  vignette.
+### Browsing the data dictionary
 
-### NTEE Codes
+`nccs_dictionary()` returns a tibble describing all 97 BMF columns, with
+optional pattern filtering.
 
-[`nccsdata`](https://urbaninstitute.github.io/nccsdata/) also offers
-several supplementary functions for documenting and retrieving
-[NTEE](https://github.com/Nonprofit-Open-Data-Collective/mission-taxonomies/blob/main/NTEE-disaggregated/README.md)
-codes.
+``` r
+# All columns
+nccs_dictionary()
 
-- Full [`ntee_preview()` and
-  `parse_ntee()`](https://urbaninstitute.github.io/nccsdata/articles/ntee.html)
-  vignette.
+# Find geocoding-related columns
+nccs_dictionary("geo")
 
-## Getting Help
+# Find NTEE-related columns
+nccs_dictionary("ntee")
+```
 
-Raise an issue on the
-[issues](https://github.com/UrbanInstitute/nccsdata/issues) page or
-contact Thiyaghessan at `tpoongundranar@urban.org`.
+## Migrating from v1
+
+| v1 function                       | v2 replacement                   |
+|-----------------------------------|----------------------------------|
+| `get_data()`                      | `nccs_read()`                    |
+| `preview_sample()`                | `nccs_summary()`                 |
+| `ntee_preview()` / `parse_ntee()` | `nccs_catalog("ntee_subsector")` |
+
+Key changes:
+
+- Data source moved from legacy Core/BMF CSVs to geocoded BMF parquet
+  files on S3.
+- Filtering now uses Arrow predicate pushdown instead of downloading
+  full files.
+- Dependencies reduced from 12 packages to 3 (`arrow`, `dplyr`,
+  `utils`).
+
+## Documentation
+
+Full documentation is available at
+<https://urbaninstitute.github.io/nccsdata/>.
+
+## Getting help
+
+- Browse the [getting started
+  vignette](https://urbaninstitute.github.io/nccsdata/articles/getting-started.html)
+- Open an issue on
+  [GitHub](https://github.com/UrbanInstitute/nccsdata/issues)
+- Contact the maintainer at `tpoongundranar@urban.org`
