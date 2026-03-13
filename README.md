@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# nccsdata <img src="hex/nccs.svg" align="right" height="139" alt="nccsdata hex logo" />
+# nccsdata <img src="hex/nccsdata.svg" align="right" height="139" alt="nccsdata hex logo" />
 
 <!-- badges: start -->
 
