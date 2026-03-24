@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:nccsdata.s3.us-east-1.amazonaws.com)",
+      "Bash(Rscript data-raw/data_generation.R 2>&1)",
+      "Bash(Rscript -e 'devtools::document\\(\\)' 2>&1)",
+      "Bash(Rscript -e 'install.packages\\(\"devtools\", repos=\"https://cloud.r-project.org\", quiet=TRUE\\)' 2>&1)",
+      "Bash(Rscript -e 'install.packages\\(\"roxygen2\", repos=\"https://cloud.r-project.org\", quiet=TRUE\\)' 2>&1)",
+      "Bash(Rscript -e 'roxygen2::roxygenise\\(\\)' 2>&1)",
+      "Bash(Rscript -e 'testthat::test_dir\\(\"tests/testthat\"\\)' 2>&1)",
+      "Bash(R CMD INSTALL . 2>&1)",
+      "Bash(Rscript -e 'library\\(nccsdata\\); testthat::test_dir\\(\"tests/testthat\"\\)' 2>&1)",
+      "Bash(R CMD check . --no-manual 2>&1)",
+      "Bash(Rscript -e 'roxygen2::roxygenise\\(\\)' 2>&1 && R CMD INSTALL . 2>&1)",
+      "Bash(mkdir -p inst/doc && Rscript -e 'rmarkdown::render\\(\"vignettes/getting-started.Rmd\", output_dir = \"inst/doc\"\\)' 2>&1)",
+      "Bash(apt-get list:*)",
+      "Bash(apt-get update:*)",
+      "Bash(Rscript -e 'rmarkdown::render\\(\"vignettes/getting-started.Rmd\", output_dir = \"inst/doc\"\\)' 2>&1 && cp vignettes/getting-started.Rmd inst/doc/)",
+      "Bash(rm -rf /mnt/c/Users/tpoongundranar/Documents/Urban/NCCS/nccsdata/..Rcheck && R CMD check . --no-manual 2>&1)",
+      "Read(//tmp/**)",
+      "Bash(R CMD build /mnt/c/Users/tpoongundranar/Documents/Urban/NCCS/nccsdata)",
+      "Bash(cd /tmp && R CMD check nccsdata_2.0.0.tar.gz --no-manual 2>&1)",
+      "Bash(du -sh * .* 2>/dev/null | sort -rh | head -30)",
+      "Bash(ls -la data/*.rda data/*.RData data/*.rds 2>/dev/null; echo \"---\"; ls -la inst/ 2>/dev/null; echo \"---\"; ls -laR inst/ 2>/dev/null | head -40)",
+      "Bash(git status:*)",
+      "Bash(gh run:*)",
+      "Bash(Rscript -e 'rmarkdown::render\\(\"README.Rmd\", output_file = \"README.md\"\\)')",
+      "Bash(gh api:*)",
+      "Bash(Rscript -e 'installed.packages\\(\\)[c\\(\"hexSticker\", \"ggplot2\", \"showtext\", \"sysfonts\"\\), \"Version\"]' 2>&1)",
+      "Bash(Rscript -e 'cat\\(rownames\\(installed.packages\\(\\)\\), sep=\"\\\\n\"\\)' | grep -iE \"hexSticker|showtext|sysfonts|ggplot2\")",
+      "Bash(Rscript -e 'install.packages\\(c\\(\"hexSticker\", \"showtext\", \"sysfonts\"\\), repos=\"https://cloud.r-project.org\"\\)')",
+      "Bash(apt-get install:*)",
+      "Bash(Rscript -e 'install.packages\\(\"svglite\", repos=\"https://cloud.r-project.org\"\\)' 2>&1 | tail -5)",
+      "Bash(Rscript hex/hexsticker.R 2>&1)",
+      "Bash(Rscript -e 'rmarkdown::render\\(\"README.Rmd\", output_file = \"README.md\"\\)' 2>&1 && rm -f README.html README.knit.md)"
+    ]
+  }
+}
