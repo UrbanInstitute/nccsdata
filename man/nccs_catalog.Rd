@@ -4,21 +4,39 @@
 \alias{nccs_catalog}
 \title{List Valid Filter Values}
 \usage{
-nccs_catalog(field = c("ntee_subsector", "exempt_org_type", "state"))
+nccs_catalog(
+  field = c("ntee_subsector", "exempt_org_type", "state", "subsection_code",
+    "foundation_code", "affiliation_code"),
+  labels = FALSE
+)
 }
 \arguments{
-\item{field}{One of `"ntee_subsector"`, `"exempt_org_type"`, or `"state"`.}
+\item{field}{One of `"ntee_subsector"`, `"exempt_org_type"`, `"state"`,
+`"subsection_code"`, `"foundation_code"`, or `"affiliation_code"`. The
+last three are decoder fields backed by the bundled BMF lookups; they
+are not currently accepted by `nccs_read()` but are useful for joining
+external data.}
+
+\item{labels}{Logical. If `FALSE` (default), returns a character vector of
+valid codes — preserves the legacy behavior. If `TRUE`, returns a tibble
+with at least a `code` and `description` column, sourced from the
+internal `.nccs_lookups` bundle (see `data-raw/build_lookups.R`). For
+`"state"`, the tibble pairs USPS abbreviations with state names; for
+`"exempt_org_type"`, codes come from `subsection_classification_code`.}
 }
 \value{
-A character vector of valid values for the specified field.
+A character vector (when `labels = FALSE`) or a tibble (when
+  `labels = TRUE`).
 }
 \description{
-Returns the set of valid values for filters used in [nccs_read()].
-No network access is needed.
+Returns the set of valid values for filters used in [nccs_read()], or — with
+`labels = TRUE` — a tibble of codes alongside their human-readable
+definitions sourced from bundled BMF lookup tables. No network access.
 }
 \examples{
 nccs_catalog("ntee_subsector")
-nccs_catalog("state")
-nccs_catalog("exempt_org_type")
+nccs_catalog("ntee_subsector", labels = TRUE)
+nccs_catalog("state", labels = TRUE)
+nccs_catalog("foundation_code", labels = TRUE)
 
 }

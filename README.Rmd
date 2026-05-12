@@ -87,6 +87,28 @@ nccs_summary(pa, group_by = c("geo_county", "nteev2_subsector"),
 nccs_catalog("state")
 nccs_catalog("ntee_subsector")
 nccs_catalog("exempt_org_type")
+
+# Pass `labels = TRUE` for a code + description tibble, sourced from the
+# bundled BMF lookup tables.
+nccs_catalog("ntee_subsector", labels = TRUE)
+nccs_catalog("foundation_code", labels = TRUE)
+```
+
+### Cleaning external data
+
+The BMF returned by `nccs_read()` is already normalized upstream, but two helpers are exposed for users joining external CSVs or API responses against it:
+
+```{r, eval = FALSE}
+# Coerce EINs in any format to canonical XX-XXXXXXX
+nccs_normalize_ein(c("123456789", "12-3456789", 1234567))
+#> [1] "12-3456789" "12-3456789" "00-1234567"
+
+# Coerce IRS binary-indicator columns to logical
+nccs_as_indicator(c("Y", "N", "1", "2"))
+#> [1]  TRUE FALSE  TRUE FALSE
+
+# e-file indicator accepts E/P (2015, 2018+) and Y/N (2016-2017)
+nccs_as_indicator(c("E", "P", "Y", "N"), scheme = "efile")
 ```
 
 ### Browsing the data dictionary
