@@ -17,6 +17,7 @@ Before querying data, you can explore the 97 available columns using
 [`nccs_dictionary()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_dictionary.md):
 
 ``` r
+
 library(nccsdata)
 
 # See all available columns
@@ -36,6 +37,7 @@ Use
 to see the valid values for each filter before querying:
 
 ``` r
+
 # NTEE v2 subsector codes
 nccs_catalog("ntee_subsector")
 #> [1] "ART" "EDU" "ENV" "HEL" "HMS" "HOS" "IFA" "MMB" "PSB" "REL" "UNI" "UNU"
@@ -57,6 +59,7 @@ efficient reads.
 ### Filter by State
 
 ``` r
+
 # All nonprofits in Pennsylvania
 pa <- nccs_read(state = "PA")
 nrow(pa)
@@ -65,6 +68,7 @@ nrow(pa)
 ### Filter by County
 
 ``` r
+
 # Nonprofits in specific Pennsylvania counties
 nepa <- nccs_read(
   state = "PA",
@@ -76,6 +80,7 @@ nrow(nepa)
 ### Filter by NTEE Subsector
 
 ``` r
+
 # Arts organizations in Pennsylvania
 pa_arts <- nccs_read(state = "PA", ntee_subsector = "ART")
 nrow(pa_arts)
@@ -89,6 +94,7 @@ returns a curated subset of commonly needed columns. You can customize
 this:
 
 ``` r
+
 # Specify exact columns (minimizes download size)
 pa_slim <- nccs_read(
   state = "PA",
@@ -106,6 +112,7 @@ Set `collect = FALSE` to get a lazy Arrow query instead of a tibble.
 This is useful for building custom dplyr chains before collecting:
 
 ``` r
+
 library(dplyr)
 
 query <- nccs_read(state = "PA", collect = FALSE)
@@ -123,6 +130,7 @@ result <- query |>
 produces grouped count summaries:
 
 ``` r
+
 pa <- nccs_read(state = "PA")
 
 # Total count
@@ -140,6 +148,7 @@ nccs_summary(pa, group_by = c("geo_county", "nteev2_subsector"))
 Write summary results to CSV:
 
 ``` r
+
 pa <- nccs_read(
   state = "PA",
   county = c("Lackawanna County", "Luzerne County", "Wayne County")

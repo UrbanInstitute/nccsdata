@@ -18,3 +18,10 @@
   : Browse the BMF Data Dictionary
 - [`bmf_dictionary`](https://urbaninstitute.github.io/nccsdata/reference/bmf_dictionary.md)
   : BMF Data Dictionary
+
+## Helpers for external data
+
+- [`nccs_normalize_ein()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_normalize_ein.md)
+  : Normalize EINs to Canonical IRS Format
+- [`nccs_as_indicator()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_as_indicator.md)
+  : Coerce IRS Binary-Indicator Columns to Logical

@@ -115,13 +115,34 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/nccs_catalog.html">nccs_catalog</a></span><span class="op">(</span><span class="st">"state"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/nccs_catalog.html">nccs_catalog</a></span><span class="op">(</span><span class="st">"ntee_subsector"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/nccs_catalog.html">nccs_catalog</a></span><span class="op">(</span><span class="st">"exempt_org_type"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/nccs_catalog.html">nccs_catalog</a></span><span class="op">(</span><span class="st">"exempt_org_type"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Pass `labels = TRUE` for a code + description tibble, sourced from the</span></span>
+<span><span class="co"># bundled BMF lookup tables.</span></span>
+<span><span class="fu"><a href="reference/nccs_catalog.html">nccs_catalog</a></span><span class="op">(</span><span class="st">"ntee_subsector"</span>, labels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/nccs_catalog.html">nccs_catalog</a></span><span class="op">(</span><span class="st">"foundation_code"</span>, labels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="cleaning-external-data">Cleaning external data<a class="anchor" aria-label="anchor" href="#cleaning-external-data"></a>
+</h3>
+<p>The BMF returned by <code><a href="reference/nccs_read.html">nccs_read()</a></code> is already normalized upstream, but two helpers are exposed for users joining external CSVs or API responses against it:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Coerce EINs in any format to canonical XX-XXXXXXX</span></span>
+<span><span class="fu"><a href="reference/nccs_normalize_ein.html">nccs_normalize_ein</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"123456789"</span>, <span class="st">"12-3456789"</span>, <span class="fl">1234567</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "12-3456789" "12-3456789" "00-1234567"</span></span>
+<span></span>
+<span><span class="co"># Coerce IRS binary-indicator columns to logical</span></span>
+<span><span class="fu"><a href="reference/nccs_as_indicator.html">nccs_as_indicator</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Y"</span>, <span class="st">"N"</span>, <span class="st">"1"</span>, <span class="st">"2"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1]  TRUE FALSE  TRUE FALSE</span></span>
+<span></span>
+<span><span class="co"># e-file indicator accepts E/P (2015, 2018+) and Y/N (2016-2017)</span></span>
+<span><span class="fu"><a href="reference/nccs_as_indicator.html">nccs_as_indicator</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"E"</span>, <span class="st">"P"</span>, <span class="st">"Y"</span>, <span class="st">"N"</span><span class="op">)</span>, scheme <span class="op">=</span> <span class="st">"efile"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="browsing-the-data-dictionary">Browsing the data dictionary<a class="anchor" aria-label="anchor" href="#browsing-the-data-dictionary"></a>
 </h3>
 <p><code><a href="reference/nccs_dictionary.html">nccs_dictionary()</a></code> returns a tibble describing all 97 BMF columns, with optional pattern filtering.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># All columns</span></span>
 <span><span class="fu"><a href="reference/nccs_dictionary.html">nccs_dictionary</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -136,20 +157,20 @@
 <h2 id="migrating-from-v1">Migrating from v1<a class="anchor" aria-label="anchor" href="#migrating-from-v1"></a>
 </h2>
 <table class="table">
-<thead><tr class="header">
+<thead><tr>
 <th>v1 function</th>
 <th>v2 replacement</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>get_data()</code></td>
 <td><code><a href="reference/nccs_read.html">nccs_read()</a></code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>preview_sample()</code></td>
 <td><code><a href="reference/nccs_summary.html">nccs_summary()</a></code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>
 <code>ntee_preview()</code> / <code>parse_ntee()</code>
 </td>

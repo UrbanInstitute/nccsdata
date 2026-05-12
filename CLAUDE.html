@@ -38,6 +38,7 @@
 <div class="section level2">
 <h2 id="about">About<a class="anchor" aria-label="anchor" href="#about"></a></h2>
 <p><code>nccsdata</code> is an R package for downloading, filtering, and analyzing NCCS (National Center for Charitable Statistics) nonprofit organization data. Published by the Urban Institute.</p>
+<p>It is a lean downstream consumer of artifacts published by the sibling ETL pipelines. This package does not transform raw IRS data — it reads parquet that has already been cleaned upstream and bundles a small set of decoder lookups for convenience.</p>
 </div>
 <div class="section level2">
 <h2 id="common-commands">Common Commands<a class="anchor" aria-label="anchor" href="#common-commands"></a></h2>
@@ -57,7 +58,35 @@
 <span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'pkgdown::build_site()'</span></span>
 <span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a></span>
 <span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co"># Install package locally</span></span>
-<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="ex">R</span> CMD INSTALL .</span></code></pre></div>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="ex">R</span> CMD INSTALL .</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co"># Refresh bundled lookup tables from S3 (dev only, requires sha256sum on PATH)</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="ex">Rscript</span> data-raw/build_lookups.R</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="design-constraints">Design constraints<a class="anchor" aria-label="anchor" href="#design-constraints"></a></h2>
+<p>These rules are load-bearing. Violating them tends to bloat the package and break the upstream/downstream contracts.</p>
+<ul><li>
+<strong>Lean dependencies.</strong> Hard <code>Imports</code> are exactly <code>arrow</code>, <code>dplyr</code>, <code>utils</code>. Do <strong>not</strong> add <code>data.table</code>, <code>stringr</code>, <code>lubridate</code>, <code>log4r</code>, <code>openxlsx</code>, or any other heavyweight dep without first asking the user. Reference pipelines (<code>../nccs-data-bmf/</code>, <code>../nccs-data-core/</code>) use these freely — this package does not.</li>
+<li>
+<strong>Pure functions.</strong> Helpers take input and return output; no in-place mutation (e.g. <code>data.table::set</code>), no global state, no logger handles. Diagnostics use base <code><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning()</a></code> / <code><a href="https://rdrr.io/r/base/message.html" class="external-link">message()</a></code>.</li>
+<li>
+<strong>Naming.</strong> Exported functions are <code>nccs_*</code> (snake_case). Internal helpers use a leading dot (e.g. <code>.build_s3_path</code>) and <code>@noRd</code>.</li>
+<li>
+<strong>No re-cleaning of package output.</strong> Helpers like <code><a href="reference/nccs_normalize_ein.html">nccs_normalize_ein()</a></code> exist for users bringing <em>external</em> data; rows returned by <code><a href="reference/nccs_read.html">nccs_read()</a></code> are already normalized upstream and should not be re-run through them.</li>
+</ul></div>
+<div class="section level2">
+<h2 id="upstream-contract">Upstream contract<a class="anchor" aria-label="anchor" href="#upstream-contract"></a></h2>
+<p>The BMF parquet read by <code><a href="reference/nccs_read.html">nccs_read()</a></code> is published by <code>../nccs-data-bmf/</code> and is already cleaned by the time it lands in S3:</p>
+<ul><li>
+<code>ein</code> is in canonical <code>XX-XXXXXXX</code> form.</li>
+<li>
+<code>nteev2_*</code> columns are decoded (subsector, code, definition, org type).</li>
+<li>
+<code>subsection_code</code> is mapped to a verbose <code>exempt_organization_type</code> description.</li>
+<li>Financial amounts (<code>asset_amount</code>, <code>income_amount</code>, <code>revenue_amount</code>, …) are numeric.</li>
+<li>Geocoding columns (<code>geo_*</code>) are populated.</li>
+</ul><p>This package therefore does not implement tax-period, financial-amount, NTEE, or subsection transforms — those live in the ETL pipeline. The audit conclusion from the v2 design sessions was: only EIN normalization and binary-indicator coercion are worth promoting as user-facing helpers, because users frequently bring external CSVs into the same workflow.</p>
 </div>
 <div class="section level2">
 <h2 id="architecture">Architecture<a class="anchor" aria-label="anchor" href="#architecture"></a></h2>
@@ -73,23 +102,31 @@
 <li>
 <code>R/nccs_summary.R</code> — Grouped count summaries on collected data.</li>
 <li>
-<code>R/nccs_catalog.R</code> — Lists valid filter values (offline, no network needed).</li>
+<code>R/nccs_catalog.R</code> — Lists valid filter values (offline, no network needed). Supports <code>labels = TRUE</code> to return a code + description tibble for fields backed by a bundled lookup.</li>
 <li>
 <code>R/nccs_dictionary.R</code> — Returns BMF data dictionary as a tibble with optional grep filtering. Also documents the <code>bmf_dictionary</code> dataset.</li>
+<li>
+<code>R/nccs_normalize_ein.R</code> — Coerces arbitrary EIN inputs to canonical <code>XX-XXXXXXX</code> form. Pure, base-R only.</li>
+<li>
+<code>R/nccs_as_indicator.R</code> — Coerces IRS binary-indicator columns to logical, with <code>yn</code> and <code>efile</code> schemes for vintage-specific encodings.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="package-data">Package Data<a class="anchor" aria-label="anchor" href="#package-data"></a></h3>
 <ul><li>
-<code>data/bmf_dictionary.rda</code> — 97-row tibble with column_name, description, type for all BMF columns.</li>
+<code>data/bmf_dictionary.rda</code> — 97-row tibble with column_name, description, type for all BMF columns. Exported.</li>
 <li>
-<code>data-raw/bmf_data_dictionary.csv</code> — Source CSV from S3.</li>
+<code>R/sysdata.rda</code> — Internal bundled lookup tables (see “Bundled lookups” below). Not exported; consumed by <code>nccs_catalog(labels = TRUE)</code>.</li>
 <li>
-<code>data-raw/data_generation.R</code> — Script to regenerate <code>bmf_dictionary.rda</code> from CSV.</li>
+<code>data-raw/bmf_data_dictionary.csv</code> — Source CSV for <code>bmf_dictionary</code>.</li>
+<li>
+<code>data-raw/data_generation.R</code> — Script to regenerate <code>bmf_dictionary.rda</code>.</li>
+<li>
+<code>data-raw/build_lookups.R</code> — Script to refresh <code>R/sysdata.rda</code> from S3.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="structure">Structure<a class="anchor" aria-label="anchor" href="#structure"></a></h3>
 <ul><li>
-<code>R/</code> — Function files (nccs_read.R, nccs_summary.R, nccs_catalog.R, nccs_dictionary.R)</li>
+<code>R/</code> — Function files</li>
 <li>
 <code>man/</code> — Generated by roxygen2</li>
 <li>
@@ -109,21 +146,56 @@
 <strong>Imports</strong>: <code>arrow</code>, <code>dplyr</code>, <code>utils</code>
 </li>
 <li>
-<strong>Suggests</strong>: <code>knitr</code>, <code>rmarkdown</code>, <code>testthat</code>
+<strong>Suggests</strong>: <code>curl</code>, <code>knitr</code>, <code>rmarkdown</code>, <code>testthat</code>
 </li>
 </ul></div>
 </div>
+<div class="section level2">
+<h2 id="bundled-lookups">Bundled lookups<a class="anchor" aria-label="anchor" href="#bundled-lookups"></a></h2>
+<p>A curated subset of the BMF decoder tables is bundled as internal package data so that <code>nccs_catalog(field, labels = TRUE)</code> works offline.</p>
+<ul><li>
+<strong>Source</strong>: <code>s3://nccsdata/lookups/bmf/latest/{lookup_name}.csv</code> plus <code>MANIFEST.json</code> (sha256 per file, vintage, generated_at). Published by <code>../nccs-data-bmf/</code> — see that repo’s CLAUDE.md § “Published artifacts”.</li>
+<li>
+<strong>Curated subset</strong> (selected because they decode codes users see in external data they bring to the package):
+<ul><li>
+<code>subsection_classification_code</code> — subsection → 501(c)(X) description</li>
+<li>
+<code>nteev2_subsector</code> — NTEE v2 subsector → definition</li>
+<li>
+<code>foundation_code</code> — foundation type</li>
+<li>
+<code>affiliation_code</code> — affiliation type</li>
+</ul></li>
+<li>
+<strong>Not bundled</strong> (large or pipeline-internal): <code>ntee_code</code>, <code>ntee_common_code</code>, <code>activity_code</code>, the filing-requirement tables, <code>ntee_legacy_5char</code>, etc. Ask before adding any of these.</li>
+<li>
+<strong>Storage</strong>: <code>R/sysdata.rda</code> contains a single list <code>.nccs_lookups</code> with one named element per bundled table, plus a <code>.metadata</code> element holding the manifest’s <code>vintage</code>, <code>generated_at</code>, and per-file <code>sha256</code>. The package can self-report its lookup vintage via <code>.nccs_lookups$.metadata</code>.</li>
+<li>
+<strong>Refresh</strong>: run <code>Rscript data-raw/build_lookups.R</code> from the package root. The script downloads CSVs + manifest, validates sha256 against the manifest (using system <code>sha256sum</code>), prints a diff summary against the previously bundled version, and writes <code>R/sysdata.rda</code>. It is idempotent — re-running with no upstream change reproduces the same <code>.rda</code>.</li>
+</ul></div>
+<div class="section level2">
+<h2 id="related-repos">Related repos<a class="anchor" aria-label="anchor" href="#related-repos"></a></h2>
+<p>Sibling repos under <code>../</code> (S3 is the contract surface — this package must not import from them directly):</p>
+<ul><li>
+<code>../nccs-data-bmf/</code> — BMF ETL pipeline. Source of truth for the geocoded BMF parquet and the published lookup tables this package consumes. See its <code>CLAUDE.md</code> § “Published artifacts” for the S3 contract.</li>
+<li>
+<code>../nccs-data-core/</code> — Form 990 ETL pipeline. Not currently consumed by this package; transforms there (EIN, indicators, e-file) served as reference implementations for <code><a href="reference/nccs_normalize_ein.html">nccs_normalize_ein()</a></code> and <code><a href="reference/nccs_as_indicator.html">nccs_as_indicator()</a></code>.</li>
+</ul></div>
 <div class="section level2">
 <h2 id="testing">Testing<a class="anchor" aria-label="anchor" href="#testing"></a></h2>
 <p>Tests use testthat edition 3. Network-dependent integration tests use <code>skip_on_cran()</code> and <code>skip_if_offline()</code>.</p>
 <ul><li>
 <code>test-nccs_dictionary.R</code> — Dictionary dataset structure and filtering (offline)</li>
 <li>
-<code>test-nccs_catalog.R</code> — Valid filter values and error handling (offline)</li>
+<code>test-nccs_catalog.R</code> — Valid filter values, label decoding, error handling (offline)</li>
 <li>
 <code>test-nccs_summary.R</code> — Count summaries, grouping, CSV output (offline)</li>
 <li>
 <code>test-nccs_read.R</code> — S3 path construction, input validation (offline), integration reads (network)</li>
+<li>
+<code>test-nccs_normalize_ein.R</code> — EIN coercion happy/edge paths (offline)</li>
+<li>
+<code>test-nccs_as_indicator.R</code> — yn/efile coercion, unknown-value warning (offline)</li>
 </ul></div>
 </div>
 
