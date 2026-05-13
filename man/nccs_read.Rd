@@ -6,35 +6,71 @@
 \usage{
 nccs_read(
   state = NULL,
-  ntee_subsector = NULL,
-  exempt_org_type = NULL,
   county = NULL,
+  ntee_subsector = NULL,
+  ntee_major_group = NULL,
+  ntee_code = NULL,
+  nteev2_code = NULL,
+  exempt_org_type = NULL,
+  size_metric = c("revenue", "income", "asset"),
+  size_min = NULL,
+  size_max = NULL,
+  min_last_year = NULL,
   columns = NULL,
   collect = TRUE
 )
 }
 \arguments{
-\item{state}{Character vector of two-letter state abbreviations to filter on
-(e.g., `"PA"`, `c("PA", "NY")`). Filters the `org_addr_state` column.}
+\item{state}{Character vector of two-letter state abbreviations (e.g.,
+`"PA"`, `c("PA", "NY")`). Filters `org_addr_state`.}
 
-\item{ntee_subsector}{Character vector of NTEE v2 subsector codes (e.g.,
-`"ART"`, `c("ART", "EDU")`). See [nccs_catalog()] for valid values.
-Filters the `nteev2_subsector` column.}
+\item{county}{Character vector of county names (e.g.,
+`"Lackawanna County"`). Filters `geo_county`.}
+
+\item{ntee_subsector}{Character vector of NTEEv2 subsector values.
+Accepts either subsector codes (`"UNI"`, `"ART"`) or human-readable
+names (`"Universities"`, `"Arts, Culture and Humanities"`), matched
+case-insensitively. See [nccs_catalog()] for valid values. Filters
+`nteev2_subsector`.}
+
+\item{ntee_major_group}{Character vector of single-letter NTEE major
+groups (`"A"` through `"Z"`). Filters `ntee_code_major_group`. See
+[nccs_catalog("ntee_major_group", labels = TRUE)] for descriptions.}
+
+\item{ntee_code}{Character vector of standardized 3-character NTEE
+codes (e.g., `"B40"`, `c("A20", "A23")`). Filters `ntee_code_clean`.
+Not validated — invalid codes just return no rows.}
+
+\item{nteev2_code}{Character vector of NTEEv2 3-character codes.
+Filters `nteev2_code`. Not validated.}
 
 \item{exempt_org_type}{Character vector of exempt organization type
-descriptions. See [nccs_catalog()] for valid values. Filters the
-`exempt_organization_type` column.}
+descriptions. See [nccs_catalog()] for valid values. Filters
+`exempt_organization_type`.}
 
-\item{county}{Character vector of county names (e.g., `"Lackawanna County"`).
-Filters the `geo_county` column.}
+\item{size_metric}{One of `"revenue"`, `"income"`, or `"asset"`
+indicating which financial amount to use with `size_min` / `size_max`.
+Defaults to `"revenue"`. The underlying columns are stored upstream
+as character; this function casts to numeric inside the predicate so
+the filter pushes down to Arrow.}
 
-\item{columns}{Column selection. `NULL` (default) returns a sensible default
-subset. A character vector returns those specific columns. `"all"` returns
-all columns (warning: 400+ MB). Columns used in active filters are always
-included.}
+\item{size_min, size_max}{Numeric. Optional inclusive bounds on the
+`size_metric` amount. `NULL` (default) leaves a side unbounded. Rows
+with `NA` for the chosen metric are dropped when either bound is set.}
 
-\item{collect}{Logical. If `TRUE` (default), collects the result into a
-tibble. If `FALSE`, returns a lazy Arrow query for further dplyr
+\item{min_last_year}{Integer. If set, restricts results to EINs whose
+`last_year_in_bmf` (the calendar year of the most recent BMF vintage
+in which the EIN appeared) is at least this value. Use this as a
+recency / "still active" filter — e.g., `min_last_year = 2024` keeps
+organizations seen in BMF in 2024 or later.}
+
+\item{columns}{Column selection. `NULL` (default) returns a sensible
+default subset. A character vector returns those specific columns.
+`"all"` returns all columns (warning: 400+ MB). Columns used in
+active filters are always included.}
+
+\item{collect}{Logical. If `TRUE` (default), collects the result into
+a tibble. If `FALSE`, returns a lazy Arrow query for further dplyr
 operations.}
 }
 \value{
@@ -43,8 +79,9 @@ A tibble (if `collect = TRUE`) or an Arrow Dataset query (if
 }
 \description{
 Reads the NCCS Business Master File (BMF) stored as a parquet file in a
-public S3 bucket. Supports predicate-pushdown filtering by state, county,
-NTEE subsector, and exempt organization type for efficient reads.
+public S3 bucket. Supports predicate-pushdown filtering on state, county,
+NTEE classification (subsector, code, NTEEv2 code, major group), exempt
+organization type, financial size, and BMF recency for efficient reads.
 }
 \details{
 The package reads the rolling "master" geocoded BMF published at
@@ -56,15 +93,29 @@ directly if you need a specific vintage.
 }
 \examples{
 \dontrun{
-# Read all Pennsylvania nonprofits
+# All Pennsylvania nonprofits
 pa <- nccs_read(state = "PA")
 
-# Read with specific columns
-pa <- nccs_read(state = "PA", columns = c("ein", "org_name_display", "geo_county"))
+# Universities in PA seen in BMF in 2024 or later
+pa_uni <- nccs_read(
+  state = "PA",
+  ntee_subsector = "Universities",
+  min_last_year = 2024
+)
+
+# Arts orgs (major group A) with revenue between $1M and $10M
+arts_mid <- nccs_read(
+  ntee_major_group = "A",
+  size_metric = "revenue",
+  size_min = 1e6,
+  size_max = 1e7
+)
 
 # Lazy query for custom dplyr chains
 query <- nccs_read(state = "PA", collect = FALSE)
-result <- query |> dplyr::filter(geo_county == "Lackawanna County") |> dplyr::collect()
+result <- query |>
+  dplyr::filter(geo_county == "Lackawanna County") |>
+  dplyr::collect()
 }
 
 }

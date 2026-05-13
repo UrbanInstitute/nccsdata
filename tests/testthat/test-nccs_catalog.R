@@ -73,3 +73,17 @@ test_that("nccs_catalog subsection_code returns codes as character", {
   expect_type(codes, "character")
   expect_true(length(codes) > 0)
 })
+
+test_that("nccs_catalog returns NTEE major group letters", {
+  result <- nccs_catalog("ntee_major_group")
+  expect_equal(result, LETTERS)
+})
+
+test_that("nccs_catalog labels = TRUE decodes ntee_major_group", {
+  result <- nccs_catalog("ntee_major_group", labels = TRUE)
+  expect_s3_class(result, "tbl_df")
+  expect_named(result, c("code", "description"))
+  expect_equal(nrow(result), 26)
+  expect_equal(result$description[result$code == "A"], "Arts, Culture, and Humanities")
+  expect_equal(result$description[result$code == "Z"], "Unknown")
+})

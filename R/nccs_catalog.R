@@ -4,10 +4,11 @@
 #' `labels = TRUE` — a tibble of codes alongside their human-readable
 #' definitions sourced from bundled BMF lookup tables. No network access.
 #'
-#' @param field One of `"ntee_subsector"`, `"exempt_org_type"`, `"state"`,
-#'   `"subsection_code"`, `"foundation_code"`, or `"affiliation_code"`. The
-#'   last three are decoder fields backed by the bundled BMF lookups; they
-#'   are not currently accepted by `nccs_read()` but are useful for joining
+#' @param field One of `"ntee_subsector"`, `"ntee_major_group"`,
+#'   `"exempt_org_type"`, `"state"`, `"subsection_code"`,
+#'   `"foundation_code"`, or `"affiliation_code"`. The last three are
+#'   decoder fields backed by the bundled BMF lookups; they are not
+#'   currently accepted by `nccs_read()` but are useful for joining
 #'   external data.
 #' @param labels Logical. If `FALSE` (default), returns a character vector of
 #'   valid codes — preserves the legacy behavior. If `TRUE`, returns a tibble
@@ -26,7 +27,8 @@
 #' nccs_catalog("foundation_code", labels = TRUE)
 #'
 #' @export
-nccs_catalog <- function(field = c("ntee_subsector", "exempt_org_type", "state",
+nccs_catalog <- function(field = c("ntee_subsector", "ntee_major_group",
+                                   "exempt_org_type", "state",
                                    "subsection_code", "foundation_code",
                                    "affiliation_code"),
                          labels = FALSE) {
@@ -46,6 +48,7 @@ nccs_catalog <- function(field = c("ntee_subsector", "exempt_org_type", "state",
       "ART", "EDU", "ENV", "HEL", "HMS", "HOS",
       "IFA", "MMB", "PSB", "REL", "UNI", "UNU"
     ),
+    ntee_major_group = LETTERS,
     state = c(
       datasets::state.abb, "DC", "PR", "GU", "VI", "AS", "MP"
     ),
@@ -100,6 +103,37 @@ nccs_catalog <- function(field = c("ntee_subsector", "exempt_org_type", "state",
         description = as.character(tbl$nteev2_subsector_definition)
       )
     },
+    ntee_major_group = dplyr::tibble(
+      code = LETTERS,
+      description = c(
+        "Arts, Culture, and Humanities",
+        "Education",
+        "Environment",
+        "Animal-Related",
+        "Health Care",
+        "Mental Health and Crisis Intervention",
+        "Voluntary Health Associations and Medical Disciplines",
+        "Medical Research",
+        "Crime and Legal-Related",
+        "Employment",
+        "Food, Agriculture, and Nutrition",
+        "Housing and Shelter",
+        "Public Safety, Disaster Preparedness, and Relief",
+        "Recreation and Sports",
+        "Youth Development",
+        "Human Services",
+        "International, Foreign Affairs, and National Security",
+        "Civil Rights, Social Action, and Advocacy",
+        "Community Improvement and Capacity Building",
+        "Philanthropy, Voluntarism, and Grantmaking Foundations",
+        "Science and Technology",
+        "Social Science",
+        "Public and Societal Benefit",
+        "Religion-Related",
+        "Mutual and Membership Benefit",
+        "Unknown"
+      )
+    ),
     state = {
       abbr <- c(datasets::state.abb, "DC", "PR", "GU", "VI", "AS", "MP")
       name <- c(datasets::state.name,
