@@ -23,3 +23,6 @@ articles:
   - title: "Getting Started"
     contents:
       - getting-started
+  - title: "Recipes"
+    contents:
+      - spatial-joins
