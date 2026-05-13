@@ -9,8 +9,8 @@ network access.
 
 ``` r
 nccs_catalog(
-  field = c("ntee_subsector", "exempt_org_type", "state", "subsection_code",
-    "foundation_code", "affiliation_code"),
+  field = c("ntee_subsector", "ntee_major_group", "exempt_org_type", "state",
+    "subsection_code", "foundation_code", "affiliation_code"),
   labels = FALSE
 )
 ```
@@ -19,11 +19,12 @@ nccs_catalog(
 
 - field:
 
-  One of \`"ntee_subsector"\`, \`"exempt_org_type"\`, \`"state"\`,
-  \`"subsection_code"\`, \`"foundation_code"\`, or
-  \`"affiliation_code"\`. The last three are decoder fields backed by
-  the bundled BMF lookups; they are not currently accepted by
-  \`nccs_read()\` but are useful for joining external data.
+  One of \`"ntee_subsector"\`, \`"ntee_major_group"\`,
+  \`"exempt_org_type"\`, \`"state"\`, \`"subsection_code"\`,
+  \`"foundation_code"\`, or \`"affiliation_code"\`. The last three are
+  decoder fields backed by the bundled BMF lookups; they are not
+  currently accepted by \`nccs_read()\` but are useful for joining
+  external data.
 
 - labels:
 
