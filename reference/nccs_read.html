@@ -51,7 +51,6 @@ NTEE subsector, and exempt organization type for efficient reads.</p>
 <span>  exempt_org_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  columns <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  date <span class="op">=</span> <span class="st">"2026_03"</span>,</span>
 <span>  collect <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -89,11 +88,6 @@ all columns (warning: 400+ MB). Columns used in active filters are always
 included.</p></dd>
 
 
-<dt id="arg-date">date<a class="anchor" aria-label="anchor" href="#arg-date"></a></dt>
-<dd><p>Character string in `YYYY_MM` format indicating the data
-vintage. Defaults to `"2026_03"`.</p></dd>
-
-
 <dt id="arg-collect">collect<a class="anchor" aria-label="anchor" href="#arg-collect"></a></dt>
 <dd><p>Logical. If `TRUE` (default), collects the result into a
 tibble. If `FALSE`, returns a lazy Arrow query for further dplyr
@@ -104,6 +98,15 @@ operations.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A tibble (if `collect = TRUE`) or an Arrow Dataset query (if
   `collect = FALSE`).</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>The package reads the rolling "master" geocoded BMF published at
+`s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet`.
+The upstream pipeline (`../nccs-data-bmf/`) also publishes dated monthly
+snapshots at `s3://nccsdata/geocoding/bmf/YYYY_MM/...` but this package
+does not expose them — point `arrow::open_dataset()` at that path
+directly if you need a specific vintage.</p>
     </div>
 
     <div class="section level2">

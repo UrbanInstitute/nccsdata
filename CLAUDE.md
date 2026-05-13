@@ -66,33 +66,77 @@ and break the upstream/downstream contracts.
 
 The BMF parquet read by
 [`nccs_read()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_read.md)
-is published by `../nccs-data-bmf/` and is already cleaned by the time
-it lands in S3:
+is published by `../nccs-data-bmf/`. Value-level cleaning is done
+upstream, but the parquet’s physical types are mostly `string` — see
+“Column types” below.
 
 - `ein` is in canonical `XX-XXXXXXX` form.
 - `nteev2_*` columns are decoded (subsector, code, definition, org
   type).
 - `subsection_code` is mapped to a verbose `exempt_organization_type`
   description.
-- Financial amounts (`asset_amount`, `income_amount`, `revenue_amount`,
-  …) are numeric.
 - Geocoding columns (`geo_*`) are populated.
 
-This package therefore does not implement tax-period, financial-amount,
-NTEE, or subsection transforms — those live in the ETL pipeline. The
-audit conclusion from the v2 design sessions was: only EIN normalization
-and binary-indicator coercion are worth promoting as user-facing
-helpers, because users frequently bring external CSVs into the same
-workflow.
+This package does not implement tax-period, NTEE, or subsection
+transforms — those live in the ETL pipeline. The audit conclusion from
+the v2 design sessions was: only EIN normalization and binary-indicator
+coercion are worth promoting as user-facing helpers, because users
+frequently bring external CSVs into the same workflow.
+
+### Column types
+
+Upstream stacks BMF vintages with mixed source dtypes and writes the
+result with almost every column as `string`, by design — explicit typing
+failed across the vintage seam. Concretely:
+
+- Numeric-looking columns (`asset_amount`, `income_amount`,
+  `revenue_amount`, `geo_score`, `geo_distance`, …) arrive as
+  `character`. Cast with
+  [`as.numeric()`](https://rdrr.io/r/base/numeric.html) at the consumer.
+- Code columns (`subsection_code`, `classification_code`,
+  `foundation_code`, `affiliation_code`, `accounting_period`,
+  `asset_code`, `income_code`, `filing_requirement_code`,
+  `org_addr_zip5`, `org_addr_zip4`, `geo_postal`, `activity_code`,
+  `ruling_date_ym_str`, `tax_period_ym_str`, …) arrive as `character`.
+  Treat them as IDs; cast only if needed.
+- Boolean-looking columns (`group_exemption_is_member`,
+  `org_addr_is_po_box`, `org_addr_is_rural_route`,
+  `org_addr_has_special_chars`, `org_addr_is_missing`,
+  `org_addr_missing_number`, `org_addr_state_invalid`,
+  `ruling_date_is_missing`, `tax_period_is_missing`,
+  `in_care_of_name_provided`) arrive as `character` (“True”/“False”).
+  Use
+  [`nccs_as_indicator()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_as_indicator.md)
+  to coerce — these are exactly the case the helper was built for, so
+  the “no re-cleaning of package output” rule does not apply to
+  indicator/financial coercion here.
+- Date columns (`ruling_date`, `tax_period_ymd`) arrive as `character`
+  in `YYYY-MM-DD` form. Cast with
+  [`as.Date()`](https://rdrr.io/r/base/as.Date.html).
+- Columns that *do* keep proper types: `geo_lat`/`geo_lon` (double),
+  `geo_is_geocoded` (logical), `first_year_in_bmf` / `last_year_in_bmf`
+  (integer), `bmf_vintages_observed` (double).
+
+The bundled data dictionary (`bmf_dictionary`) records the actual
+on-disk type for each column, so it is the source of truth — not this
+list, which is illustrative.
 
 ## Architecture
 
 ### Data Source
 
-BMF parquet files are stored in a public S3 bucket at:
-`s3://nccsdata/geocoding/bmf/{YYYY_MM}/merged/bmf_{YYYY_MM}_geocoded.parquet`
+[`nccs_read()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_read.md)
+reads the rolling master geocoded BMF parquet at:
+`s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet`
 
-The `arrow` package reads these directly via S3 URIs — no authentication
+The upstream pipeline also publishes dated monthly snapshots at
+`s3://nccsdata/geocoding/bmf/{YYYY_MM}/merged/bmf_{YYYY_MM}_geocoded.parquet`,
+but this package does not expose them. Users who need a specific vintage
+should call
+[`arrow::open_dataset()`](https://arrow.apache.org/docs/r/reference/open_dataset.html)
+against that path directly.
+
+The `arrow` package reads from S3 directly via URI — no authentication
 needed.
 
 ### Package Functions
@@ -113,7 +157,7 @@ needed.
 
 ### Package Data
 
-- `data/bmf_dictionary.rda` — 97-row tibble with column_name,
+- `data/bmf_dictionary.rda` — 106-row tibble with column_name,
   description, type for all BMF columns. Exported.
 - `R/sysdata.rda` — Internal bundled lookup tables (see “Bundled
   lookups” below). Not exported; consumed by

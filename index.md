@@ -116,7 +116,7 @@ nccs_as_indicator(c("E", "P", "Y", "N"), scheme = "efile")
 ### Browsing the data dictionary
 
 [`nccs_dictionary()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_dictionary.md)
-returns a tibble describing all 97 BMF columns, with optional pattern
+returns a tibble describing all BMF columns, with optional pattern
 filtering.
 
 ``` r

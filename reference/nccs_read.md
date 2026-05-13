@@ -14,7 +14,6 @@ nccs_read(
   exempt_org_type = NULL,
   county = NULL,
   columns = NULL,
-  date = "2026_03",
   collect = TRUE
 )
 ```
@@ -50,11 +49,6 @@ nccs_read(
   returns all columns (warning: 400+ MB). Columns used in active filters
   are always included.
 
-- date:
-
-  Character string in \`YYYY_MM\` format indicating the data vintage.
-  Defaults to \`"2026_03"\`.
-
 - collect:
 
   Logical. If \`TRUE\` (default), collects the result into a tibble. If
@@ -64,6 +58,15 @@ nccs_read(
 
 A tibble (if \`collect = TRUE\`) or an Arrow Dataset query (if \`collect
 = FALSE\`).
+
+## Details
+
+The package reads the rolling "master" geocoded BMF published at
+\`s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet\`.
+The upstream pipeline (\`../nccs-data-bmf/\`) also publishes dated
+monthly snapshots at \`s3://nccsdata/geocoding/bmf/YYYY_MM/...\` but
+this package does not expose them — point \`arrow::open_dataset()\` at
+that path directly if you need a specific vintage.
 
 ## Examples
 

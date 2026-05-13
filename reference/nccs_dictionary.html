@@ -67,31 +67,31 @@ regular expression).</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># See all columns</span></span></span>
 <span class="r-in"><span><span class="fu">nccs_dictionary</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 97 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 106 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    column_name                 description                                 type </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> accounting_period           Month when organizations accounting period… inte…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> activity_code               Three 3-digit activity codes concatenated … inte…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> accounting_period           Month when organizations accounting period… char…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> activity_code               Three 3-digit activity codes concatenated … char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> activity_code_categories    Semicolon-separated activity categories     char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> activity_code_definitions   Semicolon-separated descriptions of activi… char…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> affiliation_code            Code indicating relationship to parent org… inte…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> affiliation_code            Code indicating relationship to parent org… char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> affiliation_code_definition Description of affiliation relationship     char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> all_classifications_string  Semicolon-separated list of all classifica… char…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> asset_amount                Total assets in dollars (most recent retur… nume…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> asset_code                  Asset amount range code (0-9)               inte…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> asset_amount                Total assets in dollars (most recent retur… char…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> asset_code                  Asset amount range code (0-9)               char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> asset_code_definition       Description of asset range (e.g. $100000 t… char…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 87 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 96 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Find geocoding-related columns</span></span></span>
 <span class="r-in"><span><span class="fu">nccs_dictionary</span><span class="op">(</span><span class="st">"geo"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 19 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 18 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    column_name      description                                            type </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> geo_addr_type    Geocoder match precision level (PointAddress StreetAd… char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> geo_city         City name from geocoder                                char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> geo_country      Country code from geocoder (e.g. USA) for identifying… char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> geo_county       County name from geocoder                              char…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> geo_distance     Distance in meters between input address and matched … nume…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> geo_distance     Distance in meters between input address and matched … char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> geo_is_geocoded  TRUE if latitude and longitude are non-NA              logi…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> geo_lat          WGS 84 latitude (EPSG 4326) from geocoder              nume…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> geo_lon          WGS 84 longitude (EPSG 4326) from geocoder             nume…</span>
@@ -99,21 +99,20 @@ regular expression).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> geo_match_type   Geocoder match type (A=address match) distinguishing … char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> geo_metro_area   Metropolitan area name from geocoder (may be blank)    char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> geo_neighborhood ESRI-defined neighborhood from geocoder                char…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> geo_postal       ZIP code resolved by geocoder for cross-referencing w… inte…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> geo_postal       ZIP code resolved by geocoder for cross-referencing w… char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> geo_postal_ext   ZIP+4 extension resolved by geocoder                   char…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> geo_precision    Geocoding precision tier derived from geo_addr_type (… char…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> geo_score        Geocoder match confidence score (1-100)                nume…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> geo_state        State name from geocoder                               char…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> geo_state_abbr   State abbreviation from geocoder                       char…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">19</span> geo_status       Geocoder match status (M=Match T=Tied U=Unmatched)     char…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> geo_score        Geocoder match confidence score (1-100)                char…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> geo_state        State name from geocoder                               char…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> geo_state_abbr   State abbreviation from geocoder                       char…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> geo_status       Geocoder match status (M=Match T=Tied U=Unmatched)     char…</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Find NTEE-related columns</span></span></span>
 <span class="r-in"><span><span class="fu">nccs_dictionary</span><span class="op">(</span><span class="st">"ntee"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 10 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 11 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    column_name                 description                                 type </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ntee_code_clean             Standardized 3-character NTEE code          char…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ntee_code_definition        Full description of NTEE classification     char…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ntee_code_clean             Standardized 3-character NTEE code. UNDEFI… char…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ntee_code_definition        Full description of NTEE classification. U… char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ntee_code_major_group       NTEE major group letter (A-Z) indicating b… char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ntee_code_raw               Original NTEE code from source file (1-4 c… char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ntee_common_code            Common code suffix for 4-character NTEE co… char…</span>
@@ -122,6 +121,7 @@ regular expression).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> nteev2_code                 NTEEv2 code portion (3 characters)          char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> nteev2_org_type             NTEEv2 organization type (RG=Regular AA=Al… char…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> nteev2_subsector            NTEEv2 subsector code (e.g. UNI HOS ART EN… char…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> nteev2_subsector_definition Human-readable NTEEv2 subsector name (e.g.… char…</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

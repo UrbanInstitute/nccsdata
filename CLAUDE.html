@@ -77,23 +77,33 @@
 </ul></div>
 <div class="section level2">
 <h2 id="upstream-contract">Upstream contract<a class="anchor" aria-label="anchor" href="#upstream-contract"></a></h2>
-<p>The BMF parquet read by <code><a href="reference/nccs_read.html">nccs_read()</a></code> is published by <code>../nccs-data-bmf/</code> and is already cleaned by the time it lands in S3:</p>
+<p>The BMF parquet read by <code><a href="reference/nccs_read.html">nccs_read()</a></code> is published by <code>../nccs-data-bmf/</code>. Value-level cleaning is done upstream, but the parquet’s physical types are mostly <code>string</code> — see “Column types” below.</p>
 <ul><li>
 <code>ein</code> is in canonical <code>XX-XXXXXXX</code> form.</li>
 <li>
 <code>nteev2_*</code> columns are decoded (subsector, code, definition, org type).</li>
 <li>
 <code>subsection_code</code> is mapped to a verbose <code>exempt_organization_type</code> description.</li>
-<li>Financial amounts (<code>asset_amount</code>, <code>income_amount</code>, <code>revenue_amount</code>, …) are numeric.</li>
 <li>Geocoding columns (<code>geo_*</code>) are populated.</li>
-</ul><p>This package therefore does not implement tax-period, financial-amount, NTEE, or subsection transforms — those live in the ETL pipeline. The audit conclusion from the v2 design sessions was: only EIN normalization and binary-indicator coercion are worth promoting as user-facing helpers, because users frequently bring external CSVs into the same workflow.</p>
+</ul><p>This package does not implement tax-period, NTEE, or subsection transforms — those live in the ETL pipeline. The audit conclusion from the v2 design sessions was: only EIN normalization and binary-indicator coercion are worth promoting as user-facing helpers, because users frequently bring external CSVs into the same workflow.</p>
+<div class="section level3">
+<h3 id="column-types">Column types<a class="anchor" aria-label="anchor" href="#column-types"></a></h3>
+<p>Upstream stacks BMF vintages with mixed source dtypes and writes the result with almost every column as <code>string</code>, by design — explicit typing failed across the vintage seam. Concretely:</p>
+<ul><li>Numeric-looking columns (<code>asset_amount</code>, <code>income_amount</code>, <code>revenue_amount</code>, <code>geo_score</code>, <code>geo_distance</code>, …) arrive as <code>character</code>. Cast with <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric()</a></code> at the consumer.</li>
+<li>Code columns (<code>subsection_code</code>, <code>classification_code</code>, <code>foundation_code</code>, <code>affiliation_code</code>, <code>accounting_period</code>, <code>asset_code</code>, <code>income_code</code>, <code>filing_requirement_code</code>, <code>org_addr_zip5</code>, <code>org_addr_zip4</code>, <code>geo_postal</code>, <code>activity_code</code>, <code>ruling_date_ym_str</code>, <code>tax_period_ym_str</code>, …) arrive as <code>character</code>. Treat them as IDs; cast only if needed.</li>
+<li>Boolean-looking columns (<code>group_exemption_is_member</code>, <code>org_addr_is_po_box</code>, <code>org_addr_is_rural_route</code>, <code>org_addr_has_special_chars</code>, <code>org_addr_is_missing</code>, <code>org_addr_missing_number</code>, <code>org_addr_state_invalid</code>, <code>ruling_date_is_missing</code>, <code>tax_period_is_missing</code>, <code>in_care_of_name_provided</code>) arrive as <code>character</code> (“True”/“False”). Use <code><a href="reference/nccs_as_indicator.html">nccs_as_indicator()</a></code> to coerce — these are exactly the case the helper was built for, so the “no re-cleaning of package output” rule does not apply to indicator/financial coercion here.</li>
+<li>Date columns (<code>ruling_date</code>, <code>tax_period_ymd</code>) arrive as <code>character</code> in <code>YYYY-MM-DD</code> form. Cast with <code><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date()</a></code>.</li>
+<li>Columns that <em>do</em> keep proper types: <code>geo_lat</code>/<code>geo_lon</code> (double), <code>geo_is_geocoded</code> (logical), <code>first_year_in_bmf</code> / <code>last_year_in_bmf</code> (integer), <code>bmf_vintages_observed</code> (double).</li>
+</ul><p>The bundled data dictionary (<code>bmf_dictionary</code>) records the actual on-disk type for each column, so it is the source of truth — not this list, which is illustrative.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="architecture">Architecture<a class="anchor" aria-label="anchor" href="#architecture"></a></h2>
 <div class="section level3">
 <h3 id="data-source">Data Source<a class="anchor" aria-label="anchor" href="#data-source"></a></h3>
-<p>BMF parquet files are stored in a public S3 bucket at: <code>s3://nccsdata/geocoding/bmf/{YYYY_MM}/merged/bmf_{YYYY_MM}_geocoded.parquet</code></p>
-<p>The <code>arrow</code> package reads these directly via S3 URIs — no authentication needed.</p>
+<p><code><a href="reference/nccs_read.html">nccs_read()</a></code> reads the rolling master geocoded BMF parquet at: <code>s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet</code></p>
+<p>The upstream pipeline also publishes dated monthly snapshots at <code>s3://nccsdata/geocoding/bmf/{YYYY_MM}/merged/bmf_{YYYY_MM}_geocoded.parquet</code>, but this package does not expose them. Users who need a specific vintage should call <code><a href="https://arrow.apache.org/docs/r/reference/open_dataset.html" class="external-link">arrow::open_dataset()</a></code> against that path directly.</p>
+<p>The <code>arrow</code> package reads from S3 directly via URI — no authentication needed.</p>
 </div>
 <div class="section level3">
 <h3 id="package-functions">Package Functions<a class="anchor" aria-label="anchor" href="#package-functions"></a></h3>
@@ -113,7 +123,7 @@
 <div class="section level3">
 <h3 id="package-data">Package Data<a class="anchor" aria-label="anchor" href="#package-data"></a></h3>
 <ul><li>
-<code>data/bmf_dictionary.rda</code> — 97-row tibble with column_name, description, type for all BMF columns. Exported.</li>
+<code>data/bmf_dictionary.rda</code> — 106-row tibble with column_name, description, type for all BMF columns. Exported.</li>
 <li>
 <code>R/sysdata.rda</code> — Internal bundled lookup tables (see “Bundled lookups” below). Not exported; consumed by <code>nccs_catalog(labels = TRUE)</code>.</li>
 <li>
