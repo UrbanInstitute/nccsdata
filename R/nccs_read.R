@@ -4,6 +4,13 @@
 #' public S3 bucket. Supports predicate-pushdown filtering by state, county,
 #' NTEE subsector, and exempt organization type for efficient reads.
 #'
+#' The package reads the rolling "master" geocoded BMF published at
+#' `s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet`.
+#' The upstream pipeline (`../nccs-data-bmf/`) also publishes dated monthly
+#' snapshots at `s3://nccsdata/geocoding/bmf/{YYYY_MM}/...` but this package
+#' does not expose them — point `arrow::open_dataset()` at that path
+#' directly if you need a specific vintage.
+#'
 #' @param state Character vector of two-letter state abbreviations to filter on
 #'   (e.g., `"PA"`, `c("PA", "NY")`). Filters the `org_addr_state` column.
 #' @param ntee_subsector Character vector of NTEE v2 subsector codes (e.g.,
@@ -18,8 +25,6 @@
 #'   subset. A character vector returns those specific columns. `"all"` returns
 #'   all columns (warning: 400+ MB). Columns used in active filters are always
 #'   included.
-#' @param date Character string in `YYYY_MM` format indicating the data
-#'   vintage. Defaults to `"2026_03"`.
 #' @param collect Logical. If `TRUE` (default), collects the result into a
 #'   tibble. If `FALSE`, returns a lazy Arrow query for further dplyr
 #'   operations.
@@ -47,13 +52,7 @@ nccs_read <- function(state = NULL,
                       exempt_org_type = NULL,
                       county = NULL,
                       columns = NULL,
-                      date = "2026_03",
                       collect = TRUE) {
-
-  # Validate date format
-  if (!grepl("^\\d{4}_\\d{2}$", date)) {
-    stop("`date` must be in YYYY_MM format (e.g., '2026_03').", call. = FALSE)
-  }
 
   # Validate state codes
   valid_states <- nccs_catalog("state")
@@ -95,8 +94,7 @@ nccs_read <- function(state = NULL,
   }
 
   # Open dataset from S3
-  s3_path <- .build_s3_path(date)
-  ds <- arrow::open_dataset(s3_path)
+  ds <- arrow::open_dataset(.bmf_master_s3_path())
 
   # Column selection
   default_columns <- c(
@@ -115,7 +113,7 @@ nccs_read <- function(state = NULL,
     select_cols <- default_columns
   } else if (length(columns) == 1 && columns == "all") {
     message(
-      "Selecting all columns. The parquet file is 400+ MB with 97 columns. ",
+      "Selecting all columns. The parquet file is 400+ MB with 100+ columns. ",
       "Consider specifying `columns` for faster reads."
     )
     select_cols <- NULL
@@ -159,13 +157,9 @@ nccs_read <- function(state = NULL,
   }
 }
 
-#' Build S3 path to BMF parquet file
-#' @param date Character string in YYYY_MM format
+#' S3 URI of the rolling master geocoded BMF parquet
 #' @return Character string with S3 URI
 #' @noRd
-.build_s3_path <- function(date) {
-  paste0(
-    "s3://nccsdata/geocoding/bmf/", date,
-    "/merged/bmf_", date, "_geocoded.parquet"
-  )
+.bmf_master_s3_path <- function() {
+  "s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet"
 }

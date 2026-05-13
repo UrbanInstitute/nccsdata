@@ -115,7 +115,7 @@ nccs_as_indicator(c("E", "P", "Y", "N"), scheme = "efile")
 
 ### Browsing the data dictionary
 
-`nccs_dictionary()` returns a tibble describing all 97 BMF columns, with
+`nccs_dictionary()` returns a tibble describing all BMF columns, with
 optional pattern filtering.
 
 ``` r

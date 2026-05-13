@@ -10,7 +10,6 @@ nccs_read(
   exempt_org_type = NULL,
   county = NULL,
   columns = NULL,
-  date = "2026_03",
   collect = TRUE
 )
 }
@@ -34,9 +33,6 @@ subset. A character vector returns those specific columns. `"all"` returns
 all columns (warning: 400+ MB). Columns used in active filters are always
 included.}
 
-\item{date}{Character string in `YYYY_MM` format indicating the data
-vintage. Defaults to `"2026_03"`.}
-
 \item{collect}{Logical. If `TRUE` (default), collects the result into a
 tibble. If `FALSE`, returns a lazy Arrow query for further dplyr
 operations.}
@@ -49,6 +45,14 @@ A tibble (if `collect = TRUE`) or an Arrow Dataset query (if
 Reads the NCCS Business Master File (BMF) stored as a parquet file in a
 public S3 bucket. Supports predicate-pushdown filtering by state, county,
 NTEE subsector, and exempt organization type for efficient reads.
+}
+\details{
+The package reads the rolling "master" geocoded BMF published at
+`s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet`.
+The upstream pipeline (`../nccs-data-bmf/`) also publishes dated monthly
+snapshots at `s3://nccsdata/geocoding/bmf/{YYYY_MM}/...` but this package
+does not expose them — point `arrow::open_dataset()` at that path
+directly if you need a specific vintage.
 }
 \examples{
 \dontrun{

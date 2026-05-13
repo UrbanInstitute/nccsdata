@@ -1,19 +1,8 @@
-test_that(".build_s3_path constructs correct URL", {
-  path <- nccsdata:::.build_s3_path("2026_03")
+test_that(".bmf_master_s3_path returns the rolling master URI", {
   expect_equal(
-    path,
-    "s3://nccsdata/geocoding/bmf/2026_03/merged/bmf_2026_03_geocoded.parquet"
+    nccsdata:::.bmf_master_s3_path(),
+    "s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet"
   )
-})
-
-test_that(".build_s3_path works with different dates", {
-  path <- nccsdata:::.build_s3_path("2025_12")
-  expect_match(path, "2025_12")
-})
-
-test_that("nccs_read validates date format", {
-  expect_error(nccs_read(date = "2026-03"), "YYYY_MM")
-  expect_error(nccs_read(date = "March2026"), "YYYY_MM")
 })
 
 test_that("nccs_read validates state codes", {
