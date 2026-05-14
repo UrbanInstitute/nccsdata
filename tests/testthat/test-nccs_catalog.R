@@ -1,10 +1,16 @@
-test_that("nccs_catalog returns correct NTEE subsector codes", {
+test_that("nccs_catalog returns NTEE subsectors as inline code - description", {
   result <- nccs_catalog("ntee_subsector")
   expect_type(result, "character")
   expect_length(result, 12)
-  expect_true("ART" %in% result)
-  expect_true("EDU" %in% result)
-  expect_true("UNU" %in% result)
+  expect_true(any(grepl("^ART - ", result)))
+  expect_true(any(grepl("^EDU - ", result)))
+  expect_true(any(grepl("^UNU - ", result)))
+})
+
+test_that("nccs_read accepts inline subsector strings from nccs_catalog", {
+  inline <- nccs_catalog("ntee_subsector")
+  uni_inline <- inline[grepl("^UNI - ", inline)]
+  expect_equal(nccsdata:::.resolve_ntee_subsector(uni_inline), "UNI")
 })
 
 test_that("nccs_catalog returns state codes including territories", {

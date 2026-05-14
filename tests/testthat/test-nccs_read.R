@@ -49,6 +49,10 @@ test_that("nccs_read validates size_metric", {
   expect_error(nccs_read(size_metric = "expenses"), "should be one of")
 })
 
+test_that("nccs_read validates org_type", {
+  expect_error(nccs_read(org_type = "501c4"), "should be one of")
+})
+
 test_that("nccs_read validates min_last_year", {
   expect_error(nccs_read(min_last_year = "2024"), "must be a single integer")
   expect_error(nccs_read(min_last_year = 2024.5), "must be a single integer")

@@ -11,11 +11,13 @@
 #'   currently accepted by `nccs_read()` but are useful for joining
 #'   external data.
 #' @param labels Logical. If `FALSE` (default), returns a character vector of
-#'   valid codes — preserves the legacy behavior. If `TRUE`, returns a tibble
-#'   with at least a `code` and `description` column, sourced from the
-#'   internal `.nccs_lookups` bundle (see `data-raw/build_lookups.R`). For
-#'   `"state"`, the tibble pairs USPS abbreviations with state names; for
-#'   `"exempt_org_type"`, codes come from `subsection_classification_code`.
+#'   valid values. For fields where a short code alone is opaque
+#'   (`"ntee_subsector"`, `"exempt_org_type"`), each element is an inline
+#'   `"CODE - Description"` string; `nccs_read()` accepts these values back
+#'   verbatim. If `TRUE`, returns a tibble with at least a `code` and
+#'   `description` column, sourced from the internal `.nccs_lookups` bundle
+#'   (see `data-raw/build_lookups.R`). For `"state"`, the tibble pairs USPS
+#'   abbreviations with state names.
 #'
 #' @return A character vector (when `labels = FALSE`) or a tibble (when
 #'   `labels = TRUE`).
@@ -44,10 +46,13 @@ nccs_catalog <- function(field = c("ntee_subsector", "ntee_major_group",
 #' @noRd
 .nccs_catalog_codes <- function(field) {
   switch(field,
-    ntee_subsector = c(
-      "ART", "EDU", "ENV", "HEL", "HMS", "HOS",
-      "IFA", "MMB", "PSB", "REL", "UNI", "UNU"
-    ),
+    ntee_subsector = {
+      tbl <- .nccs_lookups$nteev2_subsector
+      paste(
+        as.character(tbl$nteev2_subsector), "-",
+        as.character(tbl$nteev2_subsector_definition)
+      )
+    },
     ntee_major_group = LETTERS,
     state = c(
       datasets::state.abb, "DC", "PR", "GU", "VI", "AS", "MP"

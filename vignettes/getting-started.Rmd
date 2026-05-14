@@ -92,6 +92,25 @@ pa_arts <- nccs_read(state = "PA", ntee_subsector = "ART")
 nrow(pa_arts)
 ```
 
+### Filter by Organization Type
+
+The `org_type` argument bundles the most common 501(c)(3) cuts so you
+don't have to manage `subsection_code` and `foundation_code` by hand:
+
+```{r}
+# All 501(c)(3) public charities
+pc <- nccs_read(org_type = "public_charity")
+
+# California private foundations
+ca_pf <- nccs_read(state = "CA", org_type = "private_foundation")
+
+# Everything that is not a 501(c)(3)
+non_c3 <- nccs_read(org_type = "non_501c3")
+```
+
+Pass `org_type = "501c3"` to keep both public charities and private
+foundations, or `"all"` (default) to skip the filter entirely.
+
 ## Selecting Columns
 
 The BMF parquet file contains 97 columns and is over 400 MB. By default,
@@ -126,6 +145,61 @@ result <- query |>
   select(ein, org_name_display, nteev2_subsector) |>
   collect()
 ```
+
+## Column Types
+
+The published BMF parquet stores most columns as `character` (the
+upstream pipeline stacks vintages and writes them out as strings).
+By default `nccs_read()` coerces well-known columns to their natural
+R types on the collected tibble:
+
+- `asset_amount`, `income_amount`, `revenue_amount`, `geo_score`,
+  `geo_distance` → `numeric`.
+- `ruling_date`, `tax_period_ymd` → `Date`.
+- The `org_addr_is_*`, `ruling_date_is_missing`, `tax_period_is_missing`
+  and `group_exemption_is_member` style flags → `logical` (via
+  `nccs_as_indicator()`).
+
+ID-like codes (`subsection_code`, `classification_code`, ZIPs, NTEE
+codes) stay as `character` — they're identifiers, not numbers. Pass
+`coerce = FALSE` to skip all coercion and get every column exactly as
+published.
+
+## Local Caching
+
+The master BMF parquet is hundreds of MB. `nccs_read()` caches it in
+`tools::R_user_dir("nccsdata", "cache")` on first use and reuses the
+local copy on subsequent calls (in the same session and across
+sessions). The cached file is refreshed automatically when it's older
+than `cache_max_age` days (30 by default, matching the upstream
+monthly rebuild cadence). Disable with `cache = FALSE`, or force a
+refresh:
+
+```{r}
+nccs_cache_dir()
+nccs_cache_clear()
+```
+
+## Reading Historical Vintages
+
+`nccs_read()` reads the rolling geocoded master, which the upstream
+pipeline rebuilds every month. For analyses that need a specific dated
+snapshot (papers, dashboards, regulatory work), use `nccs_vintage_url()`
+to get the S3 URI for that month, then read the CSV directly:
+
+```{r}
+uri  <- nccs_vintage_url("2023_07")
+dict <- arrow::read_csv_arrow(
+  nccs_vintage_url("2023_07", kind = "dictionary")
+)
+bmf_2023_07 <- arrow::read_csv_arrow(uri)
+```
+
+Vintage snapshots are *not* geocoded — they carry raw Form 990 address
+columns instead of the master's `geo_*` columns. Schemas also drift
+across vintages and across the legacy seam (pre-modern vintages live
+under a `bmf-legacy` path; pass `legacy = TRUE` to `nccs_vintage_url()`).
+Always inspect the matching data dictionary before filtering or joining.
 
 ## Summarizing
 

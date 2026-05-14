@@ -6,6 +6,10 @@ reference:
   - title: "Read Data"
     contents:
       - nccs_read
+      - nccs_vintage_url
+  - title: "Cache"
+    contents:
+      - nccs_cache_dir
   - title: "Summarize"
     contents:
       - nccs_summary

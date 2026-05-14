@@ -19,11 +19,13 @@ currently accepted by `nccs_read()` but are useful for joining
 external data.}
 
 \item{labels}{Logical. If `FALSE` (default), returns a character vector of
-valid codes — preserves the legacy behavior. If `TRUE`, returns a tibble
-with at least a `code` and `description` column, sourced from the
-internal `.nccs_lookups` bundle (see `data-raw/build_lookups.R`). For
-`"state"`, the tibble pairs USPS abbreviations with state names; for
-`"exempt_org_type"`, codes come from `subsection_classification_code`.}
+valid values. For fields where a short code alone is opaque
+(`"ntee_subsector"`, `"exempt_org_type"`), each element is an inline
+`"CODE - Description"` string; `nccs_read()` accepts these values back
+verbatim. If `TRUE`, returns a tibble with at least a `code` and
+`description` column, sourced from the internal `.nccs_lookups` bundle
+(see `data-raw/build_lookups.R`). For `"state"`, the tibble pairs USPS
+abbreviations with state names.}
 }
 \value{
 A character vector (when `labels = FALSE`) or a tibble (when
