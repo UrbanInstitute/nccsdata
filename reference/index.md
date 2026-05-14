@@ -4,6 +4,14 @@
 
 - [`nccs_read()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_read.md)
   : Read NCCS BMF Data from S3
+- [`nccs_vintage_url()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_vintage_url.md)
+  : S3 URL of a Historical BMF Vintage
+
+## Cache
+
+- [`nccs_cache_dir()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_cache_dir.md)
+  [`nccs_cache_clear()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_cache_dir.md)
+  : Manage the Local BMF Cache
 
 ## Summarize
 

@@ -40,6 +40,12 @@ pa <- nccs_read(state = "PA")
 # Arts nonprofits in New York
 ny_arts <- nccs_read(state = "NY", ntee_subsector = "ART")
 
+# 501(c)(3) private foundations in California
+ca_pf <- nccs_read(state = "CA", org_type = "private_foundation")
+
+# All 501(c)(3) public charities (the most common analyst cut)
+pc <- nccs_read(org_type = "public_charity")
+
 # Select specific columns
 pa_slim <- nccs_read(
   state = "PA",
@@ -51,6 +57,50 @@ query <- nccs_read(state = "PA", collect = FALSE)
 result <- query |>
   dplyr::filter(geo_county == "Lackawanna County") |>
   dplyr::collect()
+```
+
+### Column types
+
+The upstream parquet stores most columns as `character` (vintage
+stacking requires it).
+[`nccs_read()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_read.md)
+coerces known financial, date, and indicator columns to their natural
+types on the collected tibble by default — pass `coerce = FALSE` to opt
+out. ZIPs and other ID-like codes are intentionally left as `character`.
+
+### Local caching
+
+[`nccs_read()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_read.md)
+caches the geocoded master parquet (hundreds of MB) in
+`tools::R_user_dir("nccsdata", "cache")` so subsequent calls in the same
+or future sessions skip the S3 download. The cached copy refreshes once
+it’s more than `cache_max_age` days old (30 by default; the upstream
+master is rebuilt monthly). Pass `cache = FALSE` to always read from S3,
+or use
+[`nccs_cache_clear()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_cache_dir.md)
+to force the next call to re-download.
+
+``` r
+
+nccs_cache_dir()
+nccs_cache_clear()  # force re-download next time
+```
+
+### Reading historical vintages
+
+[`nccs_read()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_read.md)
+reads the rolling geocoded master. For a specific dated monthly snapshot
+— useful for reproducible research — use
+[`nccs_vintage_url()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_vintage_url.md)
+to get the S3 URI, then read the CSV directly. Vintage schemas differ by
+month and across the modern/legacy seam, so inspect the matching data
+dictionary before filtering.
+
+``` r
+
+uri  <- nccs_vintage_url("2023_07")
+dict <- arrow::read_csv_arrow(nccs_vintage_url("2023_07", kind = "dictionary"))
+bmf_2023_07 <- arrow::read_csv_arrow(uri)
 ```
 
 ### Summarizing data
@@ -167,6 +217,14 @@ Full documentation is available at
 
 - [`nccs_read()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_read.md)
   : Read NCCS BMF Data from S3
+- [`nccs_vintage_url()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_vintage_url.md)
+  : S3 URL of a Historical BMF Vintage
+
+## Cache
+
+- [`nccs_cache_dir()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_cache_dir.md)
+  [`nccs_cache_clear()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_cache_dir.md)
+  : Manage the Local BMF Cache
 
 ## Summarize
 

@@ -135,6 +135,25 @@ from S3 with predicate-pushdown filtering for efficient reads.</p>
 <span><span class="va">pa_arts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"PA"</span>, ntee_subsector <span class="op">=</span> <span class="st">"ART"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pa_arts</span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level3">
+<h3 id="filter-by-organization-type">Filter by Organization Type<a class="anchor" aria-label="anchor" href="#filter-by-organization-type"></a>
+</h3>
+<p>The <code>org_type</code> argument bundles the most common 501(c)(3)
+cuts so you don’t have to manage <code>subsection_code</code> and
+<code>foundation_code</code> by hand:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># All 501(c)(3) public charities</span></span>
+<span><span class="va">pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>org_type <span class="op">=</span> <span class="st">"public_charity"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># California private foundations</span></span>
+<span><span class="va">ca_pf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"CA"</span>, org_type <span class="op">=</span> <span class="st">"private_foundation"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Everything that is not a 501(c)(3)</span></span>
+<span><span class="va">non_c3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>org_type <span class="op">=</span> <span class="st">"non_501c3"</span><span class="op">)</span></span></code></pre></div>
+<p>Pass <code>org_type = "501c3"</code> to keep both public charities
+and private foundations, or <code>"all"</code> (default) to skip the
+filter entirely.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="selecting-columns">Selecting Columns<a class="anchor" aria-label="anchor" href="#selecting-columns"></a>
@@ -142,7 +161,7 @@ from S3 with predicate-pushdown filtering for efficient reads.</p>
 <p>The BMF parquet file contains 97 columns and is over 400 MB. By
 default, <code><a href="../reference/nccs_read.html">nccs_read()</a></code> returns a curated subset of commonly
 needed columns. You can customize this:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Specify exact columns (minimizes download size)</span></span>
 <span><span class="va">pa_slim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span></span>
 <span>  state <span class="op">=</span> <span class="st">"PA"</span>,</span>
@@ -159,7 +178,7 @@ needed columns. You can customize this:</p>
 <p>Set <code>collect = FALSE</code> to get a lazy Arrow query instead of
 a tibble. This is useful for building custom dplyr chains before
 collecting:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">query</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"PA"</span>, collect <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -171,10 +190,71 @@ collecting:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="column-types">Column Types<a class="anchor" aria-label="anchor" href="#column-types"></a>
+</h2>
+<p>The published BMF parquet stores most columns as
+<code>character</code> (the upstream pipeline stacks vintages and writes
+them out as strings). By default <code><a href="../reference/nccs_read.html">nccs_read()</a></code> coerces
+well-known columns to their natural R types on the collected tibble:</p>
+<ul>
+<li>
+<code>asset_amount</code>, <code>income_amount</code>,
+<code>revenue_amount</code>, <code>geo_score</code>,
+<code>geo_distance</code> → <code>numeric</code>.</li>
+<li>
+<code>ruling_date</code>, <code>tax_period_ymd</code> →
+<code>Date</code>.</li>
+<li>The <code>org_addr_is_*</code>, <code>ruling_date_is_missing</code>,
+<code>tax_period_is_missing</code> and
+<code>group_exemption_is_member</code> style flags →
+<code>logical</code> (via <code><a href="../reference/nccs_as_indicator.html">nccs_as_indicator()</a></code>).</li>
+</ul>
+<p>ID-like codes (<code>subsection_code</code>,
+<code>classification_code</code>, ZIPs, NTEE codes) stay as
+<code>character</code> — they’re identifiers, not numbers. Pass
+<code>coerce = FALSE</code> to skip all coercion and get every column
+exactly as published.</p>
+</div>
+<div class="section level2">
+<h2 id="local-caching">Local Caching<a class="anchor" aria-label="anchor" href="#local-caching"></a>
+</h2>
+<p>The master BMF parquet is hundreds of MB. <code><a href="../reference/nccs_read.html">nccs_read()</a></code>
+caches it in <code>tools::R_user_dir("nccsdata", "cache")</code> on
+first use and reuses the local copy on subsequent calls (in the same
+session and across sessions). The cached file is refreshed automatically
+when it’s older than <code>cache_max_age</code> days (30 by default,
+matching the upstream monthly rebuild cadence). Disable with
+<code>cache = FALSE</code>, or force a refresh:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/nccs_cache_dir.html">nccs_cache_dir</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/nccs_cache_dir.html">nccs_cache_clear</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="reading-historical-vintages">Reading Historical Vintages<a class="anchor" aria-label="anchor" href="#reading-historical-vintages"></a>
+</h2>
+<p><code><a href="../reference/nccs_read.html">nccs_read()</a></code> reads the rolling geocoded master, which the
+upstream pipeline rebuilds every month. For analyses that need a
+specific dated snapshot (papers, dashboards, regulatory work), use
+<code><a href="../reference/nccs_vintage_url.html">nccs_vintage_url()</a></code> to get the S3 URI for that month, then
+read the CSV directly:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">uri</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_vintage_url.html">nccs_vintage_url</a></span><span class="op">(</span><span class="st">"2023_07"</span><span class="op">)</span></span>
+<span><span class="va">dict</span> <span class="op">&lt;-</span> <span class="fu">arrow</span><span class="fu">::</span><span class="fu"><a href="https://arrow.apache.org/docs/r/reference/read_delim_arrow.html" class="external-link">read_csv_arrow</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/nccs_vintage_url.html">nccs_vintage_url</a></span><span class="op">(</span><span class="st">"2023_07"</span>, kind <span class="op">=</span> <span class="st">"dictionary"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">bmf_2023_07</span> <span class="op">&lt;-</span> <span class="fu">arrow</span><span class="fu">::</span><span class="fu"><a href="https://arrow.apache.org/docs/r/reference/read_delim_arrow.html" class="external-link">read_csv_arrow</a></span><span class="op">(</span><span class="va">uri</span><span class="op">)</span></span></code></pre></div>
+<p>Vintage snapshots are <em>not</em> geocoded — they carry raw Form 990
+address columns instead of the master’s <code>geo_*</code> columns.
+Schemas also drift across vintages and across the legacy seam
+(pre-modern vintages live under a <code>bmf-legacy</code> path; pass
+<code>legacy = TRUE</code> to <code><a href="../reference/nccs_vintage_url.html">nccs_vintage_url()</a></code>). Always
+inspect the matching data dictionary before filtering or joining.</p>
+</div>
+<div class="section level2">
 <h2 id="summarizing">Summarizing<a class="anchor" aria-label="anchor" href="#summarizing"></a>
 </h2>
 <p><code><a href="../reference/nccs_summary.html">nccs_summary()</a></code> produces grouped count summaries:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"PA"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Total count</span></span>
@@ -190,7 +270,7 @@ collecting:</p>
 <h2 id="saving-results">Saving Results<a class="anchor" aria-label="anchor" href="#saving-results"></a>
 </h2>
 <p>Write summary results to CSV:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span></span>
 <span>  state <span class="op">=</span> <span class="st">"PA"</span>,</span>
 <span>  county <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Lackawanna County"</span>, <span class="st">"Luzerne County"</span>, <span class="st">"Wayne County"</span><span class="op">)</span></span>

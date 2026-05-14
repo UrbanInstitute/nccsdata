@@ -17,10 +17,15 @@ nccs_read(
   ntee_code = NULL,
   nteev2_code = NULL,
   exempt_org_type = NULL,
+  org_type = c("all", "501c3", "public_charity", "pc", "private_foundation", "pf",
+    "non_501c3"),
   size_metric = c("revenue", "income", "asset"),
   size_min = NULL,
   size_max = NULL,
   min_last_year = NULL,
+  cache = TRUE,
+  cache_max_age = 30L,
+  coerce = TRUE,
   columns = NULL,
   collect = TRUE
 )
@@ -69,6 +74,25 @@ nccs_read(
   \[nccs_catalog()\] for valid values. Filters
   \`exempt_organization_type\`.
 
+- org_type:
+
+  Convenience filter that combines \`subsection_code\` and
+  \`foundation_code\` into the four common 501(c)(3) cuts plus their
+  complement. One of:
+
+  - \`"all"\` (default) — no filter.
+
+  - \`"501c3"\` — every 501(c)(3) organization (\`subsection_code ==
+    "3"\`).
+
+  - \`"public_charity"\` / \`"pc"\` — 501(c)(3) public charities
+    (foundation codes other than the three private-foundation types).
+
+  - \`"private_foundation"\` / \`"pf"\` — 501(c)(3) private foundations
+    (\`foundation_code\` in \`"2"\`, \`"3"\`, \`"4"\`).
+
+  - \`"non_501c3"\` — everything that is not a 501(c)(3).
+
 - size_metric:
 
   One of \`"revenue"\`, \`"income"\`, or \`"asset"\` indicating which
@@ -91,6 +115,30 @@ nccs_read(
   active" filter — e.g., \`min_last_year = 2024\` keeps organizations
   seen in BMF in 2024 or later.
 
+- cache:
+
+  Controls local caching of the master parquet. The S3 file is hundreds
+  of MB; without caching each call re-downloads it. \`TRUE\` (default)
+  caches in \`tools::R_user_dir("nccsdata", "cache")\`. A character path
+  uses that directory instead. \`FALSE\` skips the cache and reads
+  directly from S3 every call. See \[nccs_cache_dir()\] and
+  \[nccs_cache_clear()\].
+
+- cache_max_age:
+
+  Integer. Maximum age in days before the cached parquet is considered
+  stale and re-downloaded. Defaults to 30 (the master is rebuilt monthly
+  upstream). Ignored when \`cache = FALSE\`.
+
+- coerce:
+
+  Logical. If \`TRUE\` (default), known character-typed financial, date,
+  and indicator columns are coerced to their natural R types after
+  collection (see "Column coercion" below). Set to \`FALSE\` to leave
+  every column as published upstream. Only takes effect when \`collect =
+  TRUE\`; with \`collect = FALSE\` the lazy Arrow query is returned
+  untouched.
+
 - columns:
 
   Column selection. \`NULL\` (default) returns a sensible default
@@ -110,12 +158,34 @@ A tibble (if \`collect = TRUE\`) or an Arrow Dataset query (if \`collect
 
 ## Details
 
-The package reads the rolling "master" geocoded BMF published at
+Reads the rolling "master" geocoded BMF at
 \`s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet\`.
-The upstream pipeline (\`../nccs-data-bmf/\`) also publishes dated
-monthly snapshots at \`s3://nccsdata/geocoding/bmf/YYYY_MM/...\` but
-this package does not expose them — point \`arrow::open_dataset()\` at
-that path directly if you need a specific vintage.
+For a specific dated monthly snapshot, see \[nccs_vintage_url()\] —
+those artifacts are CSVs with per-vintage schemas and are not exposed
+through this function.
+
+## Column coercion
+
+The upstream BMF parquet stores most columns as \`character\` by design
+(vintage-stacking requires it). When \`coerce = TRUE\`, \`nccs_read()\`
+casts the following on the collected tibble:
+
+- Numeric: \`asset_amount\`, \`income_amount\`, \`revenue_amount\`,
+  \`geo_score\`, \`geo_distance\`.
+
+- Date (\`YYYY-MM-DD\`): \`ruling_date\`, \`tax_period_ymd\`.
+
+- Logical indicators (via \[nccs_as_indicator()\] with the \`yn\`
+  scheme): \`group_exemption_is_member\`, \`org_addr_is_po_box\`,
+  \`org_addr_is_rural_route\`, \`org_addr_has_special_chars\`,
+  \`org_addr_is_missing\`, \`org_addr_missing_number\`,
+  \`org_addr_state_invalid\`, \`ruling_date_is_missing\`,
+  \`tax_period_is_missing\`, \`in_care_of_name_provided\`.
+
+Code-like columns (e.g. \`subsection_code\`, \`classification_code\`,
+ZIPs) are intentionally left as \`character\` — they are identifiers,
+not numbers. Columns not in the result (because of \`columns\`
+selection) are silently skipped.
 
 ## Examples
 
@@ -138,6 +208,9 @@ arts_mid <- nccs_read(
   size_min = 1e6,
   size_max = 1e7
 )
+
+# Only 501(c)(3) private foundations in California
+ca_pf <- nccs_read(state = "CA", org_type = "private_foundation")
 
 # Lazy query for custom dplyr chains
 query <- nccs_read(state = "PA", collect = FALSE)

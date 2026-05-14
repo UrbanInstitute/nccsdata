@@ -29,12 +29,13 @@ nccs_catalog(
 - labels:
 
   Logical. If \`FALSE\` (default), returns a character vector of valid
-  codes — preserves the legacy behavior. If \`TRUE\`, returns a tibble
-  with at least a \`code\` and \`description\` column, sourced from the
-  internal \`.nccs_lookups\` bundle (see \`data-raw/build_lookups.R\`).
-  For \`"state"\`, the tibble pairs USPS abbreviations with state names;
-  for \`"exempt_org_type"\`, codes come from
-  \`subsection_classification_code\`.
+  values. For fields where a short code alone is opaque
+  (\`"ntee_subsector"\`, \`"exempt_org_type"\`), each element is an
+  inline \`"CODE - Description"\` string; \`nccs_read()\` accepts these
+  values back verbatim. If \`TRUE\`, returns a tibble with at least a
+  \`code\` and \`description\` column, sourced from the internal
+  \`.nccs_lookups\` bundle (see \`data-raw/build_lookups.R\`). For
+  \`"state"\`, the tibble pairs USPS abbreviations with state names.
 
 ## Value
 
@@ -45,7 +46,18 @@ A character vector (when \`labels = FALSE\`) or a tibble (when \`labels
 
 ``` r
 nccs_catalog("ntee_subsector")
-#>  [1] "ART" "EDU" "ENV" "HEL" "HMS" "HOS" "IFA" "MMB" "PSB" "REL" "UNI" "UNU"
+#>  [1] "ART - Arts, Culture, and Humanities" 
+#>  [2] "EDU - Education"                     
+#>  [3] "ENV - Environment and Animals"       
+#>  [4] "HEL - Health"                        
+#>  [5] "HMS - Human Services"                
+#>  [6] "IFA - International, Foreign Affairs"
+#>  [7] "PSB - Public, Societal Benefit"      
+#>  [8] "REL - Religion Related"              
+#>  [9] "MMB - Mutual/Membership Benefit"     
+#> [10] "UNU - Unknown, Unclassified"         
+#> [11] "UNI - Universities"                  
+#> [12] "HOS - Hospitals"                     
 nccs_catalog("ntee_subsector", labels = TRUE)
 #> # A tibble: 12 × 2
 #>    code  description                   

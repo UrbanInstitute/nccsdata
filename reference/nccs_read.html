@@ -56,10 +56,15 @@ organization type, financial size, and BMF recency for efficient reads.</p>
 <span>  ntee_code <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nteev2_code <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  exempt_org_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  org_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"501c3"</span>, <span class="st">"public_charity"</span>, <span class="st">"pc"</span>, <span class="st">"private_foundation"</span>, <span class="st">"pf"</span>,</span>
+<span>    <span class="st">"non_501c3"</span><span class="op">)</span>,</span>
 <span>  size_metric <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"revenue"</span>, <span class="st">"income"</span>, <span class="st">"asset"</span><span class="op">)</span>,</span>
 <span>  size_min <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  size_max <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  min_last_year <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cache_max_age <span class="op">=</span> <span class="fl">30L</span>,</span>
+<span>  coerce <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  columns <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  collect <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -110,6 +115,21 @@ descriptions. See [nccs_catalog()] for valid values. Filters
 `exempt_organization_type`.</p></dd>
 
 
+<dt id="arg-org-type">org_type<a class="anchor" aria-label="anchor" href="#arg-org-type"></a></dt>
+<dd><p>Convenience filter that combines `subsection_code`
+and `foundation_code` into the four common 501(c)(3) cuts plus
+their complement. One of:</p><ul><li><p>`"all"` (default) — no filter.</p></li>
+<li><p>`"501c3"` — every 501(c)(3) organization
+    (`subsection_code == "3"`).</p></li>
+<li><p>`"public_charity"` / `"pc"` — 501(c)(3) public charities
+    (foundation codes other than the three private-foundation
+    types).</p></li>
+<li><p>`"private_foundation"` / `"pf"` — 501(c)(3) private
+    foundations (`foundation_code` in `"2"`, `"3"`, `"4"`).</p></li>
+<li><p>`"non_501c3"` — everything that is not a 501(c)(3).</p></li>
+</ul></dd>
+
+
 <dt id="arg-size-metric">size_metric<a class="anchor" aria-label="anchor" href="#arg-size-metric"></a></dt>
 <dd><p>One of `"revenue"`, `"income"`, or `"asset"`
 indicating which financial amount to use with `size_min` / `size_max`.
@@ -132,6 +152,30 @@ recency / "still active" filter — e.g., `min_last_year = 2024` keeps
 organizations seen in BMF in 2024 or later.</p></dd>
 
 
+<dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
+<dd><p>Controls local caching of the master parquet. The S3
+file is hundreds of MB; without caching each call re-downloads it.
+`TRUE` (default) caches in `tools::R_user_dir("nccsdata", "cache")`.
+A character path uses that directory instead. `FALSE` skips the
+cache and reads directly from S3 every call. See
+[nccs_cache_dir()] and [nccs_cache_clear()].</p></dd>
+
+
+<dt id="arg-cache-max-age">cache_max_age<a class="anchor" aria-label="anchor" href="#arg-cache-max-age"></a></dt>
+<dd><p>Integer. Maximum age in days before the cached
+parquet is considered stale and re-downloaded. Defaults to 30 (the
+master is rebuilt monthly upstream). Ignored when `cache = FALSE`.</p></dd>
+
+
+<dt id="arg-coerce">coerce<a class="anchor" aria-label="anchor" href="#arg-coerce"></a></dt>
+<dd><p>Logical. If `TRUE` (default), known character-typed
+financial, date, and indicator columns are coerced to their natural
+R types after collection (see "Column coercion" below). Set to
+`FALSE` to leave every column as published upstream. Only takes
+effect when `collect = TRUE`; with `collect = FALSE` the lazy
+Arrow query is returned untouched.</p></dd>
+
+
 <dt id="arg-columns">columns<a class="anchor" aria-label="anchor" href="#arg-columns"></a></dt>
 <dd><p>Column selection. `NULL` (default) returns a sensible
 default subset. A character vector returns those specific columns.
@@ -152,12 +196,31 @@ operations.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The package reads the rolling "master" geocoded BMF published at
+    <p>Reads the rolling "master" geocoded BMF at
 `s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet`.
-The upstream pipeline (`../nccs-data-bmf/`) also publishes dated monthly
-snapshots at `s3://nccsdata/geocoding/bmf/YYYY_MM/...` but this package
-does not expose them — point `arrow::open_dataset()` at that path
-directly if you need a specific vintage.</p>
+For a specific dated monthly snapshot, see [nccs_vintage_url()] — those
+artifacts are CSVs with per-vintage schemas and are not exposed through
+this function.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="column-coercion">Column coercion<a class="anchor" aria-label="anchor" href="#column-coercion"></a></h2>
+
+
+<p>The upstream BMF parquet stores most columns as `character` by design
+(vintage-stacking requires it). When `coerce = TRUE`, `nccs_read()`
+casts the following on the collected tibble:</p><ul><li><p>Numeric: `asset_amount`, `income_amount`, `revenue_amount`,
+    `geo_score`, `geo_distance`.</p></li>
+<li><p>Date (`YYYY-MM-DD`): `ruling_date`, `tax_period_ymd`.</p></li>
+<li><p>Logical indicators (via [nccs_as_indicator()] with the `yn`
+    scheme): `group_exemption_is_member`, `org_addr_is_po_box`,
+    `org_addr_is_rural_route`, `org_addr_has_special_chars`,
+    `org_addr_is_missing`, `org_addr_missing_number`,
+    `org_addr_state_invalid`, `ruling_date_is_missing`,
+    `tax_period_is_missing`, `in_care_of_name_provided`.</p></li>
+</ul><p>Code-like columns (e.g. `subsection_code`, `classification_code`,
+ZIPs) are intentionally left as `character` — they are identifiers,
+not numbers. Columns not in the result (because of `columns`
+selection) are silently skipped.</p>
     </div>
 
     <div class="section level2">
@@ -180,6 +243,9 @@ directly if you need a specific vintage.</p>
 <span class="r-in"><span>  size_min <span class="op">=</span> <span class="fl">1e6</span>,</span></span>
 <span class="r-in"><span>  size_max <span class="op">=</span> <span class="fl">1e7</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Only 501(c)(3) private foundations in California</span></span></span>
+<span class="r-in"><span><span class="va">ca_pf</span> <span class="op">&lt;-</span> <span class="fu">nccs_read</span><span class="op">(</span>state <span class="op">=</span> <span class="st">"CA"</span>, org_type <span class="op">=</span> <span class="st">"private_foundation"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Lazy query for custom dplyr chains</span></span></span>
 <span class="r-in"><span><span class="va">query</span> <span class="op">&lt;-</span> <span class="fu">nccs_read</span><span class="op">(</span>state <span class="op">=</span> <span class="st">"PA"</span>, collect <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
