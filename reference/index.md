@@ -44,3 +44,10 @@
   : Normalize EINs to Canonical IRS Format
 - [`nccs_as_indicator()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_as_indicator.md)
   : Coerce IRS Binary-Indicator Columns to Logical
+
+## Financial analysis
+
+- [`nccs_deflate()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_deflate.md)
+  : Convert Nominal Dollars to Real (Inflation-Adjusted) Dollars
+- [`cpi_u`](https://urbaninstitute.github.io/nccsdata/reference/cpi_u.md)
+  : Annual CPI-U Series

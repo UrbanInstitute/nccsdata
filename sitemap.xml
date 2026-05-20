@@ -10,6 +10,7 @@
 <url><loc>https://urbaninstitute.github.io/nccsdata/authors.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/index.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/bmf_dictionary.html</loc></url>
+<url><loc>https://urbaninstitute.github.io/nccsdata/reference/cpi_u.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/index.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_as_indicator.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_cache_dir.html</loc></url>
@@ -17,6 +18,7 @@
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_core_columns.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_core_coverage.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_core_url.html</loc></url>
+<url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_deflate.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_dictionary.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_normalize_ein.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_read.html</loc></url>
