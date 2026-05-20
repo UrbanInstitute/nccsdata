@@ -153,12 +153,17 @@ tabular result.</p>
 <p>If your downstream question really is ZIP-based, use Census ZCTAs
 rather than the BMF’s mailing ZIP — they’re stable polygons you can join
 to ACS and other Census tabulations.</p>
+<p>For ZCTAs from 2020 onward, <code>tigris::zctas()</code> only serves
+the full national layer — the <code>state</code> argument was retired
+because the Census Bureau stopped publishing state-level ZCTA files.
+Pull national once (it caches) and let the spatial join restrict you to
+California.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ca</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"CA"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">geo_lat</span><span class="op">)</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">geo_lon</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">st_as_sf</span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"geo_lon"</span>, <span class="st">"geo_lat"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">zcta</span> <span class="op">&lt;-</span> <span class="fu">zctas</span><span class="op">(</span>state <span class="op">=</span> <span class="st">"CA"</span>, year <span class="op">=</span> <span class="fl">2020</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="va">zcta</span> <span class="op">&lt;-</span> <span class="fu">zctas</span><span class="op">(</span>year <span class="op">=</span> <span class="fl">2020</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">st_transform</span><span class="op">(</span><span class="fl">4326</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ca_with_zcta</span> <span class="op">&lt;-</span> <span class="fu">st_join</span><span class="op">(</span><span class="va">ca</span>, <span class="va">zcta</span><span class="op">[</span><span class="st">"ZCTA5CE20"</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
