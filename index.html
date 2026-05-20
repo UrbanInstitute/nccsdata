@@ -79,12 +79,6 @@
 <span><span class="co"># Arts nonprofits in New York</span></span>
 <span><span class="va">ny_arts</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"NY"</span>, ntee_subsector <span class="op">=</span> <span class="st">"ART"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># 501(c)(3) private foundations in California</span></span>
-<span><span class="va">ca_pf</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"CA"</span>, org_type <span class="op">=</span> <span class="st">"private_foundation"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># All 501(c)(3) public charities (the most common analyst cut)</span></span>
-<span><span class="va">pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>org_type <span class="op">=</span> <span class="st">"public_charity"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># Select specific columns</span></span>
 <span><span class="va">pa_slim</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/nccs_read.html">nccs_read</a></span><span class="op">(</span></span>
 <span>  state <span class="op">=</span> <span class="st">"PA"</span>,</span>
@@ -98,32 +92,10 @@
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="column-types">Column types<a class="anchor" aria-label="anchor" href="#column-types"></a>
-</h3>
-<p>The upstream parquet stores most columns as <code>character</code> (vintage stacking requires it). <code><a href="reference/nccs_read.html">nccs_read()</a></code> coerces known financial, date, and indicator columns to their natural types on the collected tibble by default — pass <code>coerce = FALSE</code> to opt out. ZIPs and other ID-like codes are intentionally left as <code>character</code>.</p>
-</div>
-<div class="section level3">
-<h3 id="local-caching">Local caching<a class="anchor" aria-label="anchor" href="#local-caching"></a>
-</h3>
-<p><code><a href="reference/nccs_read.html">nccs_read()</a></code> caches the geocoded master parquet (hundreds of MB) in <code>tools::R_user_dir("nccsdata", "cache")</code> so subsequent calls in the same or future sessions skip the S3 download. The cached copy refreshes once it’s more than <code>cache_max_age</code> days old (30 by default; the upstream master is rebuilt monthly). Pass <code>cache = FALSE</code> to always read from S3, or use <code><a href="reference/nccs_cache_dir.html">nccs_cache_clear()</a></code> to force the next call to re-download.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/nccs_cache_dir.html">nccs_cache_dir</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/nccs_cache_dir.html">nccs_cache_clear</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># force re-download next time</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="reading-historical-vintages">Reading historical vintages<a class="anchor" aria-label="anchor" href="#reading-historical-vintages"></a>
-</h3>
-<p><code><a href="reference/nccs_read.html">nccs_read()</a></code> reads the rolling geocoded master. For a specific dated monthly snapshot — useful for reproducible research — use <code><a href="reference/nccs_vintage_url.html">nccs_vintage_url()</a></code> to get the S3 URI, then read the CSV directly. Vintage schemas differ by month and across the modern/legacy seam, so inspect the matching data dictionary before filtering.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">uri</span>  <span class="op">&lt;-</span> <span class="fu"><a href="reference/nccs_vintage_url.html">nccs_vintage_url</a></span><span class="op">(</span><span class="st">"2023_07"</span><span class="op">)</span></span>
-<span><span class="va">dict</span> <span class="op">&lt;-</span> <span class="fu">arrow</span><span class="fu">::</span><span class="fu"><a href="https://arrow.apache.org/docs/r/reference/read_delim_arrow.html" class="external-link">read_csv_arrow</a></span><span class="op">(</span><span class="fu"><a href="reference/nccs_vintage_url.html">nccs_vintage_url</a></span><span class="op">(</span><span class="st">"2023_07"</span>, kind <span class="op">=</span> <span class="st">"dictionary"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">bmf_2023_07</span> <span class="op">&lt;-</span> <span class="fu">arrow</span><span class="fu">::</span><span class="fu"><a href="https://arrow.apache.org/docs/r/reference/read_delim_arrow.html" class="external-link">read_csv_arrow</a></span><span class="op">(</span><span class="va">uri</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
 <h3 id="summarizing-data">Summarizing data<a class="anchor" aria-label="anchor" href="#summarizing-data"></a>
 </h3>
 <p><code><a href="reference/nccs_summary.html">nccs_summary()</a></code> produces grouped count summaries from a collected data frame.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"PA"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Total count</span></span>
@@ -140,7 +112,7 @@
 <h3 id="discovering-valid-filter-values">Discovering valid filter values<a class="anchor" aria-label="anchor" href="#discovering-valid-filter-values"></a>
 </h3>
 <p><code><a href="reference/nccs_catalog.html">nccs_catalog()</a></code> lists valid values for <code><a href="reference/nccs_read.html">nccs_read()</a></code> filters without any network calls.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/nccs_catalog.html">nccs_catalog</a></span><span class="op">(</span><span class="st">"state"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/nccs_catalog.html">nccs_catalog</a></span><span class="op">(</span><span class="st">"ntee_subsector"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/nccs_catalog.html">nccs_catalog</a></span><span class="op">(</span><span class="st">"exempt_org_type"</span><span class="op">)</span></span>
@@ -154,7 +126,7 @@
 <h3 id="cleaning-external-data">Cleaning external data<a class="anchor" aria-label="anchor" href="#cleaning-external-data"></a>
 </h3>
 <p>The BMF returned by <code><a href="reference/nccs_read.html">nccs_read()</a></code> is already normalized upstream, but two helpers are exposed for users joining external CSVs or API responses against it:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Coerce EINs in any format to canonical XX-XXXXXXX</span></span>
 <span><span class="fu"><a href="reference/nccs_normalize_ein.html">nccs_normalize_ein</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"123456789"</span>, <span class="st">"12-3456789"</span>, <span class="fl">1234567</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "12-3456789" "12-3456789" "00-1234567"</span></span>
@@ -170,7 +142,7 @@
 <h3 id="browsing-the-data-dictionary">Browsing the data dictionary<a class="anchor" aria-label="anchor" href="#browsing-the-data-dictionary"></a>
 </h3>
 <p><code><a href="reference/nccs_dictionary.html">nccs_dictionary()</a></code> returns a tibble describing all BMF columns, with optional pattern filtering.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># All columns</span></span>
 <span><span class="fu"><a href="reference/nccs_dictionary.html">nccs_dictionary</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -180,6 +152,24 @@
 <span><span class="co"># Find NTEE-related columns</span></span>
 <span><span class="fu"><a href="reference/nccs_dictionary.html">nccs_dictionary</a></span><span class="op">(</span><span class="st">"ntee"</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="scope-and-design">Scope and design<a class="anchor" aria-label="anchor" href="#scope-and-design"></a>
+</h2>
+<p><code>nccsdata</code> is intentionally a lean reader. A few principles that shape what is — and is not — in the package:</p>
+<ul>
+<li>
+<strong>No re-cleaning of upstream data.</strong> The BMF and CORE Series parquet files are cleaned by the sibling ETL pipelines (<code>nccs-data-bmf</code>, <code>nccs-data-core</code>). EIN normalization, NTEE decoding, geocoding, and subsection labeling are done before publication. We don’t re-implement them here.</li>
+<li>
+<strong>The two exceptions are helpers for <em>external</em> data.</strong> <code><a href="reference/nccs_normalize_ein.html">nccs_normalize_ein()</a></code> and <code><a href="reference/nccs_as_indicator.html">nccs_as_indicator()</a></code> exist so you can bring your own CSVs (member rosters, survey extracts, donor lists) into the same shape as the package’s output before joining.</li>
+<li>
+<strong>One opinionated analytic helper: inflation adjustment.</strong> <code><a href="reference/nccs_deflate.html">nccs_deflate()</a></code> and the bundled annual <code>cpi_u</code> series are included because real-dollar conversion needs a reference table the user otherwise has to fetch themselves, and the conversion itself is mechanical and uncontroversial.</li>
+<li>
+<strong>No canonical financial ratios.</strong> Operating margin, program-expense ratio, fundraising efficiency, months of operating reserves, and similar measures are deliberately <em>not</em> bundled. Their definitions vary by analyst (which numerator, which denominator, which exclusions), and shipping one canonical version would make the package take editorial sides. They’re also one-line <code>mutate()</code> calls on the columns CORE already provides.</li>
+<li>
+<strong>Lean dependencies.</strong> Hard imports are <code>arrow</code>, <code>dplyr</code>, <code>utils</code>. Anything heavier (sf, tigris, ggplot2, data.table) belongs in vignettes that show how to combine <code>nccsdata</code> with those packages, not as a dependency.</li>
+</ul>
+<p>If you want to build analytic functionality on top of this package, the right pattern is a downstream package or notebook that imports <code>nccsdata</code> and adds your team’s preferred ratio definitions.</p>
 </div>
 <div class="section level2">
 <h2 id="migrating-from-v1">Migrating from v1<a class="anchor" aria-label="anchor" href="#migrating-from-v1"></a>
