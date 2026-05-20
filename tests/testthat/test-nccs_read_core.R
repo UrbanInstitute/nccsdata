@@ -29,6 +29,29 @@ test_that("nccs_read_core rejects invalid partitions", {
   expect_error(nccs_read_core("soi", 2010, "990"), "outside tier")
 })
 
+test_that("nccs_read_core rejects bad tax_year vectors", {
+  expect_error(nccs_read_core("merged", integer(0), "990combined"),
+               "non-empty integer")
+  expect_error(nccs_read_core("merged", c(2020, NA), "990combined"),
+               "non-empty integer")
+  expect_error(nccs_read_core("merged", 2020.5, "990combined"),
+               "non-empty integer")
+})
+
+test_that("nccs_read_core validates every year in a vector", {
+  # 2010 is outside SOI range (2012-2024) — must error before any network
+  expect_error(nccs_read_core("soi", c(2015, 2010), "990"),
+               "outside tier")
+})
+
+test_that(".format_bytes renders SI-ish units", {
+  expect_equal(nccsdata:::.format_bytes(0),         "size unknown")
+  expect_equal(nccsdata:::.format_bytes(NA_real_),  "size unknown")
+  expect_equal(nccsdata:::.format_bytes(512),       "512.0 B")
+  expect_equal(nccsdata:::.format_bytes(1536),      "1.5 KB")
+  expect_equal(nccsdata:::.format_bytes(2.5 * 1024^3), "2.5 GB")
+})
+
 # Integration test requiring network access
 test_that("nccs_read_core returns tibble with column projection", {
   skip_on_cran()

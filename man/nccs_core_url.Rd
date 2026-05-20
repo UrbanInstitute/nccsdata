@@ -47,8 +47,12 @@ filing, partitioned by `(tax_year, form)`. Three tiers are published:
   \item{`"soi"`}{IRS SOI annual extracts, harmonized. Tax years
     2012-2024. Forms `990`, `990ez`, `990pf`, `990combined`. Includes
     `is_amendment` for filtering originals vs revisions. 2024 is a
-    partial year. `990pf` has no 2017-2019 partitions (IRS did not
-    publish those PF extracts).}
+    partial year. `990pf` 2017-2019 are present but contain only
+    backfilled tax-year rows from the 2020+ calendar-year extracts
+    (no original calendar-year 2017-2019 PF SOI was published); row
+    counts are small (~665, 3.3k, 100k). For provenance-aware
+    reads, use the `"merged"` tier (which carries `source_pipeline`
+    and `has_legacy_augment`).}
   \item{`"legacy"`}{NCCS legacy CORE files, harmonized. Tax years
     1987-2011. Forms `990combined`, `990pf`. No amendment flag —
     duplicates by `(ein, tax_period)` exist but are not
