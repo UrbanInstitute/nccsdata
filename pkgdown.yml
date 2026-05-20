@@ -4,7 +4,8 @@ pkgdown_sha: ~
 articles:
   getting-started: getting-started.html
   spatial-joins: spatial-joins.html
-last_built: 2026-05-20T12:39Z
+  working-with-core: working-with-core.html
+last_built: 2026-05-20T12:45Z
 urls:
   reference: https://urbaninstitute.github.io/nccsdata/reference
   article: https://urbaninstitute.github.io/nccsdata/articles
