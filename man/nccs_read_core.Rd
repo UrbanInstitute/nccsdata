@@ -30,7 +30,7 @@ unselected columns are never read from disk or wire. Use
 [nccs_core_columns()] to see what is available for a partition.}
 
 \item{cache}{Local cache controls. `TRUE` (default) caches the
-parquet under [nccs_cache_dir()]`/core/{tier}/{tax_year}/{form}/`.
+parquet under [nccs_cache_dir()] in a `core/<tier>/<tax_year>/<form>/` subdir.
 A character path uses that directory instead. `FALSE` reads
 directly from S3 (slower on repeat calls, lower disk usage).}
 

@@ -20,3 +20,5 @@
 ^test\.R$
 ^CLAUDE\.md$
 ^\.Rproj\.user
+^README\.html$
+^Rplots\.pdf$
