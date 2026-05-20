@@ -35,4 +35,5 @@ articles:
       - getting-started
   - title: "Recipes"
     contents:
+      - working-with-core
       - spatial-joins
