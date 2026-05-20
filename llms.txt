@@ -1,4 +1,4 @@
-# nccsdata ![nccsdata hex logo](hex/nccsdata.svg)
+# nccsdata
 
 nccsdata provides tools to download, filter, and analyze nonprofit
 organization data from the [National Center for Charitable
