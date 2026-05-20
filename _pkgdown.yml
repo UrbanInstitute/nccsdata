@@ -7,6 +7,12 @@ reference:
     contents:
       - nccs_read
       - nccs_vintage_url
+  - title: "CORE Series (Form 990)"
+    contents:
+      - nccs_core_url
+      - nccs_read_core
+      - nccs_core_columns
+      - nccs_core_coverage
   - title: "Cache"
     contents:
       - nccs_cache_dir

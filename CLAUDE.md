@@ -121,6 +121,7 @@ The `arrow` package reads from S3 directly via URI — no authentication needed.
 ### Package Functions
 
 - `R/nccs_read.R` — Core function. Reads BMF parquet from S3 with optional predicate-pushdown filters (state, county, NTEE subsector, exempt org type). Supports column selection and lazy Arrow queries.
+- `R/nccs_core_url.R`, `R/nccs_read_core.R`, `R/nccs_core_columns.R`, `R/nccs_core_coverage.R` — CORE Series (Form 990 filings) surface. Three tiers (`merged` / `soi` / `legacy`) under `s3://nccsdata/processed{,_legacy,_merged}/core/{tax_year}/{form}/`. Each partition has a parquet + CSV data file and a parquet + CSV column dictionary. `nccs_read_core()` reads one partition; for multi-year, document the `arrow::open_dataset()` glob pattern in vignettes rather than baking it into the signature. Tier coverage gaps (legacy: no `990` / `990ez`; SOI: missing 2017-2019 `990pf`; merged: dedup keeps first by `(ein, tax_period)`) are documented in `nccs_core_url()` and validated by `.validate_core_partition()`.
 - `R/nccs_summary.R` — Grouped count summaries on collected data.
 - `R/nccs_catalog.R` — Lists valid filter values (offline, no network needed). Supports `labels = TRUE` to return a code + description tibble for fields backed by a bundled lookup.
 - `R/nccs_dictionary.R` — Returns BMF data dictionary as a tibble with optional grep filtering. Also documents the `bmf_dictionary` dataset.
