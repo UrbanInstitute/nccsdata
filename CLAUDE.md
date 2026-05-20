@@ -127,10 +127,12 @@ The `arrow` package reads from S3 directly via URI — no authentication needed.
 - `R/nccs_dictionary.R` — Returns BMF data dictionary as a tibble with optional grep filtering. Also documents the `bmf_dictionary` dataset.
 - `R/nccs_normalize_ein.R` — Coerces arbitrary EIN inputs to canonical `XX-XXXXXXX` form. Pure, base-R only.
 - `R/nccs_as_indicator.R` — Coerces IRS binary-indicator columns to logical, with `yn` and `efile` schemes for vintage-specific encodings.
+- `R/nccs_deflate.R` + `R/cpi_u.R` — Real-dollar conversion for CORE financial columns. `nccs_deflate(amount, year, base_year)` uses the bundled annual CPI-U series (FRED `CPIAUCNS`, 1913-present, refreshed via `data-raw/build_cpi.R`). This is the *one* opinionated analytic helper in the package — canonical financial ratios (operating margin, program-expense ratio, etc.) are deliberately not bundled because their definitions vary by analyst.
 
 ### Package Data
 
 - `data/bmf_dictionary.rda` — 106-row tibble with column_name, description, type for all BMF columns. Exported.
+- `data/cpi_u.rda` — Annual CPI-U series (1913-present) backing `nccs_deflate()`. Exported. Refreshed by `data-raw/build_cpi.R`.
 - `R/sysdata.rda` — Internal bundled lookup tables (see "Bundled lookups" below). Not exported; consumed by `nccs_catalog(labels = TRUE)`.
 - `data-raw/bmf_data_dictionary.csv` — Source CSV for `bmf_dictionary`.
 - `data-raw/data_generation.R` — Script to regenerate `bmf_dictionary.rda`.

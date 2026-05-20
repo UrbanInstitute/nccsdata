@@ -28,6 +28,10 @@ reference:
     contents:
       - nccs_normalize_ein
       - nccs_as_indicator
+  - title: "Financial analysis"
+    contents:
+      - nccs_deflate
+      - cpi_u
 
 articles:
   - title: "Getting Started"

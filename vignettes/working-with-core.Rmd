@@ -144,6 +144,30 @@ nccs_core_coverage("soi") |>
   arrange(tax_year)
 ```
 
+## Real-dollar conversion
+
+Multi-year panels mix nominal dollars from different years. Before
+comparing or aggregating across years, deflate to a common base year
+with `nccs_deflate()`, which uses the bundled annual CPI-U series
+(`cpi_u`):
+
+```{r deflate}
+panel_real <- panel |>
+  mutate(
+    total_revenue_2023  = nccs_deflate(as.numeric(total_revenue),
+                                       year = as.integer(substr(tax_period, 1, 4)),
+                                       base_year = 2023),
+    total_expenses_2023 = nccs_deflate(as.numeric(total_expenses),
+                                       year = as.integer(substr(tax_period, 1, 4)),
+                                       base_year = 2023)
+  )
+```
+
+The package deliberately stops at deflation — canonical financial
+ratios (operating margin, program-expense ratio, fundraising
+efficiency, etc.) are one-line `mutate()` calls whose definitions vary
+by analyst, so we don't ship opinionated wrappers.
+
 ## Joining CORE filings to BMF metadata
 
 CORE rows include the financial fields and form-specific data, but the
