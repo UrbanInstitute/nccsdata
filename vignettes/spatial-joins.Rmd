@@ -108,12 +108,17 @@ If your downstream question really is ZIP-based, use Census ZCTAs
 rather than the BMF's mailing ZIP — they're stable polygons you can
 join to ACS and other Census tabulations.
 
+For ZCTAs from 2020 onward, `tigris::zctas()` only serves the full
+national layer — the `state` argument was retired because the Census
+Bureau stopped publishing state-level ZCTA files. Pull national once
+(it caches) and let the spatial join restrict you to California.
+
 ```{r zcta}
 ca <- nccs_read(state = "CA") |>
   filter(!is.na(geo_lat), !is.na(geo_lon)) |>
   st_as_sf(coords = c("geo_lon", "geo_lat"), crs = 4326)
 
-zcta <- zctas(state = "CA", year = 2020) |>
+zcta <- zctas(year = 2020) |>
   st_transform(4326)
 
 ca_with_zcta <- st_join(ca, zcta["ZCTA5CE20"])
