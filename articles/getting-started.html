@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Getting Started with nccsdata • nccsdata</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting Started with nccsdata">
 </head>
@@ -251,10 +251,66 @@ Schemas also drift across vintages and across the legacy seam
 inspect the matching data dictionary before filtering or joining.</p>
 </div>
 <div class="section level2">
+<h2 id="form-990-filings-core-series">Form 990 Filings (CORE Series)<a class="anchor" aria-label="anchor" href="#form-990-filings-core-series"></a>
+</h2>
+<p>The BMF is one row per registered organization. To work with one row
+per <em>filing</em>, use the CORE Series — Form 990 filings harmonized
+into a single schema across vintages. Three tiers are published:</p>
+<ul>
+<li>
+<code>"merged"</code> (canonical, default): legacy + SOI-current
+merged on <code>(ein, tax_period)</code>. One row per
+<code>(ein, tax_period)</code>, 1987-2024, forms
+<code>990combined</code> and <code>990pf</code>.
+<strong>Deduplicated</strong> — keeps the first occurrence per key.</li>
+<li>
+<code>"soi"</code>: IRS SOI annual extracts, harmonized. 2012-2024,
+forms <code>990</code>, <code>990ez</code>, <code>990pf</code>,
+<code>990combined</code>. Carries an <code>is_amendment</code> flag if
+you need to separate originals from revisions.</li>
+<li>
+<code>"legacy"</code>: NCCS legacy CORE files, harmonized.
+1987-2011, forms <code>990combined</code> and <code>990pf</code>.</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Inspect a partition's columns before reading</span></span>
+<span><span class="va">dict</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_core_columns.html">nccs_core_columns</a></span><span class="op">(</span><span class="st">"merged"</span>, <span class="fl">2020</span>, <span class="st">"990combined"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dict</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"harmonized_name"</span>, <span class="st">"data_type"</span>, <span class="st">"description"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Read one partition with column projection</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read_core.html">nccs_read_core</a></span><span class="op">(</span></span>
+<span>  tier     <span class="op">=</span> <span class="st">"merged"</span>,</span>
+<span>  tax_year <span class="op">=</span> <span class="fl">2020</span>,</span>
+<span>  form     <span class="op">=</span> <span class="st">"990combined"</span>,</span>
+<span>  columns  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ein"</span>, <span class="st">"tax_period"</span>, <span class="st">"total_revenue"</span>, <span class="st">"total_expenses"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Or build a lazy query for custom filters</span></span>
+<span><span class="fu"><a href="../reference/nccs_read_core.html">nccs_read_core</a></span><span class="op">(</span><span class="st">"merged"</span>, <span class="fl">2020</span>, <span class="st">"990combined"</span>, collect <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">subsection_cd</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ein</span>, <span class="va">tax_period</span>, <span class="va">total_revenue</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>For multi-year analyses, build the Arrow dataset directly over a glob
+— this gives you predicate pushdown across all years in one query:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">arrow</span><span class="fu">::</span><span class="fu"><a href="https://arrow.apache.org/docs/r/reference/open_dataset.html" class="external-link">open_dataset</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"s3://nccsdata/processed_merged/core/*/990combined/"</span>,</span>
+<span>         <span class="st">"core_*_990combined.parquet"</span><span class="op">)</span>,</span>
+<span>  format <span class="op">=</span> <span class="st">"parquet"</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">tax_year</span> <span class="op">&gt;=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ein</span>, <span class="va">tax_year</span>, <span class="va">total_revenue</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="../reference/nccs_core_coverage.html">nccs_core_coverage()</a></code> returns row counts for every
+published partition of a tier — useful for sanity checks and quickly
+spotting coverage gaps (e.g. SOI’s missing 2017-2019 <code>990pf</code>
+partitions).</p>
+</div>
+<div class="section level2">
 <h2 id="summarizing">Summarizing<a class="anchor" aria-label="anchor" href="#summarizing"></a>
 </h2>
 <p><code><a href="../reference/nccs_summary.html">nccs_summary()</a></code> produces grouped count summaries:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"PA"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Total count</span></span>
@@ -270,7 +326,7 @@ inspect the matching data dictionary before filtering or joining.</p>
 <h2 id="saving-results">Saving Results<a class="anchor" aria-label="anchor" href="#saving-results"></a>
 </h2>
 <p>Write summary results to CSV:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span></span>
 <span>  state <span class="op">=</span> <span class="st">"PA"</span>,</span>
 <span>  county <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Lackawanna County"</span>, <span class="st">"Luzerne County"</span>, <span class="st">"Wayne County"</span><span class="op">)</span></span>

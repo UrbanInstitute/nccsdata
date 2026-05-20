@@ -207,6 +207,63 @@ under a `bmf-legacy` path; pass `legacy = TRUE` to
 [`nccs_vintage_url()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_vintage_url.md)).
 Always inspect the matching data dictionary before filtering or joining.
 
+## Form 990 Filings (CORE Series)
+
+The BMF is one row per registered organization. To work with one row per
+*filing*, use the CORE Series — Form 990 filings harmonized into a
+single schema across vintages. Three tiers are published:
+
+- `"merged"` (canonical, default): legacy + SOI-current merged on
+  `(ein, tax_period)`. One row per `(ein, tax_period)`, 1987-2024, forms
+  `990combined` and `990pf`. **Deduplicated** — keeps the first
+  occurrence per key.
+- `"soi"`: IRS SOI annual extracts, harmonized. 2012-2024, forms `990`,
+  `990ez`, `990pf`, `990combined`. Carries an `is_amendment` flag if you
+  need to separate originals from revisions.
+- `"legacy"`: NCCS legacy CORE files, harmonized. 1987-2011, forms
+  `990combined` and `990pf`.
+
+``` r
+
+# Inspect a partition's columns before reading
+dict <- nccs_core_columns("merged", 2020, "990combined")
+head(dict[, c("harmonized_name", "data_type", "description")])
+
+# Read one partition with column projection
+df <- nccs_read_core(
+  tier     = "merged",
+  tax_year = 2020,
+  form     = "990combined",
+  columns  = c("ein", "tax_period", "total_revenue", "total_expenses")
+)
+
+# Or build a lazy query for custom filters
+nccs_read_core("merged", 2020, "990combined", collect = FALSE) |>
+  dplyr::filter(subsection_cd == 3) |>
+  dplyr::select(ein, tax_period, total_revenue) |>
+  dplyr::collect()
+```
+
+For multi-year analyses, build the Arrow dataset directly over a glob —
+this gives you predicate pushdown across all years in one query:
+
+``` r
+
+arrow::open_dataset(
+  paste0("s3://nccsdata/processed_merged/core/*/990combined/",
+         "core_*_990combined.parquet"),
+  format = "parquet"
+) |>
+  dplyr::filter(tax_year >= 2015) |>
+  dplyr::select(ein, tax_year, total_revenue) |>
+  dplyr::collect()
+```
+
+[`nccs_core_coverage()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_core_coverage.md)
+returns row counts for every published partition of a tier — useful for
+sanity checks and quickly spotting coverage gaps (e.g. SOI’s missing
+2017-2019 `990pf` partitions).
+
 ## Summarizing
 
 [`nccs_summary()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_summary.md)

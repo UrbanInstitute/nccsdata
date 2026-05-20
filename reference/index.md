@@ -7,6 +7,17 @@
 - [`nccs_vintage_url()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_vintage_url.md)
   : S3 URL of a Historical BMF Vintage
 
+## CORE Series (Form 990)
+
+- [`nccs_core_url()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_core_url.md)
+  : URL of an NCCS CORE Series Partition
+- [`nccs_read_core()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_read_core.md)
+  : Read an NCCS CORE Series Partition
+- [`nccs_core_columns()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_core_columns.md)
+  : Column Dictionary for a CORE Series Partition
+- [`nccs_core_coverage()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_core_coverage.md)
+  : Row-Count Coverage of a CORE Series Tier
+
 ## Cache
 
 - [`nccs_cache_dir()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_cache_dir.md)

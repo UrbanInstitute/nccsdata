@@ -13,9 +13,13 @@
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_as_indicator.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_cache_dir.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_catalog.html</loc></url>
+<url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_core_columns.html</loc></url>
+<url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_core_coverage.html</loc></url>
+<url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_core_url.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_dictionary.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_normalize_ein.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_read.html</loc></url>
+<url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_read_core.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_summary.html</loc></url>
 <url><loc>https://urbaninstitute.github.io/nccsdata/reference/nccs_vintage_url.html</loc></url>
 </urlset>
