@@ -151,12 +151,16 @@ needed.
   Each partition has a parquet + CSV data file and a parquet + CSV
   column dictionary.
   [`nccs_read_core()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_read_core.md)
-  reads one partition; for multi-year, document the
-  [`arrow::open_dataset()`](https://arrow.apache.org/docs/r/reference/open_dataset.html)
-  glob pattern in vignettes rather than baking it into the signature.
-  Tier coverage gaps (legacy: no `990` / `990ez`; SOI: missing 2017-2019
-  `990pf`; merged: dedup keeps first by `(ein, tax_period)`) are
-  documented in
+  accepts a vector `tax_year` and stacks the requested partitions into
+  one Arrow dataset; before downloading anything to the cache it reports
+  total transfer size and, if `confirm = interactive()`, prompts.
+  Partitions that don’t exist upstream are dropped with a
+  [`message()`](https://rdrr.io/r/base/message.html) rather than
+  erroring, so a year range that straddles a gap still works. Tier
+  coverage notes (legacy: no `990` / `990ez`; SOI: 2017-2019 `990pf`
+  partitions are present but only contain backfilled tax-year rows from
+  2020+ extracts — sparse, no original calendar-year publication;
+  merged: dedup keeps first by `(ein, tax_period)`) are documented in
   [`nccs_core_url()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_core_url.md)
   and validated by `.validate_core_partition()`.
 - `R/nccs_summary.R` — Grouped count summaries on collected data.

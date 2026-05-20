@@ -244,19 +244,20 @@ nccs_read_core("merged", 2020, "990combined", collect = FALSE) |>
   dplyr::collect()
 ```
 
-For multi-year analyses, build the Arrow dataset directly over a glob —
-this gives you predicate pushdown across all years in one query:
+For multi-year analyses, pass a vector to `tax_year`. The function
+stacks the requested partitions into one Arrow dataset (so filters and
+column projection still push down across all of them) and, in an
+interactive session, reports the total download size before fetching any
+partitions it doesn’t already have cached.
 
 ``` r
 
-arrow::open_dataset(
-  paste0("s3://nccsdata/processed_merged/core/*/990combined/",
-         "core_*_990combined.parquet"),
-  format = "parquet"
-) |>
-  dplyr::filter(tax_year >= 2015) |>
-  dplyr::select(ein, tax_year, total_revenue) |>
-  dplyr::collect()
+panel <- nccs_read_core(
+  tier     = "merged",
+  tax_year = 2015:2022,
+  form     = "990combined",
+  columns  = c("ein", "tax_period", "total_revenue", "total_expenses")
+)
 ```
 
 [`nccs_core_coverage()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_core_coverage.md)

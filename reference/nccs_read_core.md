@@ -1,9 +1,11 @@
-# Read an NCCS CORE Series Partition
+# Read NCCS CORE Series Partitions
 
-Reads one \`(tier, tax_year, form)\` Form 990 partition as parquet, with
-optional column projection, dplyr-style filtering, and local caching.
-One row per filing (or per \`(ein, tax_period)\` in the deduplicated
-\`"merged"\` tier).
+Reads one or more \`(tier, tax_year, form)\` Form 990 partitions as
+parquet, with optional column projection, dplyr-style filtering, and
+local caching. Pass a vector of years to \`tax_year\` to read multiple
+partitions in a single query (e.g. \`tax_year = 2015:2022\`); the
+partitions are stacked into one Arrow dataset so filters and column
+projection push down across all of them.
 
 ## Usage
 
@@ -15,7 +17,8 @@ nccs_read_core(
   columns = NULL,
   cache = TRUE,
   cache_max_age = 30L,
-  collect = TRUE
+  collect = TRUE,
+  confirm = interactive()
 )
 ```
 
@@ -28,7 +31,8 @@ nccs_read_core(
 
 - tax_year:
 
-  Integer tax year.
+  Integer tax year, or an integer vector of years for a multi-partition
+  read.
 
 - form:
 
@@ -45,7 +49,7 @@ nccs_read_core(
 
 - cache:
 
-  Local cache controls. \`TRUE\` (default) caches the parquet under
+  Local cache controls. \`TRUE\` (default) caches each parquet under
   \[nccs_cache_dir()\] in a \`core/\<tier\>/\<tax_year\>/\<form\>/\`
   subdir. A character path uses that directory instead. \`FALSE\` reads
   directly from S3 (slower on repeat calls, lower disk usage).
@@ -62,6 +66,13 @@ nccs_read_core(
   Arrow query for further dplyr operations and a final
   \`dplyr::collect()\`.
 
+- confirm:
+
+  Logical. If \`TRUE\` and a multi-partition download is required,
+  prompt for confirmation after reporting the total size. Defaults to
+  \`interactive()\` so scripts and tests proceed silently while
+  interactive sessions get a guardrail.
+
 ## Value
 
 A tibble (if \`collect = TRUE\`) or an Arrow Dataset query (if \`collect
@@ -69,10 +80,15 @@ A tibble (if \`collect = TRUE\`) or an Arrow Dataset query (if \`collect
 
 ## Details
 
-For multi-year queries, prefer building the dataset yourself with
-\`arrow::open_dataset()\` over a glob — see Examples. This function
-deliberately reads a single partition so caching, column dictionaries,
-and schema reasoning stay simple.
+One row per filing (or per \`(ein, tax_period)\` in the deduplicated
+\`"merged"\` tier).
+
+When the request would download multiple partitions, the function
+reports the total transfer size (summed over partitions not already
+cached) and, if \`confirm = TRUE\`, prompts before downloading.
+Partitions that are not published for the requested tier (e.g. SOI
+\`990pf\` for 2017-2019) are dropped with a \`message()\` rather than
+raising an error, so a year range that straddles a gap still works.
 
 See \[nccs_core_url()\] for the canonical URL pattern and a description
 of each tier's coverage and caveats (especially the \`"merged"\` tier's
@@ -94,19 +110,19 @@ df <- nccs_read_core(
   columns = c("ein", "tax_period", "total_revenue", "total_expenses")
 )
 
+# Multi-year: any partition that turns out to be unpublished
+# upstream is dropped with a message rather than erroring.
+panel <- nccs_read_core(
+  tier     = "soi",
+  tax_year = 2015:2022,
+  form     = "990pf",
+  columns  = c("ein", "tax_period", "total_revenue")
+)
+
 # Lazy query, custom filter, then collect
-nccs_read_core("merged", 2020, "990combined", collect = FALSE) |>
+nccs_read_core("merged", 2018:2022, "990combined", collect = FALSE) |>
   dplyr::filter(subsection_cd == 3) |>
   dplyr::select(ein, tax_period, total_revenue) |>
-  dplyr::collect()
-
-# Multi-year: build the dataset directly
-arrow::open_dataset(
-  paste0("s3://nccsdata/processed_merged/core/*/990combined/",
-         "core_*_990combined.parquet"),
-  format = "parquet"
-) |>
-  dplyr::filter(tax_year >= 2015) |>
   dplyr::collect()
 } # }
 ```
