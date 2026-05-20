@@ -46,12 +46,6 @@ pa <- nccs_read(state = "PA")
 # Arts nonprofits in New York
 ny_arts <- nccs_read(state = "NY", ntee_subsector = "ART")
 
-# 501(c)(3) private foundations in California
-ca_pf <- nccs_read(state = "CA", org_type = "private_foundation")
-
-# All 501(c)(3) public charities (the most common analyst cut)
-pc <- nccs_read(org_type = "public_charity")
-
 # Select specific columns
 pa_slim <- nccs_read(
   state = "PA",
@@ -63,43 +57,6 @@ query <- nccs_read(state = "PA", collect = FALSE)
 result <- query |>
   dplyr::filter(geo_county == "Lackawanna County") |>
   dplyr::collect()
-```
-
-### Column types
-
-The upstream parquet stores most columns as `character` (vintage
-stacking requires it). `nccs_read()` coerces known financial, date,
-and indicator columns to their natural types on the collected tibble
-by default — pass `coerce = FALSE` to opt out. ZIPs and other ID-like
-codes are intentionally left as `character`.
-
-### Local caching
-
-`nccs_read()` caches the geocoded master parquet (hundreds of MB) in
-`tools::R_user_dir("nccsdata", "cache")` so subsequent calls in the
-same or future sessions skip the S3 download. The cached copy refreshes
-once it's more than `cache_max_age` days old (30 by default; the
-upstream master is rebuilt monthly). Pass `cache = FALSE` to always
-read from S3, or use `nccs_cache_clear()` to force the next call to
-re-download.
-
-``` r
-nccs_cache_dir()
-nccs_cache_clear()  # force re-download next time
-```
-
-### Reading historical vintages
-
-`nccs_read()` reads the rolling geocoded master. For a specific dated
-monthly snapshot — useful for reproducible research — use
-`nccs_vintage_url()` to get the S3 URI, then read the CSV directly.
-Vintage schemas differ by month and across the modern/legacy seam, so
-inspect the matching data dictionary before filtering.
-
-``` r
-uri  <- nccs_vintage_url("2023_07")
-dict <- arrow::read_csv_arrow(nccs_vintage_url("2023_07", kind = "dictionary"))
-bmf_2023_07 <- arrow::read_csv_arrow(uri)
 ```
 
 ### Summarizing data
@@ -171,6 +128,41 @@ nccs_dictionary("geo")
 # Find NTEE-related columns
 nccs_dictionary("ntee")
 ```
+
+## Scope and design
+
+`nccsdata` is intentionally a lean reader. A few principles that shape
+what is — and is not — in the package:
+
+- **No re-cleaning of upstream data.** The BMF and CORE Series parquet
+  files are cleaned by the sibling ETL pipelines (`nccs-data-bmf`,
+  `nccs-data-core`). EIN normalization, NTEE decoding, geocoding, and
+  subsection labeling are done before publication. We don’t re-implement
+  them here.
+- **The two exceptions are helpers for *external* data.**
+  `nccs_normalize_ein()` and `nccs_as_indicator()` exist so you can
+  bring your own CSVs (member rosters, survey extracts, donor lists)
+  into the same shape as the package’s output before joining.
+- **One opinionated analytic helper: inflation adjustment.**
+  `nccs_deflate()` and the bundled annual `cpi_u` series are included
+  because real-dollar conversion needs a reference table the user
+  otherwise has to fetch themselves, and the conversion itself is
+  mechanical and uncontroversial.
+- **No canonical financial ratios.** Operating margin, program-expense
+  ratio, fundraising efficiency, months of operating reserves, and
+  similar measures are deliberately *not* bundled. Their definitions
+  vary by analyst (which numerator, which denominator, which
+  exclusions), and shipping one canonical version would make the package
+  take editorial sides. They’re also one-line `mutate()` calls on the
+  columns CORE already provides.
+- **Lean dependencies.** Hard imports are `arrow`, `dplyr`, `utils`.
+  Anything heavier (sf, tigris, ggplot2, data.table) belongs in
+  vignettes that show how to combine `nccsdata` with those packages, not
+  as a dependency.
+
+If you want to build analytic functionality on top of this package, the
+right pattern is a downstream package or notebook that imports
+`nccsdata` and adds your team’s preferred ratio definitions.
 
 ## Migrating from v1
 

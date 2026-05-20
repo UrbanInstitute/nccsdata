@@ -126,6 +126,18 @@ nccs_dictionary("geo")
 nccs_dictionary("ntee")
 ```
 
+## Scope and design
+
+`nccsdata` is intentionally a lean reader. A few principles that shape what is — and is not — in the package:
+
+- **No re-cleaning of upstream data.** The BMF and CORE Series parquet files are cleaned by the sibling ETL pipelines (`nccs-data-bmf`, `nccs-data-core`). EIN normalization, NTEE decoding, geocoding, and subsection labeling are done before publication. We don't re-implement them here.
+- **The two exceptions are helpers for *external* data.** `nccs_normalize_ein()` and `nccs_as_indicator()` exist so you can bring your own CSVs (member rosters, survey extracts, donor lists) into the same shape as the package's output before joining.
+- **One opinionated analytic helper: inflation adjustment.** `nccs_deflate()` and the bundled annual `cpi_u` series are included because real-dollar conversion needs a reference table the user otherwise has to fetch themselves, and the conversion itself is mechanical and uncontroversial.
+- **No canonical financial ratios.** Operating margin, program-expense ratio, fundraising efficiency, months of operating reserves, and similar measures are deliberately *not* bundled. Their definitions vary by analyst (which numerator, which denominator, which exclusions), and shipping one canonical version would make the package take editorial sides. They're also one-line `mutate()` calls on the columns CORE already provides.
+- **Lean dependencies.** Hard imports are `arrow`, `dplyr`, `utils`. Anything heavier (sf, tigris, ggplot2, data.table) belongs in vignettes that show how to combine `nccsdata` with those packages, not as a dependency.
+
+If you want to build analytic functionality on top of this package, the right pattern is a downstream package or notebook that imports `nccsdata` and adds your team's preferred ratio definitions.
+
 ## Migrating from v1
 
 | v1 function | v2 replacement |
