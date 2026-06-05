@@ -109,9 +109,10 @@ download_text(file.path(S3_HTTPS_BASE, "MANIFEST.json"), manifest_path)
 manifest <- jsonlite::fromJSON(manifest_path, simplifyVector = FALSE)
 
 cat("Vintage:     ", manifest$vintage, "\n")
-cat("Generated at:", manifest$generated_at, "\n")
+cat("Generated at:", manifest$built_at, "\n")
 
-missing_from_manifest <- setdiff(CURATED, names(manifest$files))
+manifest_tables <- sub("\\.csv$", "", names(manifest$files))
+missing_from_manifest <- setdiff(CURATED, manifest_tables)
 if (length(missing_from_manifest)) {
   stop("Curated tables not in manifest: ",
        paste(missing_from_manifest, collapse = ", "))
@@ -121,7 +122,7 @@ lookups <- list()
 sha_metadata <- list()
 
 for (nm in CURATED) {
-  entry <- manifest$files[[nm]]
+  entry <- manifest$files[[paste0(nm, ".csv")]]
   expected_sha <- entry$sha256
   url <- file.path(S3_HTTPS_BASE, entry$file)
   dest <- file.path(tmp, entry$file)
@@ -136,9 +137,9 @@ for (nm in CURATED) {
   }
 
   df <- utils::read.csv(dest, stringsAsFactors = FALSE, check.names = FALSE)
-  if (nrow(df) != entry$rows) {
+  if (nrow(df) != entry$row_count) {
     stop(sprintf("Row-count mismatch for %s: manifest=%d, file=%d",
-                 nm, entry$rows, nrow(df)))
+                 nm, entry$row_count, nrow(df)))
   }
   lookups[[nm]] <- dplyr::as_tibble(df)
   sha_metadata[[nm]] <- expected_sha
@@ -148,7 +149,7 @@ for (nm in CURATED) {
   lookups,
   list(.metadata = list(
     vintage      = manifest$vintage,
-    generated_at = manifest$generated_at,
+    generated_at = manifest$built_at,
     source       = S3_HTTPS_BASE,
     sha256       = sha_metadata,
     built_at     = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
