@@ -1,0 +1,25 @@
+name: contracts-guard
+
+# Thin caller of the reusable contract-change guard in nccs-contracts (ADR 0022).
+# The guard logic lives once there; this file passes only this repo's
+# paths_regex. nccsdata is a CONSUMER, so the contract-relevant surface is how
+# it READS and PINS contracted artifacts — the read/url/vintage/catalog/column
+# code. Tune the regex as that surface evolves.
+#
+# The guard verifies ACKNOWLEDGMENT, not correctness: a PR that touches the
+# matched paths must carry an `ADR NNNN` breadcrumb (commit message or PR body)
+# or the `contracts-ack` label, so the nccs-contracts reconcile isn't silently
+# skipped. See nccs-contracts/CONTRIBUTING.md.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  contracts-guard:
+    uses: UrbanInstitute/nccs-contracts/.github/workflows/contracts-guard.yml@main
+    with:
+      paths_regex: '^R/nccs_(read|read_core|vintage_url|core_url|catalog|core_columns|core_coverage)\.R$'
