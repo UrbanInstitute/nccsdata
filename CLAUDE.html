@@ -212,6 +212,10 @@
 <li>
 <code>test-nccs_as_indicator.R</code> — yn/efile coercion, unknown-value warning (offline)</li>
 </ul></div>
+<div class="section level2">
+<h2 id="contract-change-guard-adr-0022">Contract-change guard (ADR 0022)<a class="anchor" aria-label="anchor" href="#contract-change-guard-adr-0022"></a></h2>
+<p>A PR that changes how this package <strong>reads or pins</strong> contracted artifacts — the read/url/vintage/catalog/column code — must acknowledge the <a href="https://github.com/UrbanInstitute/nccs-contracts" class="external-link"><code>nccs-contracts</code></a> impact, or CI fails. The <code>.github/workflows/contracts-guard.yml</code> caller (a thin wrapper over the reusable guard in <code>nccs-contracts</code>) fires on PRs that change <code>R/nccs_read*.R</code>, <code>R/nccs_vintage_url.R</code>, <code>R/nccs_core_url.R</code>, <code>R/nccs_catalog.R</code>, or <code>R/nccs_core_columns.R</code>/<code>R/nccs_core_coverage.R</code>. To pass: add an <code>ADR NNNN</code> breadcrumb to a commit message or the PR body (and queue the <code>nccs-contracts</code> reconcile if a contract pin/version moved), <strong>or</strong> add the <code>contracts-ack</code> label if there’s genuinely no contract impact. The guard checks <em>acknowledgment, not correctness</em>.</p>
+</div>
 </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -276,3 +276,18 @@ Tests use testthat edition 3. Network-dependent integration tests use
 - `test-nccs_normalize_ein.R` — EIN coercion happy/edge paths (offline)
 - `test-nccs_as_indicator.R` — yn/efile coercion, unknown-value warning
   (offline)
+
+## Contract-change guard (ADR 0022)
+
+A PR that changes how this package **reads or pins** contracted
+artifacts — the read/url/vintage/catalog/column code — must acknowledge
+the [`nccs-contracts`](https://github.com/UrbanInstitute/nccs-contracts)
+impact, or CI fails. The `.github/workflows/contracts-guard.yml` caller
+(a thin wrapper over the reusable guard in `nccs-contracts`) fires on
+PRs that change `R/nccs_read*.R`, `R/nccs_vintage_url.R`,
+`R/nccs_core_url.R`, `R/nccs_catalog.R`, or
+`R/nccs_core_columns.R`/`R/nccs_core_coverage.R`. To pass: add an
+`ADR NNNN` breadcrumb to a commit message or the PR body (and queue the
+`nccs-contracts` reconcile if a contract pin/version moved), **or** add
+the `contracts-ack` label if there’s genuinely no contract impact. The
+guard checks *acknowledgment, not correctness*.
