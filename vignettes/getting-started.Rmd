@@ -165,6 +165,42 @@ codes) stay as `character` — they're identifiers, not numbers. Pass
 `coerce = FALSE` to skip all coercion and get every column exactly as
 published.
 
+## Joining External Data on EINs
+
+The `ein` column returned by `nccs_read()` is already in canonical
+`XX-XXXXXXX` form. When you bring your own data — a CSV export, a
+spreadsheet, an API response — its EINs are often messier: numeric storage
+drops the leading zero, or the value arrives padded or unformatted. Use
+`nccs_normalize_ein()` to coerce arbitrary input to the canonical form
+before joining:
+
+```{r}
+# All of these refer to the same organization.
+nccs_normalize_ein(c("042104327", "04-2104327", 42104327))
+#> [1] "04-2104327" "04-2104327" "04-2104327"
+```
+
+Some legacy and NODC products (harmonized CORE marts, the Unified BMF,
+the website e-file series) key on `EIN2` — the same EIN with a literal
+`EIN-` prefix (`EIN-04-2104327`). `nccs_ein_to_ein2()` and
+`nccs_ein2_to_ein()` bridge the two formats so you can join a canonical
+`ein` column against an `EIN2` key without a crosswalk:
+
+```{r}
+# Canonical ein -> legacy EIN2 key
+nccs_ein_to_ein2("04-2104327")
+#> [1] "EIN-04-2104327"
+
+# Legacy EIN2 key -> canonical ein (leading zeros preserved)
+nccs_ein2_to_ein("EIN-00-0000004")
+#> [1] "00-0000004"
+```
+
+Both helpers are vectorized and lenient: an input that cannot be
+normalized becomes `NA` and the call warns with a count, so partial loss
+never passes silently. They share one normalization core with the
+upstream producer, so the round-trip is lossless.
+
 ## Local Caching
 
 The master BMF parquet is hundreds of MB. `nccs_read()` caches it in

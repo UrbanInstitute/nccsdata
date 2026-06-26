@@ -27,6 +27,8 @@ reference:
   - title: "Helpers for external data"
     contents:
       - nccs_normalize_ein
+      - nccs_ein_to_ein2
+      - nccs_ein2_to_ein
       - nccs_as_indicator
   - title: "Financial analysis"
     contents:
