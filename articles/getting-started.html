@@ -92,9 +92,16 @@ publicly accessible.</p>
 <p>Use <code><a href="../reference/nccs_catalog.html">nccs_catalog()</a></code> to see the valid values for each
 filter before querying:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># NTEE v2 subsector codes</span></span>
+<code class="sourceCode R"><span><span class="co"># NTEE v2 subsectors. For fields where a bare code is opaque, each value is</span></span>
+<span><span class="co"># returned as an inline "CODE - Description" string (accepted back verbatim by</span></span>
+<span><span class="co"># nccs_read()). Pass labels = TRUE for a code + description tibble instead.</span></span>
 <span><span class="fu"><a href="../reference/nccs_catalog.html">nccs_catalog</a></span><span class="op">(</span><span class="st">"ntee_subsector"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "ART" "EDU" "ENV" "HEL" "HMS" "HOS" "IFA" "MMB" "PSB" "REL" "UNI" "UNU"</span></span>
+<span><span class="co">#&gt;  [1] "ART - Arts, Culture, and Humanities"  "EDU - Education"</span></span>
+<span><span class="co">#&gt;  [3] "ENV - Environment and Animals"        "HEL - Health"</span></span>
+<span><span class="co">#&gt;  [5] "HMS - Human Services"                 "IFA - International, Foreign Affairs"</span></span>
+<span><span class="co">#&gt;  [7] "PSB - Public, Societal Benefit"       "REL - Religion Related"</span></span>
+<span><span class="co">#&gt;  [9] "MMB - Mutual/Membership Benefit"      "UNU - Unknown, Unclassified"</span></span>
+<span><span class="co">#&gt; [11] "UNI - Universities"                   "HOS - Hospitals"</span></span>
 <span></span>
 <span><span class="co"># State and territory codes</span></span>
 <span><span class="fu"><a href="../reference/nccs_catalog.html">nccs_catalog</a></span><span class="op">(</span><span class="st">"state"</span><span class="op">)</span></span>

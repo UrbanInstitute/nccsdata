@@ -38,9 +38,16 @@ to see the valid values for each filter before querying:
 
 ``` r
 
-# NTEE v2 subsector codes
+# NTEE v2 subsectors. For fields where a bare code is opaque, each value is
+# returned as an inline "CODE - Description" string (accepted back verbatim by
+# nccs_read()). Pass labels = TRUE for a code + description tibble instead.
 nccs_catalog("ntee_subsector")
-#> [1] "ART" "EDU" "ENV" "HEL" "HMS" "HOS" "IFA" "MMB" "PSB" "REL" "UNI" "UNU"
+#>  [1] "ART - Arts, Culture, and Humanities"  "EDU - Education"
+#>  [3] "ENV - Environment and Animals"        "HEL - Health"
+#>  [5] "HMS - Human Services"                 "IFA - International, Foreign Affairs"
+#>  [7] "PSB - Public, Societal Benefit"       "REL - Religion Related"
+#>  [9] "MMB - Mutual/Membership Benefit"      "UNU - Unknown, Unclassified"
+#> [11] "UNI - Universities"                   "HOS - Hospitals"
 
 # State and territory codes
 nccs_catalog("state")
