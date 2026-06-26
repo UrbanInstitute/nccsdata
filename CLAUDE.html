@@ -119,6 +119,8 @@
 <li>
 <code>R/nccs_normalize_ein.R</code> — Coerces arbitrary EIN inputs to canonical <code>XX-XXXXXXX</code> form. Pure, base-R only.</li>
 <li>
+<code>R/nccs_ein_bridge.R</code> — <code><a href="reference/ein_bridge.html">nccs_ein_to_ein2()</a></code> / <code><a href="reference/ein_bridge.html">nccs_ein2_to_ein()</a></code> bridge the canonical clean <code>ein</code> (<code>XX-XXXXXXX</code>) and the legacy/NODC <code>EIN2</code> (<code>EIN-XX-XXXXXXX</code>) join keys. Deterministic string reformat (no lookup); both route through the canonical 9-digit-<code>core()</code> normalization. Implements the <code>nccs-contracts</code> convention <code>conventions/ein-format.md</code> (consumer side; producer is <code>nccs-data-bmf/R/ein.R::transform_ein</code>). Lenient contract: un-normalizable input → <code>NA</code> plus a <code><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning()</a></code> with the drop count. Pure, base-R only.</li>
+<li>
 <code>R/nccs_as_indicator.R</code> — Coerces IRS binary-indicator columns to logical, with <code>yn</code> and <code>efile</code> schemes for vintage-specific encodings.</li>
 <li>
 <code>R/nccs_deflate.R</code> + <code>R/cpi_u.R</code> — Real-dollar conversion for CORE financial columns. <code>nccs_deflate(amount, year, base_year)</code> uses the bundled annual CPI-U series (FRED <code>CPIAUCNS</code>, 1913-present, refreshed via <code>data-raw/build_cpi.R</code>). This is the <em>one</em> opinionated analytic helper in the package — canonical financial ratios (operating margin, program-expense ratio, etc.) are deliberately not bundled because their definitions vary by analyst.</li>

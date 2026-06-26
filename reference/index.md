@@ -42,6 +42,9 @@
 
 - [`nccs_normalize_ein()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_normalize_ein.md)
   : Normalize EINs to Canonical IRS Format
+- [`nccs_ein_to_ein2()`](https://urbaninstitute.github.io/nccsdata/reference/ein_bridge.md)
+  [`nccs_ein2_to_ein()`](https://urbaninstitute.github.io/nccsdata/reference/ein_bridge.md)
+  : Bridge Between \`ein\` and \`EIN2\` Formats
 - [`nccs_as_indicator()`](https://urbaninstitute.github.io/nccsdata/reference/nccs_as_indicator.md)
   : Coerce IRS Binary-Indicator Columns to Logical
 

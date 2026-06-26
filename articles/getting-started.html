@@ -215,6 +215,38 @@ well-known columns to their natural R types on the collected tibble:</p>
 exactly as published.</p>
 </div>
 <div class="section level2">
+<h2 id="joining-external-data-on-eins">Joining External Data on EINs<a class="anchor" aria-label="anchor" href="#joining-external-data-on-eins"></a>
+</h2>
+<p>The <code>ein</code> column returned by <code><a href="../reference/nccs_read.html">nccs_read()</a></code> is
+already in canonical <code>XX-XXXXXXX</code> form. When you bring your
+own data — a CSV export, a spreadsheet, an API response — its EINs are
+often messier: numeric storage drops the leading zero, or the value
+arrives padded or unformatted. Use <code><a href="../reference/nccs_normalize_ein.html">nccs_normalize_ein()</a></code> to
+coerce arbitrary input to the canonical form before joining:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># All of these refer to the same organization.</span></span>
+<span><span class="fu"><a href="../reference/nccs_normalize_ein.html">nccs_normalize_ein</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"042104327"</span>, <span class="st">"04-2104327"</span>, <span class="fl">42104327</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "04-2104327" "04-2104327" "04-2104327"</span></span></code></pre></div>
+<p>Some legacy and NODC products (harmonized CORE marts, the Unified
+BMF, the website e-file series) key on <code>EIN2</code> — the same EIN
+with a literal <code>EIN-</code> prefix (<code>EIN-04-2104327</code>).
+<code><a href="../reference/ein_bridge.html">nccs_ein_to_ein2()</a></code> and <code><a href="../reference/ein_bridge.html">nccs_ein2_to_ein()</a></code>
+bridge the two formats so you can join a canonical <code>ein</code>
+column against an <code>EIN2</code> key without a crosswalk:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Canonical ein -&gt; legacy EIN2 key</span></span>
+<span><span class="fu"><a href="../reference/ein_bridge.html">nccs_ein_to_ein2</a></span><span class="op">(</span><span class="st">"04-2104327"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "EIN-04-2104327"</span></span>
+<span></span>
+<span><span class="co"># Legacy EIN2 key -&gt; canonical ein (leading zeros preserved)</span></span>
+<span><span class="fu"><a href="../reference/ein_bridge.html">nccs_ein2_to_ein</a></span><span class="op">(</span><span class="st">"EIN-00-0000004"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "00-0000004"</span></span></code></pre></div>
+<p>Both helpers are vectorized and lenient: an input that cannot be
+normalized becomes <code>NA</code> and the call warns with a count, so
+partial loss never passes silently. They share one normalization core
+with the upstream producer, so the round-trip is lossless.</p>
+</div>
+<div class="section level2">
 <h2 id="local-caching">Local Caching<a class="anchor" aria-label="anchor" href="#local-caching"></a>
 </h2>
 <p>The master BMF parquet is hundreds of MB. <code><a href="../reference/nccs_read.html">nccs_read()</a></code>
@@ -224,7 +256,7 @@ session and across sessions). The cached file is refreshed automatically
 when it’s older than <code>cache_max_age</code> days (30 by default,
 matching the upstream monthly rebuild cadence). Disable with
 <code>cache = FALSE</code>, or force a refresh:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nccs_cache_dir.html">nccs_cache_dir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/nccs_cache_dir.html">nccs_cache_clear</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -236,7 +268,7 @@ upstream pipeline rebuilds every month. For analyses that need a
 specific dated snapshot (papers, dashboards, regulatory work), use
 <code><a href="../reference/nccs_vintage_url.html">nccs_vintage_url()</a></code> to get the S3 URI for that month, then
 read the CSV directly:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">uri</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_vintage_url.html">nccs_vintage_url</a></span><span class="op">(</span><span class="st">"2023_07"</span><span class="op">)</span></span>
 <span><span class="va">dict</span> <span class="op">&lt;-</span> <span class="fu">arrow</span><span class="fu">::</span><span class="fu"><a href="https://arrow.apache.org/docs/r/reference/read_delim_arrow.html" class="external-link">read_csv_arrow</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="../reference/nccs_vintage_url.html">nccs_vintage_url</a></span><span class="op">(</span><span class="st">"2023_07"</span>, kind <span class="op">=</span> <span class="st">"dictionary"</span><span class="op">)</span></span>
@@ -271,7 +303,7 @@ you need to separate originals from revisions.</li>
 <code>"legacy"</code>: NCCS legacy CORE files, harmonized.
 1987-2011, forms <code>990combined</code> and <code>990pf</code>.</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Inspect a partition's columns before reading</span></span>
 <span><span class="va">dict</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_core_columns.html">nccs_core_columns</a></span><span class="op">(</span><span class="st">"merged"</span>, <span class="fl">2020</span>, <span class="st">"990combined"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dict</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"harmonized_name"</span>, <span class="st">"data_type"</span>, <span class="st">"description"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
@@ -294,7 +326,7 @@ function stacks the requested partitions into one Arrow dataset (so
 filters and column projection still push down across all of them) and,
 in an interactive session, reports the total download size before
 fetching any partitions it doesn’t already have cached.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">panel</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read_core.html">nccs_read_core</a></span><span class="op">(</span></span>
 <span>  tier     <span class="op">=</span> <span class="st">"merged"</span>,</span>
 <span>  tax_year <span class="op">=</span> <span class="fl">2015</span><span class="op">:</span><span class="fl">2022</span>,</span>
@@ -310,7 +342,7 @@ partitions).</p>
 <h2 id="summarizing">Summarizing<a class="anchor" aria-label="anchor" href="#summarizing"></a>
 </h2>
 <p><code><a href="../reference/nccs_summary.html">nccs_summary()</a></code> produces grouped count summaries:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"PA"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Total count</span></span>
@@ -326,7 +358,7 @@ partitions).</p>
 <h2 id="saving-results">Saving Results<a class="anchor" aria-label="anchor" href="#saving-results"></a>
 </h2>
 <p>Write summary results to CSV:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nccs_read.html">nccs_read</a></span><span class="op">(</span></span>
 <span>  state <span class="op">=</span> <span class="st">"PA"</span>,</span>
 <span>  county <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Lackawanna County"</span>, <span class="st">"Luzerne County"</span>, <span class="st">"Wayne County"</span><span class="op">)</span></span>

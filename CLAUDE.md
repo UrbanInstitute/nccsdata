@@ -171,6 +171,19 @@ needed.
   optional grep filtering. Also documents the `bmf_dictionary` dataset.
 - `R/nccs_normalize_ein.R` — Coerces arbitrary EIN inputs to canonical
   `XX-XXXXXXX` form. Pure, base-R only.
+- `R/nccs_ein_bridge.R` —
+  [`nccs_ein_to_ein2()`](https://urbaninstitute.github.io/nccsdata/reference/ein_bridge.md)
+  /
+  [`nccs_ein2_to_ein()`](https://urbaninstitute.github.io/nccsdata/reference/ein_bridge.md)
+  bridge the canonical clean `ein` (`XX-XXXXXXX`) and the legacy/NODC
+  `EIN2` (`EIN-XX-XXXXXXX`) join keys. Deterministic string reformat (no
+  lookup); both route through the canonical 9-digit-`core()`
+  normalization. Implements the `nccs-contracts` convention
+  `conventions/ein-format.md` (consumer side; producer is
+  `nccs-data-bmf/R/ein.R::transform_ein`). Lenient contract:
+  un-normalizable input → `NA` plus a
+  [`warning()`](https://rdrr.io/r/base/warning.html) with the drop
+  count. Pure, base-R only.
 - `R/nccs_as_indicator.R` — Coerces IRS binary-indicator columns to
   logical, with `yn` and `efile` schemes for vintage-specific encodings.
 - `R/nccs_deflate.R` + `R/cpi_u.R` — Real-dollar conversion for CORE
