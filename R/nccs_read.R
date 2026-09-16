@@ -5,8 +5,8 @@
 #' NTEE classification (subsector, code, NTEEv2 code, major group), exempt
 #' organization type, financial size, and BMF recency for efficient reads.
 #'
-#' Reads the rolling "master" geocoded BMF at
-#' `s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet`.
+#' Reads the always-current geocoded Unified BMF (`latest/`, ADR 0042) at
+#' `s3://nccsdata/geocoding/unified-bmf/latest/bmf_unified_geocoded.parquet`.
 #' For a specific dated monthly snapshot, see [nccs_vintage_url()] — those
 #' artifacts are CSVs with per-vintage schemas and are not exposed through
 #' this function.
@@ -398,13 +398,13 @@ nccs_read <- function(state = NULL,
 #' @return Character string with S3 URI
 #' @noRd
 .bmf_master_s3_path <- function() {
-  "s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet"
+  "s3://nccsdata/geocoding/unified-bmf/latest/bmf_unified_geocoded.parquet"
 }
 
 #' Public HTTPS URL mirroring the S3 path; used for local cache downloads.
 #' @noRd
 .bmf_master_https_url <- function() {
-  "https://nccsdata.s3.amazonaws.com/geocoding/bmf-master/merged/bmf_master_geocoded.parquet"
+  "https://nccsdata.s3.amazonaws.com/geocoding/unified-bmf/latest/bmf_unified_geocoded.parquet"
 }
 
 #' Resolve the `cache` argument of nccs_read() to a directory path or NULL.
@@ -427,7 +427,7 @@ nccs_read <- function(state = NULL,
     stop("`cache_max_age` must be a non-negative number.", call. = FALSE)
   }
 
-  local <- file.path(cache_dir, "bmf_master_geocoded.parquet")
+  local <- file.path(cache_dir, "bmf_unified_geocoded.parquet")
   if (.cache_is_fresh(local, max_age_days)) return(local)
 
   ok <- tryCatch({

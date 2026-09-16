@@ -122,8 +122,8 @@ NTEE classification (subsector, code, NTEEv2 code, major group), exempt
 organization type, financial size, and BMF recency for efficient reads.
 }
 \details{
-Reads the rolling "master" geocoded BMF at
-`s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet`.
+Reads the always-current geocoded Unified BMF (`latest/`, ADR 0042) at
+`s3://nccsdata/geocoding/unified-bmf/latest/bmf_unified_geocoded.parquet`.
 For a specific dated monthly snapshot, see [nccs_vintage_url()] — those
 artifacts are CSVs with per-vintage schemas and are not exposed through
 this function.
