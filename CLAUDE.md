@@ -108,8 +108,8 @@ list, which is illustrative.
 
 ### Data Source
 
-`nccs_read()` reads the rolling master geocoded BMF parquet at:
-`s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet`
+`nccs_read()` reads the always-current geocoded Unified BMF parquet (ADR 0039/0042) at:
+`s3://nccsdata/geocoding/unified-bmf/latest/bmf_unified_geocoded.parquet`
 
 The upstream pipeline also publishes dated monthly snapshots at
 `s3://nccsdata/geocoding/bmf/{YYYY_MM}/merged/bmf_{YYYY_MM}_geocoded.parquet`,

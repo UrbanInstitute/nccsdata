@@ -49,7 +49,7 @@ test_that(".bmf_master_source falls back to S3 when download fails", {
     on.exit(
       assignInNamespace(
         ".bmf_master_https_url",
-        function() "https://nccsdata.s3.amazonaws.com/geocoding/bmf-master/merged/bmf_master_geocoded.parquet",
+        function() "https://nccsdata.s3.amazonaws.com/geocoding/unified-bmf/latest/bmf_unified_geocoded.parquet",
         ns = "nccsdata"
       ),
       add = TRUE

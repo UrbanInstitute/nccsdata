@@ -1,7 +1,7 @@
-test_that(".bmf_master_s3_path returns the rolling master URI", {
+test_that(".bmf_master_s3_path returns the unified-bmf-geocoded latest URI", {
   expect_equal(
     nccsdata:::.bmf_master_s3_path(),
-    "s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet"
+    "s3://nccsdata/geocoding/unified-bmf/latest/bmf_unified_geocoded.parquet"
   )
 })
 
