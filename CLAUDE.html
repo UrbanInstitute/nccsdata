@@ -100,7 +100,7 @@
 <h2 id="architecture">Architecture<a class="anchor" aria-label="anchor" href="#architecture"></a></h2>
 <div class="section level3">
 <h3 id="data-source">Data Source<a class="anchor" aria-label="anchor" href="#data-source"></a></h3>
-<p><code><a href="reference/nccs_read.html">nccs_read()</a></code> reads the rolling master geocoded BMF parquet at: <code>s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet</code></p>
+<p><code><a href="reference/nccs_read.html">nccs_read()</a></code> reads the always-current geocoded Unified BMF parquet (ADR 0039/0042) at: <code>s3://nccsdata/geocoding/unified-bmf/latest/bmf_unified_geocoded.parquet</code></p>
 <p>The upstream pipeline also publishes dated monthly snapshots at <code>s3://nccsdata/geocoding/bmf/{YYYY_MM}/merged/bmf_{YYYY_MM}_geocoded.parquet</code>, but this package does not expose them. Users who need a specific vintage should call <code><a href="https://arrow.apache.org/docs/r/reference/open_dataset.html" class="external-link">arrow::open_dataset()</a></code> against that path directly.</p>
 <p>The <code>arrow</code> package reads from S3 directly via URI — no authentication needed.</p>
 </div>
@@ -229,7 +229,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

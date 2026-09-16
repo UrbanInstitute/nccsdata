@@ -195,8 +195,8 @@ operations.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Reads the rolling "master" geocoded BMF at
-`s3://nccsdata/geocoding/bmf-master/merged/bmf_master_geocoded.parquet`.
+    <p>Reads the always-current geocoded Unified BMF (`latest/`, ADR 0042) at
+`s3://nccsdata/geocoding/unified-bmf/latest/bmf_unified_geocoded.parquet`.
 For a specific dated monthly snapshot, see [nccs_vintage_url()] — those
 artifacts are CSVs with per-vintage schemas and are not exposed through
 this function.</p>
@@ -264,7 +264,7 @@ selection) are silently skipped.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>
