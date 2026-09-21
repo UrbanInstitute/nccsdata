@@ -24,9 +24,10 @@ Suggests:
     curl,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
-RoxygenNote: 7.3.3
+    testthat (>= 3.0.0),
+    withr
 URL: https://github.com/UrbanInstitute/nccsdata, https://urbaninstitute.github.io/nccsdata/
 BugReports: https://github.com/UrbanInstitute/nccsdata/issues
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.1.0.9000

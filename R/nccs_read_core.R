@@ -219,12 +219,8 @@ nccs_read_core <- function(tier = c("merged", "soi", "legacy"),
   dir.create(part_dir, recursive = TRUE, showWarnings = FALSE)
   url <- nccs_core_url(tier, tax_year, form,
                        format = "parquet", kind = "data")
-  tmp <- paste0(local_path, ".part")
   ok <- tryCatch({
-    suppressWarnings(
-      utils::download.file(url, tmp, mode = "wb", quiet = TRUE)
-    )
-    file.rename(tmp, local_path)
+    .download_to_cache(url, local_path)
     TRUE
   }, error = function(e) {
     warning("nccsdata core cache download failed for ",
