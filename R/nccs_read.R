@@ -432,12 +432,7 @@ nccs_read <- function(state = NULL,
 
   ok <- tryCatch({
     dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
-    tmp <- paste0(local, ".part")
-    suppressWarnings(
-      utils::download.file(.bmf_master_https_url(), tmp,
-                           mode = "wb", quiet = TRUE)
-    )
-    file.rename(tmp, local)
+    .download_to_cache(.bmf_master_https_url(), local)
     TRUE
   }, error = function(e) {
     warning("nccsdata cache download failed (", conditionMessage(e),
