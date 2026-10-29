@@ -22,3 +22,5 @@
 ^\.Rproj\.user
 ^README\.html$
 ^Rplots\.pdf$
+^\.mailmap$
+^CITATION\.cff$

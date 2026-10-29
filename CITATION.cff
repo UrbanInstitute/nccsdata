@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "nccsdata: Access and Analyze NCCS Nonprofit Data"
+type: software
+authors:
+  - family-names: Lecy
+    given-names: Jesse
+    affiliation: "National Center for Charitable Statistics, Urban Institute"
+  - family-names: Poongundranar
+    given-names: Thiyaghessan
+    affiliation: "National Center for Charitable Statistics, Urban Institute"
+  - name: "Urban Institute"
+repository-code: "https://github.com/UrbanInstitute/nccsdata"
+url: "https://nccs.urban.org"
+abstract: "R package for reading the NCCS Unified BMF and CORE Series directly from the public S3 bucket."
+date-released: "2026-10-29"

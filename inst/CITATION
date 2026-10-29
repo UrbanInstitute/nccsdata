@@ -1,0 +1,10 @@
+citHeader("To cite nccsdata in publications use:")
+
+bibentry(
+  bibtype = "Manual",
+  title   = "nccsdata: Access and Analyze NCCS Nonprofit Data",
+  author  = c(person("Jesse", "Lecy"), person("Thiyaghessan", "Poongundranar")),
+  year    = "2026",
+  note    = "R package",
+  url     = "https://github.com/UrbanInstitute/nccsdata"
+)
