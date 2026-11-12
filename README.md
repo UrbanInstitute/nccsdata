@@ -3,6 +3,8 @@
 
 # nccsdata <img src="man/figures/logo.svg" align="right" height="139" alt="nccsdata hex logo" />
 
+Maintained by Thiyaghessan Poongundranar, National Center for Charitable Statistics, Urban Institute, since August 2023.
+
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UrbanInstitute/nccsdata/actions/workflows/R-CMD-check.yaml)
