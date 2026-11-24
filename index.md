@@ -1,5 +1,8 @@
 # nccsdata
 
+Maintained by Thiyaghessan Poongundranar, National Center for Charitable
+Statistics, Urban Institute, since August 2023.
+
 nccsdata provides tools to download, filter, and analyze nonprofit
 organization data from the [National Center for Charitable
 Statistics](https://nccs.urban.org/) (NCCS). It reads IRS Business
